@@ -17,14 +17,15 @@ class CreateDoctorsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->nullable();
+            $table->string('phone')->unique();
             $table->string('photo');
             $table->string('degree_copy');
             $table->integer('gender');
             $table->timestamp('activated_at');
-            $table->unsignedBigInteger('specialization_id');
+            $table->unsignedBigInteger('specialization_id')->nullable();
             $table->foreign('specialization_id')->references('id')->on('specializations')->onDelete('cascade')
             ->onUpdate('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

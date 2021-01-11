@@ -17,8 +17,9 @@ class CreateAdminsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->nullable();
+            $table->string('phone')->unique();
             $table->boolean('is_super');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

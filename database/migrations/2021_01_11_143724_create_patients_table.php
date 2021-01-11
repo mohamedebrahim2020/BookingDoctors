@@ -17,10 +17,11 @@ class CreatePatientsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->nullable();
+            $table->string('phone')->unique();
             $table->string('photo');
             $table->integer('gender');
             $table->timestamp('verified_at');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -22,6 +22,7 @@ class CreateWorkingDaysTable extends Migration
             $table->unsignedBigInteger('doctor_id');
             $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade')
             ->onUpdate('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
