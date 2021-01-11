@@ -14,15 +14,15 @@ abstract class BaseRepository
     /**
      * @var Application
      */
-    protected $app;
+
     /**
      * @param Application $app
      *
      * @throws \Exception
      */
-    public function __construct($app)
+    public function __construct()
     {
-        $this->app = $app;
+        
         $this->makeModel();
     }
     /**
@@ -46,7 +46,7 @@ abstract class BaseRepository
      */
     public function makeModel()
     {
-        $model = $this->app->make($this->model());
+        $model = app($this->model());
         if (!$model instanceof Model) {
             throw new \Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
         }
