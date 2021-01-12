@@ -22,8 +22,8 @@ class CreateDoctorsTable extends Migration
             $table->string('photo');
             $table->string('degree_copy');
             $table->integer('gender');
-            $table->timestamp('activated_at');
-            $table->unsignedBigInteger('specialization_id')->nullable();
+            $table->timestamp('activated_at')->nullable();
+            $table->unsignedBigInteger('specialization_id');
             $table->foreign('specialization_id')->references('id')->on('specializations')->onDelete('cascade')
             ->onUpdate('cascade');
             $table->softDeletes();
