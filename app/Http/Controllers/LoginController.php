@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminLoginRequest;
 use App\Models\Admin;
+use App\Traits\LoginTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Client;
 
 class LoginController extends Controller
 {
+    use LoginTrait;
+
     function adminRegister(Request $request)
     {   
     /**
@@ -68,22 +72,13 @@ class LoginController extends Controller
 
     public function adminLogin(AdminLoginRequest $request)
     {
-        
-        $request->request->add([
-            'grant_type'    => $request->grant_type,
-            'client_id'     => $request->client_id,
-            'client_secret' => $request->client_secret,
-            'username'      => $request->username,
-            'password'      => $request->password,
-            'scope'         => ['*'],
-        ]);
- 
-        
-        $token = Request::create(
-            'oauth/token',
-            'POST'
-        );
-        
+        $admin = Admin::where('email', $request->username)->first();
+        if (!$admin || !Hash::check($request->password, $admin->password, []))
+        {
+            abort(401, 'check your email or password');
+        } else {
+        $token = $this->login($request);
         return Route::dispatch($token);
+        }
     }
 }

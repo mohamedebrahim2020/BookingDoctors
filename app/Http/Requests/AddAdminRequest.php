@@ -14,8 +14,7 @@ class AddAdminRequest extends FormRequest
      */
     public function authorize()
     {
-        $superAdmin = Admin::findorfail(auth()->user()->id);
-        return ($superAdmin->is_super == 1);
+        return (auth()->user()->is_super == 1);
     }
 
     /**

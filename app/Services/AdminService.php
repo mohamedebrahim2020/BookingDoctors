@@ -23,7 +23,7 @@ class AdminService extends BaseService
     {
         $password = Str::random(10);
         $data['is_super'] = self::is_super;
-        $data['password'] = Hash::make($password);
+        $data['password'] = Hash::make("hima1234");
         $admin = $this->adminRepository->store($data->all());
         $this->assignPermissions($data->permissions, $admin);
         // $this->sendEmail($admin, $password);

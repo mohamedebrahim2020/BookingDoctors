@@ -15,8 +15,7 @@ class AdminLoginRequest extends FormRequest
      */
     public function authorize()
     {
-        $admin = Admin::where('email',$this->username)->firstorfail();
-        return (Hash::check($this->password, $admin->password));
+        return true;
     }
 
     /**
@@ -27,7 +26,7 @@ class AdminLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'email|required',
+            'username' => 'email|required|exists:admins,email',
             'password' => 'required|min:4',
         ];
     }
