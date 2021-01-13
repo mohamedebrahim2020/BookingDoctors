@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddAdminRequest;
+use App\Http\Requests\UpdateAdminRequest;
 use App\Models\Admin;
 use App\Services\AdminService;
 use Illuminate\Http\Request;
@@ -58,9 +59,12 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAdminRequest $request, $id)
     {
-        //
+        if ($this->authorize('update', Admin::findorfail($id))) {
+            $this->adminService->updateAdmin($request, $id);
+            return response()->json(null, Response::HTTP_OK);
+        }
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Mail\AdminPasswordMail;
+use App\Models\Admin;
 use App\Repositories\AdminRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -24,7 +25,7 @@ class AdminService extends BaseService
         $data['is_super'] = self::is_super;
         $data['password'] = Hash::make($password);
         $admin = $this->repository->store($data->all());
-        $this->assignPermissions($data->permissions, $admin);
+        $this->repository->assignPermissions($data->permissions, $admin);
         // $this->sendEmail($admin, $password);
     }
 
@@ -34,21 +35,13 @@ class AdminService extends BaseService
 
     }
 
-    public function assignPermissions(array $permissionIDs, $admin)
-    {
-        $permissions = [];
-        foreach ($permissionIDs as $permissionID) {
-            $permission = Permission::findById($permissionID);
-            array_push($permissions, $permission); 
-        }
-        $admin->givePermissionTo($permissions);
-        
-    }
 
-    // public function delete($id)
-    // {
-    //     return $this->repository->delete($id);
-    // }
+
+    public function updateAdmin($request, $id)
+    {
+        $this->update($request->except('permissions'), $id);
+        $this->repository->updatePermissions($request->permissions, $id);
+    }
 
     
 }

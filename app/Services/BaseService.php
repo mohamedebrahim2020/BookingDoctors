@@ -26,11 +26,11 @@ class BaseService
     {
         return $this->repository->store($data, false);
     }
-    // public function update(array $data, $id, $resource = true)
-    // {
-    //     return $this->repository->update($data, $id, false, $resource);
-    // }
-public function delete($model)
+    public function update(array $data, $id)
+    {
+        return $this->repository->update($data, $id);
+    }
+    public function delete($model)
     {
         $this->repository->delete($model);
     }

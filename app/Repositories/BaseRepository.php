@@ -31,6 +31,16 @@ class BaseRepository
     {
         return $this->model->create($attributes);
     }
+
+        /**
+    * @param array $attributes
+    *
+    * @return Model
+    */
+    public function update(array $attributes, $id)
+    {
+        return $this->find($id)->update($attributes);
+    }
  
     /**
     * @param $id

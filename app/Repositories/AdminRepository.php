@@ -15,4 +15,15 @@ class AdminRepository extends BaseRepository
    {
        parent::__construct($model);
    }
+
+   public function assignPermissions(array $permissions, $admin)
+   {
+        $admin->givePermissionTo($permissions);
+        
+   }
+
+   public function updatePermissions(array $permissions, $adminId)
+   {
+       $this->find($adminId)->syncPermissions($permissions);
+   }
 }

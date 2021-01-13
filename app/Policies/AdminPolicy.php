@@ -53,10 +53,12 @@ class AdminPolicy
      * @param  \App\Models\Admin  $admin
      * @return mixed
      */
-    // public function update(Admin $admin, Admin $admin)
-    // {
-    //     //
-    // }
+    public function update(Admin $superAdmin, Admin $admin)
+    {
+        return $superAdmin->is_super && !$admin->is_super
+        ? Response::allow()
+        : Response::deny('You do not authorized to update admin', 403);
+    }
 
     /**
      * Determine whether the user can delete the model.
