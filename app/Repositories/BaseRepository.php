@@ -40,4 +40,13 @@ class BaseRepository
     {
         return $this->model->find($id);
     }
+
+        /**
+    * @param $id
+    * @return Model
+    */
+    public function delete($model)
+    {   
+         $model->delete();
+    }
 }

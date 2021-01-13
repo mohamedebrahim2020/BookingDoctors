@@ -12,19 +12,18 @@ use Spatie\Permission\Models\Permission;
 class AdminService extends BaseService
 {
     public const is_super = 0;
-    protected $adminRepository;
 
-    public function __construct(AdminRepository $adminRepository)
+    public function __construct(AdminRepository $repository)
     {
-        $this->adminRepository = $adminRepository;
+        $this->repository = $repository;
     }
 
     public function handleData($data)
     {
         $password = Str::random(10);
         $data['is_super'] = self::is_super;
-        $data['password'] = Hash::make("hima1234");
-        $admin = $this->adminRepository->store($data->all());
+        $data['password'] = Hash::make($password);
+        $admin = $this->repository->store($data->all());
         $this->assignPermissions($data->permissions, $admin);
         // $this->sendEmail($admin, $password);
     }
@@ -45,6 +44,11 @@ class AdminService extends BaseService
         $admin->givePermissionTo($permissions);
         
     }
+
+    // public function delete($id)
+    // {
+    //     return $this->repository->delete($id);
+    // }
 
     
 }

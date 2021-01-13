@@ -43,7 +43,7 @@ class AdminPolicy
     {
         return $superAdmin->is_super == 1
         ? Response::allow()
-        : Response::deny('You do be authorized to create admin');
+        : Response::deny('You do not authorized to create admin', 403);
     }
 
     /**
@@ -65,10 +65,12 @@ class AdminPolicy
      * @param  \App\Models\Admin  $admin
      * @return mixed
      */
-    // public function delete(Admin $admin, Admin $admin)
-    // {
-    //     //
-    // }
+    public function delete(Admin $superAdmin, Admin $admin)
+    {
+        return $superAdmin->is_super && !$admin->is_super
+        ? Response::allow()
+        : Response::deny('only super admin can delete admin and not be deleted', 403);
+    }
 
     /**
      * Determine whether the user can restore the model.

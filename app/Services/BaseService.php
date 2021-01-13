@@ -30,8 +30,8 @@ class BaseService
     // {
     //     return $this->repository->update($data, $id, false, $resource);
     // }
-    // public function delete($id)
-    // {
-    //     $this->repository->delete($id);
-    // }
+public function delete($model)
+    {
+        $this->repository->delete($model);
+    }
 }

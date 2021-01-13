@@ -34,11 +34,11 @@ class AdminController extends Controller
      */
     public function store(AddAdminRequest $request)
     {
-        if (!$this->authorize('create', Admin::class)) {
-            abort(403);
+        if ($this->authorize('create', Admin::class)) {
+            $this->adminService->handleData($request);
+            return response()->json(null, Response::HTTP_CREATED);
         }
-        $this->adminService->handleData($request);
-        return response()->json(null, Response::HTTP_CREATED);
+
     }
 
     /**
@@ -69,8 +69,11 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Admin $admin)
     {
-        //
+        if ($this->authorize('delete', $admin)) {
+            $this->adminService->delete($admin);
+            return response()->json(null, Response::HTTP_OK);
+        }
     }
 }
