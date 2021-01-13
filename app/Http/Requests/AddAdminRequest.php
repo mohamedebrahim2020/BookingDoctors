@@ -14,7 +14,8 @@ class AddAdminRequest extends FormRequest
      */
     public function authorize()
     {
-        return (auth()->user()->is_super == 1);
+        // return (auth()->user()->is_super == 1);
+        return true;
     }
 
     /**

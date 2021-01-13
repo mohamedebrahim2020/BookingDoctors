@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddAdminRequest;
+use App\Models\Admin;
 use App\Services\AdminService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -33,6 +34,9 @@ class AdminController extends Controller
      */
     public function store(AddAdminRequest $request)
     {
+        if (!$this->authorize('create', Admin::class)) {
+            abort(403);
+        }
         $this->adminService->handleData($request);
         return response()->json(null, Response::HTTP_CREATED);
     }

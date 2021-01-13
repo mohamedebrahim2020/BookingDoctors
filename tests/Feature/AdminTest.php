@@ -93,6 +93,7 @@ class AdminTest extends TestCase
     /** @test */
     public function superadmin_successfully_add_admin()
     {
+        $this->withoutExceptionHandling();
         $admin = Admin::where('is_super', 1)->first();
         Passport::actingAs($admin, ['*'], 'admin');
         $data = [
