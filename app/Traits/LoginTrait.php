@@ -18,10 +18,11 @@ trait LoginTrait
             'scope'         => ['*'],
         ]);
 
-        $token = Request::create(
+        $tokensApi = Request::create(
             'oauth/token',
             'POST'
         );
-        return($token);
+        $tokens = json_decode(Route::dispatch($tokensApi)->getContent());
+        return $tokens;
     }
 }

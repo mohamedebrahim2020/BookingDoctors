@@ -30,7 +30,7 @@ class AddAdminRequest extends FormRequest
             'email' => 'required|email|unique:admins',
             'phone' => 'nullable',
             'permissions' => 'required|array',
-            'permissions.*' =>'exists:Spatie\Permission\Models\Permission,id'
+            'permissions.*' =>'exists:permissions,id'
         ];
     }
 }

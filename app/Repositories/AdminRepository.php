@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Admin;
+use Spatie\Permission\Models\Permission;
 
 class AdminRepository extends BaseRepository 
 {
@@ -16,14 +17,14 @@ class AdminRepository extends BaseRepository
        parent::__construct($model);
    }
 
-   public function assignPermissions(array $permissions, $admin)
-   {
-        $admin->givePermissionTo($permissions);
-        
-   }
-
-   public function updatePermissions(array $permissions, $adminId)
+   public function assignOrUpdatePermissions(array $permissions, $adminId)
    {
        $this->find($adminId)->syncPermissions($permissions);
+   }
+
+   public function allPermissions()
+   {
+       $permissions = Permission::all();
+       return $permissions;
    }
 }

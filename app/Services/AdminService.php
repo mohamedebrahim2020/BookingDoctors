@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\AdminPasswordMail;
 use App\Models\Admin;
+use App\Notifications\AdminRegistrationMail;
 use App\Repositories\AdminRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -19,28 +20,23 @@ class AdminService extends BaseService
         $this->repository = $repository;
     }
 
-    public function handleData($data)
+    public function store($data)
     {
         $password = Str::random(10);
-        $data['is_super'] = self::is_super;
-        $data['password'] = Hash::make($password);
-        $admin = $this->repository->store($data->all());
-        $this->repository->assignPermissions($data->permissions, $admin);
-        // $this->sendEmail($admin, $password);
+        $admin = $this->repository->store($data->merge(['password' => $password])->all());
+        $this->repository->assignOrUpdatePermissions ($data->permissions, $admin->id);
+        $admin->notify(new AdminRegistrationMail($admin, $password));
     }
 
-    public function sendEmail($admin, $password)
+    public function permissions()
     {
-        Mail::to($admin->email)->send(new AdminPasswordMail($admin, $password));
-
+        return $this->repository->allPermissions();
     }
-
-
 
     public function updateAdmin($request, $id)
     {
         $this->update($request->except('permissions'), $id);
-        $this->repository->updatePermissions($request->permissions, $id);
+        $this->repository->assignOrUpdatePermissions($request->permissions, $id);
     }
 
     

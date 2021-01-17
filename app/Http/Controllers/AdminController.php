@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
+use App\Http\Resources\PermissionResource;
 use App\Models\Admin;
 use App\Services\AdminService;
 use Illuminate\Http\Request;
@@ -35,11 +36,9 @@ class AdminController extends Controller
      */
     public function store(AddAdminRequest $request)
     {
-        if ($this->authorize('create', Admin::class)) {
-            $this->adminService->handleData($request);
-            return response()->json(null, Response::HTTP_CREATED);
-        }
-
+        $this->authorize('create', Admin::class);
+        $this->adminService->store($request);
+        return response()->json(null, Response::HTTP_CREATED);
     }
 
     /**
@@ -61,10 +60,10 @@ class AdminController extends Controller
      */
     public function update(UpdateAdminRequest $request, $id)
     {
-        if ($this->authorize('update', Admin::findorfail($id))) {
-            $this->adminService->updateAdmin($request, $id);
-            return response()->json(null, Response::HTTP_OK);
-        }
+
+        $this->authorize('update', Admin::findorfail($id));
+        $this->adminService->updateAdmin($request, $id);
+        return response()->json(null, Response::HTTP_OK);
     }
 
     /**
@@ -79,5 +78,10 @@ class AdminController extends Controller
             $this->adminService->delete($admin);
             return response()->json(null, Response::HTTP_OK);
         }
+    }
+
+    public function getPermissions()
+    {
+        return response()->json(PermissionResource::collection($this->adminService->permissions()), Response::HTTP_OK); 
     }
 }
