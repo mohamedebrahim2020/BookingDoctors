@@ -16,7 +16,7 @@ class BaseService
 
     public function index()
     {
-
+        return $this->repository->all();
     }
     public function show($id)
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AdminLoginRequest;
 use App\Http\Resources\TokenResource;
 use App\Models\Admin;
+use App\Services\AdminService;
 use App\Traits\LoginTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,14 +18,17 @@ class LoginController extends Controller
 {
     use LoginTrait;
 
+    protected $adminService;
+
+    public function __construct(AdminService $adminService)
+    {
+        $this->adminService = $adminService;
+    }
+
     public function adminLogin(AdminLoginRequest $request)
     {
-        $admin = Admin::where('email', $request->username)->first();
-        if (!$admin || !Hash::check($request->password, $admin->password, []))
-        {
-            abort(401, 'check your email or password');
-        } else {
+        $this->adminService->checkAuth($request->all());
         return response()->json(new TokenResource($this->login($request)), Response::HTTP_OK);
-        }
+        
     }
 }

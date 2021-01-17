@@ -21,7 +21,17 @@ class BaseRepository
     {         
         $this->model = $model;
     }
- 
+
+    /**
+     * @param array $attributes
+     *
+     * @return Model
+     */
+    public function all()
+    {
+        return $this->model->all();
+    }
+
     /**
     * @param array $attributes
     *

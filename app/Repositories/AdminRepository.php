@@ -27,4 +27,10 @@ class AdminRepository extends BaseRepository
        $permissions = Permission::all();
        return $permissions;
    }
+
+   public function findAdminByEmail($email)
+   {
+       $admin = Admin::where('email', $email)->firstorfail();
+       return $admin;
+   }
 }

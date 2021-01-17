@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
+use App\Http\Resources\AdminResource;
+use App\Http\Resources\AllAdminsResource;
+use App\Http\Resources\CreatedAdminResource;
 use App\Http\Resources\PermissionResource;
 use App\Models\Admin;
 use App\Services\AdminService;
@@ -25,7 +28,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(AdminResource::collection($this->adminService->index()), Response::HTTP_OK);
     }
 
     /**
@@ -37,8 +40,8 @@ class AdminController extends Controller
     public function store(AddAdminRequest $request)
     {
         $this->authorize('create', Admin::class);
-        $this->adminService->store($request);
-        return response()->json(null, Response::HTTP_CREATED);
+        $admin = $this->adminService->store($request->all());
+        return response()->json(new CreatedAdminResource($admin), Response::HTTP_CREATED);
     }
 
     /**
@@ -49,7 +52,7 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(new AdminResource($this->adminService->show($id)), Response::HTTP_OK);
     }
 
     /**
@@ -74,10 +77,9 @@ class AdminController extends Controller
      */
     public function destroy(Admin $admin)
     {
-        if ($this->authorize('delete', $admin)) {
-            $this->adminService->delete($admin);
-            return response()->json(null, Response::HTTP_OK);
-        }
+        $this->authorize('delete', $admin);
+        $this->adminService->delete($admin);
+        return response()->json(null, Response::HTTP_OK);
     }
 
     public function getPermissions()

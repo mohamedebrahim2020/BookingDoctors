@@ -22,10 +22,11 @@ class AdminService extends BaseService
 
     public function store($data)
     {
-        $password = Str::random(10);
-        $admin = $this->repository->store($data->merge(['password' => $password])->all());
-        $this->repository->assignOrUpdatePermissions ($data->permissions, $admin->id);
-        $admin->notify(new AdminRegistrationMail($admin, $password));
+        $data['password'] = Str::random(10);
+        $admin = $this->repository->store($data);
+        $this->repository->assignOrUpdatePermissions($data['permissions'], $admin->id);
+        $admin->notify(new AdminRegistrationMail($admin, $data['password']));
+        return $admin;
     }
 
     public function permissions()
@@ -39,5 +40,9 @@ class AdminService extends BaseService
         $this->repository->assignOrUpdatePermissions($request->permissions, $id);
     }
 
-    
-}
+    public function checkAuth($data)
+    {
+        $admin = $this->repository->findAdminByEmail($data['username']);
+        (!Hash::check($data['password'], $admin->password)) ? abort(401, 'unauthenticated') : "" ;      
+    }
+} 

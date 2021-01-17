@@ -31,7 +31,7 @@ class UpdateAdminRequest extends FormRequest
             'email' => ['required', 'email', Rule::unique('admins', 'email')->ignore($admin)],
             'phone' => 'nullable',
             'permissions' => 'required|array',
-            'permissions.*' =>'exists:Spatie\Permission\Models\Permission,id',
+            'permissions.*' =>'exists:permissions,id',
         ];
     }
 }
