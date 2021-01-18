@@ -13,13 +13,10 @@ class BaseService
     {
         $this->repository = $repository;
     }
-    public function getRepository()
-    {
-        return $this->repository;
-    }
+
     public function index()
     {
-        return $this->repository->allQuery();
+        return $this->repository->all();
     }
     public function show($id)
     {
@@ -27,14 +24,14 @@ class BaseService
     }
     public function store($data)
     {
-        return $this->repository->create($data, false);
+        return $this->repository->store($data, false);
     }
-    public function update(array $data, $id, $resource = true)
+    public function update(array $data, $id)
     {
-        return $this->repository->update($data, $id, false, $resource);
+        return $this->repository->update($data, $id);
     }
-    public function delete($id)
+    public function delete($model)
     {
-        $this->repository->delete($id);
+        $this->repository->delete($model);
     }
 }
