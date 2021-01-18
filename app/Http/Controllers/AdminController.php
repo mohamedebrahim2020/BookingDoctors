@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
 use App\Http\Resources\AdminResource;
-use App\Http\Resources\AllAdminsResource;
 use App\Http\Resources\CreatedAdminResource;
 use App\Http\Resources\PermissionResource;
 use App\Models\Admin;
 use App\Services\AdminService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AdminController extends Controller
