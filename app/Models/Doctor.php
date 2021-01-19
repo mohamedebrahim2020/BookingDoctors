@@ -28,13 +28,13 @@ class Doctor extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
-    public function setPhotoAttribute($value)
-    {
-        $this->attributes['photo'] = $value->getClientOriginalName();
-    }
+    // public function setPhotoAttribute($value)
+    // {
+    //     $this->attributes['photo'] = $value->getClientOriginalName();
+    // }
 
-    public function setDegreeCopyAttribute($value)
-    {
-        $this->attributes['degree_copy'] = $value->getClientOriginalName();
-    }
+    // public function setDegreeCopyAttribute($value)
+    // {
+    //     $this->attributes['degree_copy'] = $value->getClientOriginalName();
+    // }
 }

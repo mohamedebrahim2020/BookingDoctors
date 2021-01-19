@@ -11,11 +11,13 @@ class GetSpecializationsTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $routeName = '/api/specializations';
+
     /** @test */
     public function successfully_get_specializations()
     {
         $this->seed(DoctorSpecializationsSeeder::class);
-        $response = $this->getJson('/api/specializations');
+        $response = $this->getJson($this->routeName);
         $response->assertExactJson([
             [
                 "id" => 1,
@@ -35,7 +37,7 @@ class GetSpecializationsTest extends TestCase
     /** @test */
     public function get_empty_specializations()
     {
-        $response = $this->getJson('/api/specializations');
+        $response = $this->getJson($this->routeName);
         $response->assertExactJson([]);
         $response->assertOk();
     }

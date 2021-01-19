@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\DoctorRepository;
+use Illuminate\Support\Facades\Storage;
 
 class DoctorService extends BaseService
 {
@@ -22,7 +23,6 @@ class DoctorService extends BaseService
 
     public function addFileToPublic($file, $folder)
     {
-        $name = $file->getClientOriginalName();
-        $file->move(public_path() . '/storage/'. $folder, $name);
+        Storage::put($folder, $file);
     }
 }    

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Doctor;
 use Database\Seeders\DoctorSpecializationsSeeder;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -14,6 +15,8 @@ use Tests\TestCase;
 class DoctorRegisterationTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected $routeName = '/api/doctor/register';
 
     public function setup() : void 
     {
@@ -26,17 +29,8 @@ class DoctorRegisterationTest extends TestCase
     {
         Storage::fake('photo');
         Storage::fake('degree_copy');
-        $data = [
-            'name' => 'hima',
-            'email' => 'hima@gmail.com',
-            'phone' => '01225000539',
-            'specialization_id' => 1,
-            'photo' => UploadedFile::fake()->image('photo.png'),
-            'degree_copy' => UploadedFile::fake()->image('degree.png'),
-            'gender' => '1',
-            'password' => '123456789',
-        ]; 
-        $response = $this->postJson('/api/doctor/register', $data, ["Accept"=>"application/json"]);
+        $data = Doctor::factory()->raw(); 
+        $response = $this->postJson($this->routeName, $data, ["Accept"=>"application/json"]);
         $response->assertCreated();
         Storage::disk('photo')->exists($data['photo']->hashName());
         Storage::disk('degree_copy')->exists($data['degree_copy']->hashName());
@@ -47,17 +41,8 @@ class DoctorRegisterationTest extends TestCase
     {
         Storage::fake('photo');
         Storage::fake('degree_copy');
-        $data = [
-            'name' => 'hima',
-            'email' => 'hima@gmail.com',
-            'phone' => '01225000539',
-            'specialization_id' => 1,
-            'photo' => UploadedFile::fake()->image('photo.jpg'),
-            'degree_copy' => UploadedFile::fake()->image('degree.png'),
-            'gender' => '1',
-            'password' => '123456789',
-        ];
-        $response = $this->postJson('/api/doctor/register', $data, ["Accept" => "application/json"]);
+        $data = Doctor::factory()->state(['photo' => UploadedFile::fake()->image('photo.jpg')])->raw();
+        $response = $this->postJson($this->routeName, $data, ["Accept" => "application/json"]);
         $response->assertJsonValidationErrors('photo');
         $response->assertStatus(422);
     }
@@ -66,17 +51,8 @@ class DoctorRegisterationTest extends TestCase
     {
         Storage::fake('photo');
         Storage::fake('degree_copy');
-        $data = [
-            'name' => 'hima',
-            'email' => 'hima@gmail.com',
-            'phone' => '01225000539',
-            'specialization_id' => 1,
-            'photo' => UploadedFile::fake()->image('photo.png'),
-            'degree_copy' => UploadedFile::fake()->image('degree.png'),
-            'gender' => '3',
-            'password' => '123456789',
-        ];
-        $response = $this->postJson('/api/doctor/register', $data, ["Accept" => "application/json"]);
+        $data = Doctor::factory()->state(['gender' => '3'])->raw();
+        $response = $this->postJson($this->routeName, $data, ["Accept" => "application/json"]);
         $response->assertJsonValidationErrors('gender');
         $response->assertStatus(422);
     }
