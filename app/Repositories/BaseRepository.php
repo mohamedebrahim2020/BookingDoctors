@@ -58,7 +58,7 @@ class BaseRepository
     */
     public function find($id): ?Model
     {
-        return $this->model->find($id);
+        return $this->model->findorfail($id);
     }
 
         /**

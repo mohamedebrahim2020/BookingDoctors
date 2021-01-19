@@ -3,49 +3,13 @@
 namespace App\Policies;
 
 use App\Models\Admin;
+use App\Models\Doctor;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 
 class AdminPolicy
 {
     use HandlesAuthorization;
-
-    /**
-     * Perform pre-authorization checks.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @param  string  $ability
-     * @return void|bool
-     */
-    public function before(Admin $admin, $ability)
-    {
-        if ($admin->is_super) {
-            return true;
-        }
-    }
-
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @return mixed
-     */
-    public function viewAny(Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @param  \App\Models\Admin  $admin
-     * @return mixed
-     */
-    // public function view(Admin $admin, Admin $admin)
-    // {
-    //     //
-    // }
 
     /**
      * Determine whether the user can create models.
@@ -55,7 +19,7 @@ class AdminPolicy
      */
     public function create(Admin $superAdmin)
     {
-        return false;
+        return $superAdmin->is_super;
     }
 
     /**
@@ -67,7 +31,7 @@ class AdminPolicy
      */
     public function update(Admin $superAdmin, Admin $admin)
     {
-        return !$admin->is_super;
+        return $superAdmin->is_super && !$admin->is_super;
     }
 
     /**
@@ -79,30 +43,11 @@ class AdminPolicy
      */
     public function delete(Admin $superAdmin, Admin $admin)
     {
-        return !$admin->is_super;
+        return $superAdmin->is_super && !$admin->is_super;
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @param  \App\Models\Admin  $admin
-     * @return mixed
-     */
-    // public function restore(Admin $admin, Admin $admin)
-    // {
-    //     //
-    // }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @param  \App\Models\Admin  $admin
-     * @return mixed
-     */
-    // public function forceDelete(Admin $admin, Admin $admin)
-    // {
-    //     //
-    // }
+    public function activateDoctor(Admin $admin)
+    {
+        return $admin->is_super || $admin->hasPermissionTo('control doctors');
+    }    
 }

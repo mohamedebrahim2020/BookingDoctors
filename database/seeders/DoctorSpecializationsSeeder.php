@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Specialization;
 use Illuminate\Database\Seeder;
 
 class DoctorSpecializationsSeeder extends Seeder
@@ -13,6 +14,10 @@ class DoctorSpecializationsSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Specialization::insert([
+            ['name' => 'ortho'],
+            ['name' => 'dentist'],
+            ['name' => 'knee'],
+        ]);
     }
 }

@@ -8,18 +8,24 @@ use App\Http\Resources\AdminResource;
 use App\Http\Resources\AllAdminsResource;
 use App\Http\Resources\CreatedAdminResource;
 use App\Http\Resources\PermissionResource;
+use App\Http\Resources\UnactivatedDoctorResource;
+use App\Http\Resources\UnactivatedDoctorsResource;
 use App\Models\Admin;
+use App\Models\Doctor;
 use App\Services\AdminService;
+use App\Services\DoctorService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AdminController extends Controller
 {
     protected $adminService;
+    protected $doctorService;
 
-    public function __construct(AdminService $adminService)
+    public function __construct(AdminService $adminService, DoctorService $doctorService)
     {
         $this->adminService = $adminService;
+        $this->doctorService = $doctorService;
     }
     /**
      * Display a listing of the resource.
@@ -85,5 +91,24 @@ class AdminController extends Controller
     public function getPermissions()
     {
         return response()->json(PermissionResource::collection($this->adminService->permissions()), Response::HTTP_OK); 
+    }
+
+    public function unactivatedDoctors()
+    {
+        $doctors = $this->doctorService->unactivatedDoctors();
+        return response()->json(UnactivatedDoctorsResource::collection($doctors), Response::HTTP_OK);
+    }
+
+    public function unactivatedDoctor($unactivatedDoctor)
+    {
+        $doctor = $this->doctorService->unactivatedDoctor($unactivatedDoctor);
+        return response()->json(new UnactivatedDoctorResource($doctor), Response::HTTP_OK);
+    }
+
+    public function activateDoctor($unactivatedDoctor)
+    {
+        $this->authorize('activateDoctor', Admin::class);
+        $this->doctorService->activateDoctor($unactivatedDoctor);
+        return response()->json(null, Response::HTTP_OK);
     }
 }
