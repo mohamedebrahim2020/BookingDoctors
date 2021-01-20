@@ -14,7 +14,7 @@ use Spatie\Permission\Models\Permission;
 class AdminService extends BaseService
 {
     public const is_super = 0;
-
+    
     public function __construct(AdminRepository $repository)
     {
         $this->repository = $repository;

@@ -51,7 +51,6 @@ class UpdateAdminTest extends TestCase
             'permissions' => [1, 2, 3],
         ];
         $response = $this->putJson('/api/admins/' . $admin->id, $data);
-        $response->assertExactJson(["You do not authorized to update admin"]);
         $response->assertForbidden();
     }
 

@@ -39,7 +39,6 @@ class DeleteAdminTest extends TestCase
         Passport::actingAs(Admin::factory()->create(), ['*'], 'admin');
         $admin = Admin::factory()->create();
         $response = $this->deleteJson('/api/admins/' . $admin->id);
-        $response->assertExactJson(["only super admin can delete admin and not be deleted"]);
         $response->assertForbidden();
     }
 
@@ -50,7 +49,6 @@ class DeleteAdminTest extends TestCase
         Passport::actingAs($superAdmin, ['*'], 'admin');
         $anotherSuperAdmin = Admin::factory()->create(['is_super' => 1]);
         $response = $this->deleteJson('/api/admins/' . $anotherSuperAdmin->id);
-        $response->assertExactJson(["only super admin can delete admin and not be deleted"]);
         $response->assertForbidden();
     }
 }
