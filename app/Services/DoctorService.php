@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Notifications\DoctorActivationMail;
 use App\Repositories\DoctorRepository;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 
 class DoctorService extends BaseService
 {
@@ -21,22 +22,22 @@ class DoctorService extends BaseService
     public function unactivatedDoctor($id)
     {
         $doctor = $this->repository->find($id);
-        if (!$doctor->activated_at) {
-            return $doctor;
-        } else {
-            abort(404);
-        }
+        return $doctor;
     }
 
     public function activateDoctor($id)
     {
         $doctor = $this->repository->find($id);
         if (!$doctor->activated_at) {
-            $doctor->activated_at = Carbon::now();
-            $doctor->save();
+            $this->repository->update(["activated_at" => Carbon::now()], $id);
             $doctor->notify(new DoctorActivationMail($doctor->name));
         } else {
-            abort(404);
+            abort(Response::HTTP_BAD_REQUEST);
         }        
+    }
+
+    public function query($request)
+    {
+        return $this->repository->query($request);
     }
 }    

@@ -21,8 +21,6 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('admins', AdminController::class);
     Route::group(['prefix' => 'admin',], function () {
         Route::get('permissions', [AdminController::class,'getPermissions']); 
-        Route::get('unactivatedDoctors', [AdminController::class,'unactivatedDoctors']);
-        Route::get('unactivatedDoctors/{unactivatedDoctor}', [AdminController::class,'unactivatedDoctor']);
-        Route::post('unactivatedDoctors/{unactivatedDoctor}/activate', [AdminController::class,'activateDoctor'])->name('actvate.doctor');       
+        Route::post('doctors/{doctor}/activate', [AdminController::class,'activateDoctor'])->name('activate.doctor');       
     });
 });

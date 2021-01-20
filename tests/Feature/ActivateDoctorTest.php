@@ -35,7 +35,7 @@ class ActivateDoctorTest extends TestCase
         $admin = Admin::where('is_super', 1)->first();
         Passport::actingAs($admin, ['*'], 'admin');
         $doctor = Doctor::factory()->create();
-        $response = $this->postJson(route('actvate.doctor', ['unactivatedDoctor' => $doctor->id]));
+        $response = $this->postJson(route('activate.doctor', ['doctor' => $doctor->id]));
         Notification::assertSentTo([$doctor], DoctorActivationMail::class);
         $response->assertOk();
     }
@@ -49,7 +49,7 @@ class ActivateDoctorTest extends TestCase
         $admin->givePermissionTo('control doctors');
         Passport::actingAs($admin, ['*'], 'admin');
         $doctor = Doctor::factory()->create();
-        $response = $this->postJson(route('actvate.doctor', ['unactivatedDoctor' => $doctor->id]));
+        $response = $this->postJson(route('activate.doctor', ['doctor' => $doctor->id]));
         Notification::assertSentTo([$doctor], DoctorActivationMail::class);
         $response->assertOk();
     }
@@ -62,7 +62,7 @@ class ActivateDoctorTest extends TestCase
         $admin = Admin::factory()->create();
         Passport::actingAs($admin, ['*'], 'admin');
         $doctor = Doctor::factory()->create();
-        $response = $this->postJson(route('actvate.doctor', ['unactivatedDoctor' => $doctor->id]));
+        $response = $this->postJson(route('activate.doctor', ['doctor' => $doctor->id]));
         Notification::assertNotSentTo([$doctor], DoctorActivationMail::class);
         $response->assertForbidden();
     }
@@ -75,8 +75,8 @@ class ActivateDoctorTest extends TestCase
         $admin = Admin::where('is_super', 1)->first();
         Passport::actingAs($admin, ['*'], 'admin');
         $activatedDoctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
-        $response = $this->postJson(route('actvate.doctor', ['unactivatedDoctor' => $activatedDoctor->id]));
+        $response = $this->postJson(route('activate.doctor', ['doctor' => $activatedDoctor->id]));
         Notification::assertNotSentTo([$activatedDoctor], DoctorActivationMail::class);
-        $response->assertNotFound();
+        $response->assertStatus(400);
     }
 }

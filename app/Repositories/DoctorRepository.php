@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Filters\DoctorFilters;
 use App\Models\Doctor;
 
 class DoctorRepository extends BaseRepository 
@@ -16,9 +17,10 @@ class DoctorRepository extends BaseRepository
        parent::__construct($model);
    }
 
-   public function unactivatedDoctors()
+   public function query($request)
    {
-       $doctors = Doctor::where('activated_at', null)->get();
+       $filters = new DoctorFilters($request);
+       $doctors = Doctor::filter($filters)->get();
        return $doctors;
    }
 }   

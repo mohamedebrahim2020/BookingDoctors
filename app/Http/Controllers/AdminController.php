@@ -93,22 +93,10 @@ class AdminController extends Controller
         return response()->json(PermissionResource::collection($this->adminService->permissions()), Response::HTTP_OK); 
     }
 
-    public function unactivatedDoctors()
-    {
-        $doctors = $this->doctorService->unactivatedDoctors();
-        return response()->json(UnactivatedDoctorsResource::collection($doctors), Response::HTTP_OK);
-    }
-
-    public function unactivatedDoctor($unactivatedDoctor)
-    {
-        $doctor = $this->doctorService->unactivatedDoctor($unactivatedDoctor);
-        return response()->json(new UnactivatedDoctorResource($doctor), Response::HTTP_OK);
-    }
-
-    public function activateDoctor($unactivatedDoctor)
+    public function activateDoctor($doctor)
     {
         $this->authorize('activateDoctor', Admin::class);
-        $this->doctorService->activateDoctor($unactivatedDoctor);
+        $this->doctorService->activateDoctor($doctor);
         return response()->json(null, Response::HTTP_OK);
     }
 }

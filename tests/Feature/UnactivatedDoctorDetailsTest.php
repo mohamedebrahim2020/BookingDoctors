@@ -15,8 +15,6 @@ class UnactivatedDoctorDetailsTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $routeName = 'api/admin/unactivatedDoctors/';
-
     public function setup() : void 
     {
         parent::setUp();
@@ -31,7 +29,7 @@ class UnactivatedDoctorDetailsTest extends TestCase
         Doctor::factory()->count(40)->create();
         $doctor = Doctor::factory()->create();
         Passport::actingAs($admin, ['*'], 'admin');
-        $response = $this->getJson($this->routeName . $doctor->id);
+        $response = $this->getJson(route('doctors.show', ["doctor" => $doctor->id]));
         $response->assertOk();
         $response->assertJsonStructure([
             'id',
@@ -50,7 +48,7 @@ class UnactivatedDoctorDetailsTest extends TestCase
         Doctor::factory()->count(40)->create();
         $doctor = Doctor::factory()->create();
         Passport::actingAs($admin, ['*'], 'admin');
-        $response = $this->getJson($this->routeName . $doctor->id);
+        $response = $this->getJson(route('doctors.show', ["doctor" => $doctor->id]));
         $response->assertOk();
         $response->assertJsonStructure([
             'id',
