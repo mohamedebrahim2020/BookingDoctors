@@ -37,11 +37,5 @@ class LoginController extends Controller
         
     }
 
-    public function doctorLogin(DoctorLoginRequest $request)
-    {
-        
-        $this->doctorService->checkAuth($request->all());
-        return response()->json(new TokenResource($this->login($request)), Response::HTTP_OK);
-        
-    }
+
 }

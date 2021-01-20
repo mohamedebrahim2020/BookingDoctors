@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\DoctorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,4 +15,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('doctor/login',[LoginController::class, 'doctorLogin'])->name('doctorLogin');
+Route::post('doctor/login',[DoctorController::class, 'doctorLogin'])->name('doctorLogin');

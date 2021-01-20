@@ -16,9 +16,9 @@ class DoctorRepository extends BaseRepository
        parent::__construct($model);
    }
 
-   public function findDoctorByEmail($email)
+   public function findDoctorByEmail($filters)
    {
-       $doctor = Doctor::where('email', $email)->firstorfail();
+       $doctor = Doctor::filter($filters)->firstorfail();
        return $doctor;
    }
 }   

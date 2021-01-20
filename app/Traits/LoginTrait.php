@@ -17,7 +17,6 @@ trait LoginTrait
             'password'      => $request->password,
             'scope'         => ['*'],
         ]);
-
         $tokensApi = Request::create(
             'oauth/token',
             'POST'
