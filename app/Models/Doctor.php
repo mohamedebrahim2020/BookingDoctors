@@ -20,21 +20,11 @@ class Doctor extends Authenticatable
     */
     protected $fillable = [
         'name', 'email', 'password', 'phone','specialization_id', 'gender'
-        , 'photo', 'degree_copy'
+        , 'photo', 'degree_copy', 'activated_at'
     ];
 
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
     }
-
-    // public function setPhotoAttribute($value)
-    // {
-    //     $this->attributes['photo'] = $value->getClientOriginalName();
-    // }
-
-    // public function setDegreeCopyAttribute($value)
-    // {
-    //     $this->attributes['degree_copy'] = $value->getClientOriginalName();
-    // }
 }
