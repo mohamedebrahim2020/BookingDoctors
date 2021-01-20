@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Filters\DoctorFilters;
 use App\Http\Resources\IndexDoctorResource;
 use App\Http\Resources\ShowDoctorResource;
-use App\Models\Doctor;
 use App\Services\DoctorService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -19,12 +18,9 @@ class DoctorController extends Controller
         $this->doctorService = $doctorService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request,DoctorFilters $filters)
     {
-        // $dd = Doctor::filter($filters)->get();
-        // dd($dd);
-        $doctors = $this->doctorService->query($request);
-        // $doctors = $this->doctorService->unactivatedDoctors();
+        $doctors = $this->doctorService->query($filters);
         return response()->json(IndexDoctorResource::collection($doctors), Response::HTTP_OK);
     }
 

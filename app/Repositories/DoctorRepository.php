@@ -17,9 +17,8 @@ class DoctorRepository extends BaseRepository
        parent::__construct($model);
    }
 
-   public function query($request)
+   public function query($filters)
    {
-       $filters = new DoctorFilters($request);
        $doctors = Doctor::filter($filters)->get();
        return $doctors;
    }
