@@ -48,10 +48,6 @@ class Handler extends ExceptionHandler
             $modelname = strtolower(class_basename($exception->getmodel()));
             return response()->json(['error' => "no model  {$modelname} with this identifier"], Response::HTTP_NOT_FOUND);
         }
-
-        // if ($exception instanceof AuthorizationException) {
-        //     return response()->json($exception->getMessage(), $exception->getCode());
-        // }
         return parent::render($request, $exception);
     }
 }
