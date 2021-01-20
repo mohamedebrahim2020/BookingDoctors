@@ -14,8 +14,6 @@ class DoctorLoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $routeName = '/api/doctor/login';
-
     public function setup() : void 
     {
         parent::setUp();
@@ -35,7 +33,7 @@ class DoctorLoginTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson($this->routeName, $data,);
+        $response = $this->postJson(route('doctorLogin'), $data,);
         $response->assertJsonStructure([
             'accessToken',
             'refreshToken',
@@ -55,7 +53,7 @@ class DoctorLoginTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson($this->routeName, $data,);
+        $response = $this->postJson(route('doctorLogin'), $data,);
         $response->assertStatus(401);
     }
 
@@ -71,7 +69,7 @@ class DoctorLoginTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson($this->routeName, $data,);
+        $response = $this->postJson(route('doctorLogin'), $data,);
         $response->assertStatus(401);
     }
 
@@ -87,7 +85,7 @@ class DoctorLoginTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson($this->routeName, $data,);
+        $response = $this->postJson(route('doctorLogin'), $data,);
         $response->assertJsonValidationErrors('username');
         $response->assertStatus(422);
     }
