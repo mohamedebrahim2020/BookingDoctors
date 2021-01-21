@@ -19,7 +19,7 @@ class DoctorController extends Controller
     }
     public function register(DoctorRegistrationRequest $request)
     {
-        $doctor = $this->doctorService->store($request->all());
+        $doctor = $this->doctorService->store($request->except('activated_at'));
         return response()->json(new CreatedDoctorResource($doctor), Response::HTTP_CREATED);
     }
 }
