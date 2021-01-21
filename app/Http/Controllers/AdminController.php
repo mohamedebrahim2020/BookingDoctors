@@ -3,21 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddAdminRequest;
+use App\Http\Requests\AdminLoginRequest;
 use App\Http\Requests\UpdateAdminRequest;
 use App\Http\Resources\AdminResource;
 use App\Http\Resources\CreatedAdminResource;
 use App\Http\Resources\PermissionResource;
+use App\Http\Resources\TokenResource;
 use App\Http\Resources\UnactivatedDoctorResource;
 use App\Http\Resources\UnactivatedDoctorsResource;
 use App\Models\Admin;
 use App\Models\Doctor;
 use App\Services\AdminService;
+use App\Traits\LoginTrait;
 use App\Services\DoctorService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AdminController extends Controller
 {
+    use LoginTrait;
+
     protected $adminService;
     protected $doctorService;
 
@@ -31,6 +36,14 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function adminLogin(AdminLoginRequest $request)
+    {
+        $this->adminService->checkAuth($request->all());
+        return response()->json(new TokenResource($this->login($request)), Response::HTTP_OK);
+        
+    } 
+
     public function index()
     {
         return response()->json(AdminResource::collection($this->adminService->index()), Response::HTTP_OK);

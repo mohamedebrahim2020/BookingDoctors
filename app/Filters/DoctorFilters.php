@@ -10,6 +10,13 @@ class DoctorFilters extends QueryFilters
     {
         $this->request = $request;
         parent::__construct($request);
+
+    } 
+    
+    public function email($term) 
+    {
+        return $this->builder->where('email', $term);
+
     }
   
     public function active($term) {
@@ -18,6 +25,5 @@ class DoctorFilters extends QueryFilters
         } elseif ($term == 0) {
             return $this->builder->where('activated_at', null);
         }
-        
     }
 }    

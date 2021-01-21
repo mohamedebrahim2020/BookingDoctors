@@ -32,7 +32,8 @@ class DoctorFactory extends Factory
             'degree_copy' => $this->faker->imageUrl(),
             'activated_at' => null,
             'gender' => GenderType::MALE,
-            'password' => 123456789,
+            'password' => bcrypt('123456789'),
         ];
     }
 }
+

@@ -16,11 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::post('doctor/login',[DoctorController::class, 'login'])->name('doctorLogin');
+
 Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('doctors', DoctorController::class)->only('index','show');
 });
 
 Route::apiResource('specializations', SpecializationController::class)->only(['index']);
 Route::post('doctor/register',[DoctorController::class, 'register'])->name('doctorRegister');
-
 

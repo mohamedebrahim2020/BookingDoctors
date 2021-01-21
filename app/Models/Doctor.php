@@ -14,8 +14,8 @@ use Laravel\Passport\HasApiTokens;
 class Doctor extends Authenticatable
 {
     use HasFactory, Notifiable, Filterable, HasApiTokens, SoftDeletes;
-
-    /**
+  
+     /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -24,6 +24,11 @@ class Doctor extends Authenticatable
         'name', 'email', 'password', 'phone','specialization_id', 'gender'
         , 'photo', 'degree_copy', 'activated_at'
     ];
+
+    public function findForPassport($username)
+    {
+        return $this->where('email', $username)->first();
+    }
 
     public function specialization()
     {

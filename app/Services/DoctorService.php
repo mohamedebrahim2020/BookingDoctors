@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+
+use App\Repositories\DoctorRepository;
+use Illuminate\Support\Facades\Hash;
 use App\Notifications\DoctorActivationMail;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
@@ -18,6 +21,13 @@ class DoctorService extends BaseService
         $this->repository = $repository;
     }
 
+
+    public function checkAuth($data)
+    {
+        $doctor = $this->repository->findDoctorByEmail($data);
+        (!Hash::check($data->password, $doctor->password) || !$doctor->activated_at) ? abort(401, 'unauthenticated') : "" ;      
+    }
+  
     public function unactivatedDoctors()
     {
         return $this->repository->unactivatedDoctors();
@@ -60,7 +70,5 @@ class DoctorService extends BaseService
         $fileNametostore = $folder . '/'. $randomString . $fileName;
         Storage::put($fileNametostore, $img);
         return $fileNametostore;
-        
-
     }
 }    
