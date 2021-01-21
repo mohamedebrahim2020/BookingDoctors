@@ -10,7 +10,7 @@ class DoctorRepository extends BaseRepository
     /**
     * UserRepository constructor.
     *
-    * @param User $model
+    * @param Doctor $model
     */
    public function __construct(Doctor $model)
    {
@@ -23,4 +23,12 @@ class DoctorRepository extends BaseRepository
        $doctor = Doctor::filter($filters)->firstorfail();
        return $doctor;
    }
+
+   public function query($data)
+   {
+       $filters = new DoctorFilters($data);
+       $doctors = Doctor::filter($filters)->get();
+       return $doctors;
+   }
+
 }   

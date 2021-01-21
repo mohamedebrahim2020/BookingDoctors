@@ -36,4 +36,6 @@ class QueryFilters
     {
         return $this->request->all();
     }
+
 }
+

@@ -10,17 +10,11 @@ use App\Models\Doctor;
 use App\Services\AdminService;
 use App\Services\DoctorService;
 use App\Traits\LoginTrait;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
-use Laravel\Passport\Client;
+
 
 class LoginController extends Controller
 {
-    
-
     protected $adminService;
     protected $doctorService;
 
@@ -29,8 +23,4 @@ class LoginController extends Controller
         $this->adminService = $adminService;
         $this->doctorService = $doctorService;
     }
-
- 
-
-
 }

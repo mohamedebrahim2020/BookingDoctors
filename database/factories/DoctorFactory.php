@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\GenderType;
 use App\Models\Doctor;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Http\UploadedFile;
 
 class DoctorFactory extends Factory
 {
@@ -35,3 +36,4 @@ class DoctorFactory extends Factory
         ];
     }
 }
+
