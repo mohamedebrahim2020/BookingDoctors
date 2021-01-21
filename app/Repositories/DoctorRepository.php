@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Filters\DoctorFilters;
+
 use App\Models\Doctor;
 
 class DoctorRepository extends BaseRepository 
@@ -15,4 +17,12 @@ class DoctorRepository extends BaseRepository
    {
        parent::__construct($model);
    }
+
+   public function query($data)
+   {
+       $filters = new DoctorFilters($data);
+       $doctors = Doctor::filter($filters)->get();
+       return $doctors;
+   }
+
 }   

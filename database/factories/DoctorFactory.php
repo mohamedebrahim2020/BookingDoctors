@@ -28,8 +28,9 @@ class DoctorFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'phone' => $this->faker->unique()->phoneNumber,
             'specialization_id' => $this->faker->numberBetween($min = 1, $max = 3),
-            'photo' => UploadedFile::fake()->image('photo.png'),
-            'degree_copy' => UploadedFile::fake()->image('degree.png'),
+            'photo' => $this->faker->imageUrl(),
+            'degree_copy' => $this->faker->imageUrl(),
+            'activated_at' => null,
             'gender' => GenderType::MALE,
             'password' => 123456789,
         ];

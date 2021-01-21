@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::group(['middleware' => ['auth:admin']], function () {
+    Route::apiResource('doctors', DoctorController::class)->only('index','show');
+});
+
 Route::apiResource('specializations', SpecializationController::class)->only(['index']);
 Route::post('doctor/register',[DoctorController::class, 'register'])->name('doctorRegister');
+
 

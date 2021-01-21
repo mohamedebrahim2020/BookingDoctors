@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Admin;
+use App\Models\Doctor;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 
@@ -11,6 +12,7 @@ class AdminPolicy
     use HandlesAuthorization;
 
     /**
+
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\Admin  $admin
@@ -21,19 +23,6 @@ class AdminPolicy
         //
     }
 
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @param  \App\Models\Admin  $admin
-     * @return mixed
-     */
-    // public function view(Admin $admin, Admin $admin)
-    // {
-    //     //
-    // }
-
-    /**
      * Determine whether the user can create models.
      *
      * @param  \App\Models\Admin  $admin
@@ -65,29 +54,12 @@ class AdminPolicy
      */
     public function delete(Admin $superAdmin, Admin $admin)
     {
-        return $superAdmin->is_super && !$admin->is_super;    }
+        return $superAdmin->is_super && !$admin->is_super;
+    }
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @param  \App\Models\Admin  $admin
-     * @return mixed
-     */
-    // public function restore(Admin $admin, Admin $admin)
-    // {
-    //     //
-    // }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @param  \App\Models\Admin  $admin
-     * @return mixed
-     */
-    // public function forceDelete(Admin $admin, Admin $admin)
-    // {
-    //     //
-    // }
+    public function activateDoctor(Admin $admin)
+    {
+        return $admin->is_super || $admin->hasPermissionTo('control doctors');
+    }    
 }

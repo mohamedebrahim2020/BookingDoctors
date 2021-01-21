@@ -2,10 +2,14 @@
 
 namespace App\Services;
 
+use App\Notifications\DoctorActivationMail;
+use Carbon\Carbon;
+use Illuminate\Http\Response;
 use App\Repositories\DoctorRepository;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
+
 
 class DoctorService extends BaseService
 {
@@ -14,10 +18,34 @@ class DoctorService extends BaseService
         $this->repository = $repository;
     }
 
+    public function unactivatedDoctors()
+    {
+        return $this->repository->unactivatedDoctors();
+    }
+
+    public function unactivatedDoctor($id)
+    {
+        $doctor = $this->repository->find($id);
+        return $doctor;
+    }
+
+    public function activateDoctor($id)
+    {
+        $doctor = $this->repository->find($id);
+        if (!$doctor->activated_at) {
+            $this->repository->update(["activated_at" => Carbon::now()], $id);
+            $doctor->notify(new DoctorActivationMail($doctor->name));
+        } else {
+            abort(Response::HTTP_BAD_REQUEST);
+        }        
+    }
+
+    public function query($request)
+    {
+        return $this->repository->query($request);
+
     public function store($data)
     {
-        
-        
         $data['photo'] = $this->addFileToPublic($data['photo'],'/photo');
         $data['degree_copy'] = $this->addFileToPublic($data['degree_copy'],'/degree_copy');
         $doctor = $this->repository->store($data);
@@ -33,5 +61,6 @@ class DoctorService extends BaseService
         Storage::put($fileNametostore, $img);
         return $fileNametostore;
         
+
     }
 }    
