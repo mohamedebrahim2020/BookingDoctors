@@ -39,10 +39,8 @@ class LoginAdminTest extends TestCase
         ];
         $response = $this->postJson('/api/admin/login', $data, $headers=["Accept"=>"application/json"]);
         $response->assertJsonStructure([
-            'token_type'  ,
-            'expires_in'  ,
-            'access_token'  ,
-            'refresh_token'  ,
+            'accessToken'  ,
+            'refreshToken'  ,
         ]);
         $response->assertOk();
 

@@ -4,15 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminLoginRequest;
 use App\Http\Resources\TokenResource;
-use App\Models\Admin;
 use App\Services\AdminService;
 use App\Traits\LoginTrait;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
-use Laravel\Passport\Client;
+
 
 class LoginController extends Controller
 {

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Filters\DoctorFilters;
+
 use App\Models\Doctor;
 
 class DoctorRepository extends BaseRepository 
@@ -10,7 +11,7 @@ class DoctorRepository extends BaseRepository
     /**
     * UserRepository constructor.
     *
-    * @param User $model
+    * @param Doctor $model
     */
    public function __construct(Doctor $model)
    {
@@ -23,4 +24,5 @@ class DoctorRepository extends BaseRepository
        $doctors = Doctor::filter($filters)->get();
        return $doctors;
    }
+
 }   
