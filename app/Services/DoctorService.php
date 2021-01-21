@@ -2,17 +2,14 @@
 
 namespace App\Services;
 
-
 use App\Repositories\DoctorRepository;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\DoctorActivationMail;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
-use App\Repositories\DoctorRepository;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
-
 
 class DoctorService extends BaseService
 {
@@ -25,7 +22,7 @@ class DoctorService extends BaseService
     public function checkAuth($data)
     {
         $doctor = $this->repository->findDoctorByEmail($data);
-        (!Hash::check($data->password, $doctor->password) || !$doctor->activated_at) ? abort(401, 'unauthenticated') : "" ;      
+        (!Hash::check($data->password, $doctor->password) || !$doctor->activated_at) ? abort(401, 'unauthenticated') : "" ;
     }
   
     public function unactivatedDoctors()
@@ -47,17 +44,18 @@ class DoctorService extends BaseService
             $doctor->notify(new DoctorActivationMail($doctor->name));
         } else {
             abort(Response::HTTP_BAD_REQUEST);
-        }        
+        }
     }
 
     public function query($request)
     {
         return $this->repository->query($request);
-
+    }
+    
     public function store($data)
     {
-        $data['photo'] = $this->addFileToPublic($data['photo'],'/photo');
-        $data['degree_copy'] = $this->addFileToPublic($data['degree_copy'],'/degree_copy');
+        $data['photo'] = $this->addFileToPublic($data['photo'], '/photo');
+        $data['degree_copy'] = $this->addFileToPublic($data['degree_copy'], '/degree_copy');
         $doctor = $this->repository->store($data);
         return $doctor;
     }
@@ -71,4 +69,4 @@ class DoctorService extends BaseService
         Storage::put($fileNametostore, $img);
         return $fileNametostore;
     }
-}    
+}

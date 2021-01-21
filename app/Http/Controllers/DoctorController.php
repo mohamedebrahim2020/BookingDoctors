@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Filters\DoctorFilters;
 use App\Http\Requests\DoctorLoginRequest;
 use App\Http\Resources\TokenResource;
 use App\Services\DoctorService;
@@ -10,9 +9,7 @@ use App\Traits\LoginTrait;
 use App\Http\Resources\IndexDoctorResource;
 use App\Http\Resources\ShowDoctorResource;
 use App\Http\Requests\DoctorRegistrationRequest;
-use App\Http\Requests\StoreDoctorRequest;
 use App\Http\Resources\CreatedDoctorResource;
-use App\Services\DoctorService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

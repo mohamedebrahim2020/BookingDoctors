@@ -23,6 +23,7 @@ class AdminPolicy
         //
     }
 
+    /*
      * Determine whether the user can create models.
      *
      * @param  \App\Models\Admin  $admin
@@ -61,5 +62,5 @@ class AdminPolicy
     public function activateDoctor(Admin $admin)
     {
         return $admin->is_super || $admin->hasPermissionTo('control doctors');
-    }    
+    }
 }
