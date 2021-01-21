@@ -36,8 +36,8 @@ class DoctorService extends BaseService
         }        
     }
 
-    public function query($filters)
+    public function query($request)
     {
-        return $this->repository->query($filters);
+        return $this->repository->query($request);
     }
 }    

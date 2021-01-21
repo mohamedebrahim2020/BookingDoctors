@@ -21,6 +21,8 @@ class ShowDoctorResource extends JsonResource
             'specialization' => $this->specialization->name,
             'photo' => $this->photo,
             'degree_copy' => $this->degree_copy,
+            'status' => ($this->activated_at) ? "active" : "inactive",
+            'regestired_at' => $this->created_at->timestamp
 
         ];
     }

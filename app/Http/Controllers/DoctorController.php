@@ -18,15 +18,16 @@ class DoctorController extends Controller
         $this->doctorService = $doctorService;
     }
 
-    public function index(Request $request,DoctorFilters $filters)
+    public function index(Request $request)
     {
-        $doctors = $this->doctorService->query($filters);
+        dd($request->all());
+        $doctors = $this->doctorService->query($request);
         return response()->json(IndexDoctorResource::collection($doctors), Response::HTTP_OK);
     }
 
     public function show($doctor)
     {
-        $doctor = $this->doctorService->unactivatedDoctor($doctor);
+        $doctor = $this->doctorService->show($doctor);
         return response()->json(new ShowDoctorResource($doctor), Response::HTTP_OK);
     }
 }

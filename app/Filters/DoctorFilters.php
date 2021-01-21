@@ -14,9 +14,9 @@ class DoctorFilters extends QueryFilters
   
     public function active($term) {
         if ($term == 1) {
-            return $this->builder->where('doctors.activated_at', '!=', null);
+            return $this->builder->where('activated_at','!=', null);
         } elseif ($term == 0) {
-            return $this->builder->where('doctors.activated_at', null);
+            return $this->builder->where('activated_at', null);
         }
         
     }
