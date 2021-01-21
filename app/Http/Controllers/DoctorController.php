@@ -21,9 +21,9 @@ class DoctorController extends Controller
         $this->doctorService = $doctorService;
     }
 
-    public function doctorLogin(DoctorLoginRequest $request , DoctorFilters $filters)
+    public function login(DoctorLoginRequest $request)
     {
-        $this->doctorService->checkAuth($request->password, $filters);
+        $this->doctorService->checkAuth($request);
         return response()->json(new TokenResource($this->login($request)), Response::HTTP_OK);
         
     }

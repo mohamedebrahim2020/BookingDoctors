@@ -14,6 +14,6 @@ class DoctorFilters extends QueryFilters
     
     public function email($term) 
     {
-        return $this->builder->where('doctors.email', $term);
+        return $this->builder->where('email', $term);
     }
 }    

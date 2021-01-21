@@ -12,9 +12,9 @@ class DoctorService extends BaseService
         $this->repository = $repository;
     }
 
-    public function checkAuth($password, $filters)
+    public function checkAuth($data)
     {
-        $doctor = $this->repository->findDoctorByEmail($filters);
-        (!Hash::check($password, $doctor->password) || !$doctor->activated_at) ? abort(401, 'unauthenticated') : "" ;      
+        $doctor = $this->repository->findDoctorByEmail($data);
+        (!Hash::check($data->password, $doctor->password) || !$doctor->activated_at) ? abort(401, 'unauthenticated') : "" ;      
     }
 }    

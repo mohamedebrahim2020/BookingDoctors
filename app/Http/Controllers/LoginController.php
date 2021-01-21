@@ -19,7 +19,7 @@ use Laravel\Passport\Client;
 
 class LoginController extends Controller
 {
-    use LoginTrait;
+    
 
     protected $adminService;
     protected $doctorService;
@@ -30,12 +30,7 @@ class LoginController extends Controller
         $this->doctorService = $doctorService;
     }
 
-    public function adminLogin(AdminLoginRequest $request)
-    {
-        $this->adminService->checkAuth($request->all());
-        return response()->json(new TokenResource($this->login($request)), Response::HTTP_OK);
-        
-    }
+ 
 
 
 }

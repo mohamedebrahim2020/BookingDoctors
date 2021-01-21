@@ -15,4 +15,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('doctor/login',[DoctorController::class, 'doctorLogin'])->name('doctorLogin');
+Route::post('doctor/login',[DoctorController::class, 'login'])->name('doctorLogin');

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Filters\DoctorFilters;
 use App\Models\Doctor;
 
 class DoctorRepository extends BaseRepository 
@@ -16,8 +17,9 @@ class DoctorRepository extends BaseRepository
        parent::__construct($model);
    }
 
-   public function findDoctorByEmail($filters)
+   public function findDoctorByEmail($data)
    {
+       $filters = new DoctorFilters($data);
        $doctor = Doctor::filter($filters)->firstorfail();
        return $doctor;
    }
