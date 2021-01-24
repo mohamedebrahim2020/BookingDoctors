@@ -50,6 +50,9 @@ jobs:
 
     - name: Create DB and schemas
       run: php artisan migrate
+      
+    - name: Passport Install
+      run: php artisan passport:keys
 
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       run: vendor/bin/phpunit
