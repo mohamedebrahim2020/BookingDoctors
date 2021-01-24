@@ -52,7 +52,7 @@ jobs:
       run: php artisan migrate
 
     - name: Install Passport
-      run: php artisan passport:install
+      run: php artisan passport:keys
 
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       run: vendor/bin/phpunit
