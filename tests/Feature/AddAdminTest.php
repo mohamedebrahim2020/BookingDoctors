@@ -3,14 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Admin;
-use App\Models\User;
 use App\Notifications\AdminRegistrationMail;
 use Database\Seeders\AdminPermissionSeeder;
 use Database\Seeders\SuperAdminSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Passport\Passport;
@@ -31,7 +27,6 @@ class AddAdminTest extends TestCase
     /** @test */
     public function superadmin_successfully_add_admin()
     {
-        $this->withoutExceptionHandling();
         Notification::fake();
         Queue::fake();
         $admin = Admin::where('is_super', 1)->first();
@@ -42,7 +37,7 @@ class AddAdminTest extends TestCase
             'phone' => '01225000539',
             'permissions' => [1,2,3],
         ];
-        $response = $this->postJson('/api/admins', $data);
+        $response = $this->postJson(route('admins.store'), $data);
         $admin = Admin::where('email',$data['email'])->first();
         Notification::assertSentTo([$admin], AdminRegistrationMail::class);
         $response->assertCreated();
@@ -59,7 +54,7 @@ class AddAdminTest extends TestCase
             'phone' => '01225000539',
             'permissions' => [1, 2, 3],
         ];
-        $response = $this->postJson('/api/admins', $data);
+        $response = $this->postJson(route('admins.store'), $data);
         $response->assertJsonValidationErrors('email');
         $response->assertStatus(422);
     } 
@@ -75,7 +70,7 @@ class AddAdminTest extends TestCase
                'phone' => '01225000539',
                'permissions' => [1, 2, 4],
            ];
-           $response = $this->postJson('/api/admins', $data);
+           $response = $this->postJson(route('admins.store'), $data);
            $response->assertJsonValidationErrors('permissions.2');
            $response->assertExactJson([
             "message" =>  "The given data was invalid.",
@@ -98,7 +93,7 @@ class AddAdminTest extends TestCase
             'phone' => '01225000539',
             'permissions' => [1, 2, 3],
         ];
-        $response = $this->postJson('/api/admins', $data);
+        $response = $this->postJson(route('admins.store'), $data);
         $response->assertForbidden();
     }
 }

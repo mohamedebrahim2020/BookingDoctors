@@ -28,11 +28,11 @@ class DoctorFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'phone' => $this->faker->unique()->phoneNumber,
             'specialization_id' => $this->faker->numberBetween($min = 1, $max = 3),
-            'photo' => $this->faker->imageUrl(),
-            'degree_copy' => $this->faker->imageUrl(),
+            'photo' => UploadedFile::fake()->image('photo1.png'),
+            'degree_copy' => UploadedFile::fake()->image('photo2.png'),
             'activated_at' => null,
             'gender' => GenderType::MALE,
-            'password' => bcrypt('123456789'),
+            'password' => '123456789',
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,7 +21,7 @@ class ShowDoctorResource extends JsonResource
             'specialization' => $this->specialization->name,
             'photo' => $this->photo,
             'degree_copy' => $this->degree_copy,
-            'status' => ($this->activated_at) ? "active" : "inactive",
+            'is_active' => (bool) $this->activated_at,
             'regestired_at' => $this->created_at->timestamp
 
         ];

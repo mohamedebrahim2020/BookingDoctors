@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TokenResource extends JsonResource
+class CreatedAdminResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,8 +15,7 @@ class TokenResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'accessToken' => $this->access_token,
-            'refreshToken' => $this->refresh_token,
+            'id' => $this->id,
         ];
     }
 }

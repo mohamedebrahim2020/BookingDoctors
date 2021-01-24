@@ -9,8 +9,8 @@ use BenSampo\Enum\Enum;
  * @method static static OptionTwo()
  * @method static static OptionThree()
  */
-final class GenderType extends Enum
+final class FolderName extends Enum
 {
-    const MALE =   '1';
-    const FEMALE = '2';
+    const PHOTO =   '/photo';
+    const DEGREE_COPY =   '/degree_copy';
 }

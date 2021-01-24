@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CreatedDoctorResource extends JsonResource
+class AdminResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,6 +16,9 @@ class CreatedDoctorResource extends JsonResource
     {
         return [
             'id' => $this->id,
-        ];
+            'name' => $this->name,
+            'email' => $this->email,
+            'permissions' => PermissionResource::collection($this->getAllPermissions())
+        ];    
     }
 }

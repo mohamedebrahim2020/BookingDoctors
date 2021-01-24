@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Filters\AdminFilters;
 use App\Models\Admin;
 use Spatie\Permission\Models\Permission;
 
@@ -22,15 +23,9 @@ class AdminRepository extends BaseRepository
        $this->find($adminId)->syncPermissions($permissions);
    }
 
-   public function allPermissions()
+   public function findAdminByEmail()
    {
-       $permissions = Permission::all();
-       return $permissions;
-   }
-
-   public function findAdminByEmail($email)
-   {
-       $admin = Admin::where('email', $email)->firstorfail();
-       return $admin;
+    $admin = Admin::filter(app(AdminFilters::class))->firstorfail();
+    return $admin;
    }
 }
