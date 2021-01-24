@@ -9,11 +9,11 @@ trait LoginTrait
 {
     public function requestTokensFromPassport($request)
     {
-        $request->request->add([
+        request()->request->add([
             'grant_type'    => $request->grant_type,
             'client_id'     => $request->client_id,
             'client_secret' => $request->client_secret,
-            'username'      => $request->username,
+            'username'      => $request->email,
             'password'      => $request->password,
             'scope'         => ['*'],
         ]);

@@ -28,7 +28,7 @@ class DoctorLoginTest extends TestCase
         $client = Client::where('id', 1)->first();
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $data = [
-            'username' => $doctor->email,
+            'email' => $doctor->email,
             'password' => '123456789',
             'client_id' => $client->id,
             'client_secret' => $client->secret,
@@ -48,7 +48,7 @@ class DoctorLoginTest extends TestCase
         $client = Client::where('id', 1)->first();
         $doctor = Doctor::factory()->create();
         $data = [
-            'username' => $doctor->email,
+            'email' => $doctor->email,
             'password' => '123456789',
             'client_id' => $client->id,
             'client_secret' => $client->secret,
@@ -64,7 +64,7 @@ class DoctorLoginTest extends TestCase
         $client = Client::where('id', 1)->first();
         $doctor = Doctor::factory()->create();
         $data = [
-            'username' => $doctor->email,
+            'email' => $doctor->email,
             'password' => '123456',
             'client_id' => $client->id,
             'client_secret' => $client->secret,
@@ -80,14 +80,14 @@ class DoctorLoginTest extends TestCase
         $client = Client::where('id', 1)->first();
         $doctor = Doctor::factory()->create();
         $data = [
-            'username' => $doctor->email . "dhh",
+            'email' => $doctor->email . "dhh",
             'password' => '123456789',
             'client_id' => $client->id,
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
         $response = $this->postJson(route('doctorLogin'), $data);
-        $response->assertJsonValidationErrors('username');
+        $response->assertJsonValidationErrors('email');
         $response->assertStatus(422);
     }
 
