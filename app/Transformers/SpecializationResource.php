@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PermissionResource extends JsonResource
+class SpecializationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,7 @@ class PermissionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'permission' => $this->name,
-        ];    
+            'name' => $this->name,
+        ];
     }
 }

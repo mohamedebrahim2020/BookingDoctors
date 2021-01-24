@@ -26,6 +26,7 @@ class GetUnactivatedDoctorsTest extends TestCase
     /** @test */
     public function superadmin_successfully_get_unactivated_doctors()
     {
+        $this->withoutExceptionHandling();
         $admin = Admin::where('is_super', 1)->first();
         Doctor::factory()->count(60)->create(["activated_at" => Carbon::now()]);
         Doctor::factory()->count(40)->create();

@@ -25,11 +25,6 @@ class Doctor extends Authenticatable
         , 'photo', 'degree_copy', 'activated_at'
     ];
 
-    public function findForPassport($username)
-    {
-        return $this->where('email', $username)->first();
-    }
-
     public function specialization()
     {
         return $this->belongsTo(Specialization::class);

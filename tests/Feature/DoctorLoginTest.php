@@ -24,6 +24,7 @@ class DoctorLoginTest extends TestCase
     /** @test */
     public function doctor_successfully_login()
     {
+        $this->withoutExceptionHandling();
         $client = Client::where('id', 1)->first();
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $data = [
@@ -33,7 +34,7 @@ class DoctorLoginTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson(route('doctorLogin'), $data,);
+        $response = $this->postJson(route('doctorLogin'), $data, $headers=["Accept"=>"application/json"]);
         $response->assertJsonStructure([
             'accessToken',
             'refreshToken',
@@ -53,7 +54,7 @@ class DoctorLoginTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson(route('doctorLogin'), $data,);
+        $response = $this->postJson(route('doctorLogin'), $data);
         $response->assertStatus(401);
     }
 
@@ -69,7 +70,7 @@ class DoctorLoginTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson(route('doctorLogin'), $data,);
+        $response = $this->postJson(route('doctorLogin'), $data);
         $response->assertStatus(401);
     }
 
@@ -85,7 +86,7 @@ class DoctorLoginTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson(route('doctorLogin'), $data,);
+        $response = $this->postJson(route('doctorLogin'), $data);
         $response->assertJsonValidationErrors('username');
         $response->assertStatus(422);
     }

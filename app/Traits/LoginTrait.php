@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 trait LoginTrait 
 {
-    public function login($request)
+    public function requestTokensFromPassport($request)
     {
         $request->request->add([
             'grant_type'    => $request->grant_type,

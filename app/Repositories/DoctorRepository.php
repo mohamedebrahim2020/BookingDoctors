@@ -17,17 +17,15 @@ class DoctorRepository extends BaseRepository
        parent::__construct($model);
    }
 
-   public function findDoctorByEmail($data)
+   public function findDoctorByEmail()
    {
-       $filters = new DoctorFilters($data);
-       $doctor = Doctor::filter($filters)->firstorfail();
+       $doctor = Doctor::filter(app(DoctorFilters::class))->firstorfail();
        return $doctor;
    }
 
-   public function query($data)
+   public function query()
    {
-       $filters = new DoctorFilters($data);
-       $doctors = Doctor::filter($filters)->get();
+       $doctors = Doctor::filter(app(DoctorFilters::class))->get();
        return $doctors;
    }
 

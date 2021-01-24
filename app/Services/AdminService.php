@@ -6,18 +6,19 @@ use App\Mail\AdminPasswordMail;
 use App\Models\Admin;
 use App\Notifications\AdminRegistrationMail;
 use App\Repositories\AdminRepository;
+use App\Repositories\PermissionRepository;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Permission;
 
 class AdminService extends BaseService
-{
-    public const is_super = 0;
-    
-    public function __construct(AdminRepository $repository)
+{    
+    public $permissionRepository;
+
+    public function __construct(AdminRepository $repository, PermissionRepository $permissionRepository)
     {
         $this->repository = $repository;
+        $this->permissionRepository = $permissionRepository;
     }
 
     public function store($data)
@@ -31,7 +32,7 @@ class AdminService extends BaseService
 
     public function permissions()
     {
-        return $this->repository->allPermissions();
+        return $this->permissionRepository->all();
     }
 
     public function updateAdmin($request, $id)
@@ -42,7 +43,7 @@ class AdminService extends BaseService
 
     public function checkAuth($data)
     {
-        $admin = $this->repository->findAdminByEmail($data['username']);
-        (!Hash::check($data['password'], $admin->password)) ? abort(401, 'unauthenticated') : "" ;      
+        $admin = $this->repository->findAdminByEmail();
+        (!Hash::check($data['password'], $admin->password)) ? abort(Response::HTTP_UNAUTHORIZED, 'unauthenticated') : "" ;      
     }
 } 

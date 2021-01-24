@@ -5,18 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddAdminRequest;
 use App\Http\Requests\AdminLoginRequest;
 use App\Http\Requests\UpdateAdminRequest;
-use App\Http\Resources\AdminResource;
-use App\Http\Resources\CreatedAdminResource;
-use App\Http\Resources\PermissionResource;
-use App\Http\Resources\TokenResource;
-use App\Http\Resources\UnactivatedDoctorResource;
-use App\Http\Resources\UnactivatedDoctorsResource;
 use App\Models\Admin;
-use App\Models\Doctor;
 use App\Services\AdminService;
 use App\Traits\LoginTrait;
 use App\Services\DoctorService;
-use Illuminate\Http\Request;
+use App\Transformers\AdminResource;
+use App\Transformers\CreatedAdminResource;
+use App\Transformers\PermissionResource;
+use App\Transformers\TokenResource;
 use Illuminate\Http\Response;
 
 class AdminController extends Controller
@@ -37,10 +33,10 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function adminLogin(AdminLoginRequest $request)
+    public function login(AdminLoginRequest $request)
     {
         $this->adminService->checkAuth($request->all());
-        return response()->json(new TokenResource($this->login($request)), Response::HTTP_OK);
+        return response()->json(new TokenResource($this->requestTokensFromPassport($request)), Response::HTTP_OK);
         
     } 
 
@@ -82,9 +78,9 @@ class AdminController extends Controller
     public function update(UpdateAdminRequest $request, $id)
     {
 
-        $this->authorize('update', Admin::findorfail($id));
+        $this->authorize('update', $this->adminService->show($id));
         $this->adminService->updateAdmin($request, $id);
-        return response()->json(null, Response::HTTP_OK);
+        return response()->json([], Response::HTTP_OK);
     }
 
     /**
@@ -93,11 +89,11 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Admin $admin)
+    public function destroy($id)
     {
-        $this->authorize('delete', $admin);
-        $this->adminService->delete($admin);
-        return response()->json(null, Response::HTTP_OK);
+        $this->authorize('delete', $this->adminService->show($id));
+        $this->adminService->delete($this->adminService->show($id));
+        return response()->json([], Response::HTTP_OK);
     }
 
     public function getPermissions()
@@ -109,6 +105,6 @@ class AdminController extends Controller
     {
         $this->authorize('activateDoctor', Admin::class);
         $this->doctorService->activateDoctor($doctor);
-        return response()->json(null, Response::HTTP_OK);
+        return response()->json([], Response::HTTP_OK);
     }
 }

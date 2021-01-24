@@ -26,10 +26,8 @@ class LoginAdminTest extends TestCase
     /** @test */
     public function superadmin_successfully_login()
     {
-        $this->withoutExceptionHandling();
         $client = Client::where('id', 1)->first();
         $admin = Admin::where('is_super', 1)->first();
-        // dd($admin->is_super);
         $data= [
             'username' => $admin->email,
             'password' => 'admin23456789',
@@ -37,7 +35,7 @@ class LoginAdminTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson('/api/admin/login', $data, $headers=["Accept"=>"application/json"]);
+        $response = $this->postJson(route('adminLogin'), $data, $headers=["Accept"=>"application/json"]);
         $response->assertJsonStructure([
             'accessToken'  ,
             'refreshToken'  ,
@@ -58,7 +56,7 @@ class LoginAdminTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson('/api/admin/login', $data);
+        $response = $this->postJson(route('adminLogin'), $data);
         $response->assertStatus(401);
     }
 
@@ -73,7 +71,7 @@ class LoginAdminTest extends TestCase
             'client_secret' => $client->secret,
             'grant_type' => 'password',
         ];
-        $response = $this->postJson('/api/admin/login', $data);
+        $response = $this->postJson(route('adminLogin'), $data);
         $response->assertExactJson([
             "message" =>  "The given data was invalid.",
             "errors" => [

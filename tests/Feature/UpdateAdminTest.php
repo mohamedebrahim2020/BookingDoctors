@@ -6,8 +6,6 @@ use App\Models\Admin;
 use Database\Seeders\AdminPermissionSeeder;
 use Database\Seeders\SuperAdminSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Artisan;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -35,7 +33,7 @@ class UpdateAdminTest extends TestCase
             'phone' => '01225000539',
             'permissions' => [1, 2, 3],
         ];
-        $response = $this->putJson('/api/admins/' . $admin->id, $data);
+        $response = $this->putJson(route('admins.update', ['admin' => $admin->id]), $data);
         $response->assertOk();
     }
 
@@ -50,7 +48,7 @@ class UpdateAdminTest extends TestCase
             'phone' => '01225000539',
             'permissions' => [1, 2, 3],
         ];
-        $response = $this->putJson('/api/admins/' . $admin->id, $data);
+        $response = $this->putJson(route('admins.update', ['admin' => $admin->id]), $data);
         $response->assertForbidden();
     }
 
@@ -67,7 +65,7 @@ class UpdateAdminTest extends TestCase
             'phone' => '01225000539',
             'permissions' => [1, 2, 3],
         ];
-        $response = $this->putJson('/api/admins/' . $firstAdmin->id, $data);
+        $response = $this->putJson(route('admins.update', ['admin' => $firstAdmin->id]), $data);
         $response->assertJsonValidationErrors('email');
         $response->assertStatus(422);
     }
@@ -84,7 +82,7 @@ class UpdateAdminTest extends TestCase
             'phone' => '01225000539',
             'permissions' => [1, 2, 4],
         ];
-        $response = $this->putJson('/api/admins/' . $firstAdmin->id, $data);
+        $response = $this->putJson(route('admins.update', ['admin' => $firstAdmin->id]), $data);
         $response->assertJsonValidationErrors('permissions.2');
         $response->assertExactJson([
             "message" =>  "The given data was invalid.",
@@ -108,7 +106,7 @@ class UpdateAdminTest extends TestCase
             'phone' => '01225000539',
             'permissions' => [1, 2, 3],
         ];
-        $response = $this->putJson('/api/admins/2', $data);
+        $response = $this->putJson(route('admins.update', ['admin' => 2]), $data);
         $response->assertExactJson([
             "error" => "no model  admin with this identifier",
         ]);
