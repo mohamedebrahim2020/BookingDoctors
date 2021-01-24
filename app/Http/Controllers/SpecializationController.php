@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SpecializationResource;
 use App\Services\SpecializationService;
+use App\Transformers\SpecializationResource;
 use Illuminate\Http\Response;
 
 class SpecializationController extends Controller

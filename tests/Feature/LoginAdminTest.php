@@ -29,7 +29,7 @@ class LoginAdminTest extends TestCase
         $client = Client::where('id', 1)->first();
         $admin = Admin::where('is_super', 1)->first();
         $data= [
-            'username' => $admin->email,
+            'email' => $admin->email,
             'password' => 'admin23456789',
             'client_id' => $client->id,
             'client_secret' => $client->secret,
@@ -50,7 +50,7 @@ class LoginAdminTest extends TestCase
         $client = Client::where('id', 1)->first();
         $admin = Admin::where('is_super', 1)->first();
         $data = [
-            'username' => $admin->email,
+            'email' => $admin->email,
             'password' => 'admin234',
             'client_id' => $client->id,
             'client_secret' => $client->secret,
@@ -65,7 +65,7 @@ class LoginAdminTest extends TestCase
     {
         $client = Client::where('id', 1)->first();
         $data = [
-            'username' => 'mohamed',
+            'email' => 'mohamed',
             'password' => 'adm',
             'client_id' => $client->id,
             'client_secret' => $client->secret,
@@ -75,8 +75,8 @@ class LoginAdminTest extends TestCase
         $response->assertExactJson([
             "message" =>  "The given data was invalid.",
             "errors" => [
-                "username" => [
-                    "The username must be a valid email address."
+                "email" => [
+                    "The email must be a valid email address."
                 ],
                 "password" => [
                     "The password must be at least 4 characters."
