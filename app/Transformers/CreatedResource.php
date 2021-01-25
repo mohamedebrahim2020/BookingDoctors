@@ -4,7 +4,7 @@ namespace App\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CreatedDoctorResource extends JsonResource
+class CreatedResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

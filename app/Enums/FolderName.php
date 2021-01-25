@@ -13,4 +13,5 @@ final class FolderName extends Enum
 {
     const PHOTO =   '/photo';
     const DEGREE_COPY =   '/degree_copy';
+    const PATIENT_PHOTO = '/patient_photo';
 }
