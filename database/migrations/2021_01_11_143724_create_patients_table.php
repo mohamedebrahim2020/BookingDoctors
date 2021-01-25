@@ -21,7 +21,7 @@ class CreatePatientsTable extends Migration
             $table->string('phone')->unique();
             $table->string('photo');
             $table->integer('gender');
-            $table->timestamp('verified_at');
+            $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

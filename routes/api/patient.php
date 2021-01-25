@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PatientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('patient/register', [PatientController::class, 'register'])->name('patientRegister');
+Route::post('patient/verify', [PatientController::class, 'verify'])->name('patientVerify');
+Route::post('patient/login',[PatientController::class, 'login'])->name('patientLogin');
+
+
