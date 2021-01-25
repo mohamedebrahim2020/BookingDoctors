@@ -6,8 +6,6 @@ use App\Models\Admin;
 use Database\Seeders\AdminPermissionSeeder;
 use Database\Seeders\SuperAdminSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Artisan;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -29,7 +27,7 @@ class DeleteAdminTest extends TestCase
         $superAdmin = Admin::where('is_super', 1)->first();
         Passport::actingAs($superAdmin, ['*'], 'admin');
         $admin = Admin::factory()->create();
-        $response = $this->deleteJson('/api/admins/' . $admin->id);
+        $response = $this->deleteJson(route('admins.destroy', ['admin'=> $admin->id]));
         $response->assertOk();
     }
 
@@ -38,7 +36,7 @@ class DeleteAdminTest extends TestCase
     {
         Passport::actingAs(Admin::factory()->create(), ['*'], 'admin');
         $admin = Admin::factory()->create();
-        $response = $this->deleteJson('/api/admins/' . $admin->id);
+        $response = $this->deleteJson(route('admins.destroy', ['admin'=> $admin->id]));
         $response->assertForbidden();
     }
 
@@ -48,7 +46,7 @@ class DeleteAdminTest extends TestCase
         $superAdmin = Admin::where('is_super', 1)->first();
         Passport::actingAs($superAdmin, ['*'], 'admin');
         $anotherSuperAdmin = Admin::factory()->create(['is_super' => 1]);
-        $response = $this->deleteJson('/api/admins/' . $anotherSuperAdmin->id);
+        $response = $this->deleteJson(route('admins.destroy', ['admin'=> $anotherSuperAdmin ->id]));
         $response->assertForbidden();
     }
 }

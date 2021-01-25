@@ -11,7 +11,6 @@ class AdminRegistrationMail extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    // public $connection = 'redis';
     public $admin ;
     public $password;
 

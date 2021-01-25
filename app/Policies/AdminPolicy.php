@@ -11,18 +11,6 @@ class AdminPolicy
 {
     use HandlesAuthorization;
 
-    /**
-
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @return mixed
-     */
-    public function viewAny(Admin $admin)
-    {
-        //
-    }
-
     /*
      * Determine whether the user can create models.
      *

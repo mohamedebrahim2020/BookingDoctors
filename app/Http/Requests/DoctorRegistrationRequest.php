@@ -31,8 +31,8 @@ class DoctorRegistrationRequest extends FormRequest
             'phone' => 'required|unique:doctors,phone',
             'specialization_id' => 'required|exists:specializations,id',
             'password' => 'required|min:4',
-            'photo' => 'required|mimes:png',
-            'degree_copy' =>'required|mimes:png',
+            'photo' => 'required|file|mimes:png',
+            'degree_copy' =>'required|file|mimes:png',
             'gender' => ['required', new EnumValue(GenderType::class)],
         ];
     }

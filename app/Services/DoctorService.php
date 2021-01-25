@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\FolderName;
 use App\Repositories\DoctorRepository;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\DoctorActivationMail;
@@ -21,8 +22,8 @@ class DoctorService extends BaseService
 
     public function checkAuth($data)
     {
-        $doctor = $this->repository->findDoctorByEmail($data);
-        (!Hash::check($data->password, $doctor->password) || !$doctor->activated_at) ? abort(401, 'unauthenticated') : "" ;
+        $doctor = $this->repository->findDoctorByEmail();
+        (!Hash::check($data['password'], $doctor->password) || !$doctor->activated_at) ? abort(Response::HTTP_UNAUTHORIZED, 'unauthenticated') : "" ;
     }
   
     public function unactivatedDoctors()
@@ -47,15 +48,15 @@ class DoctorService extends BaseService
         }
     }
 
-    public function query($request)
+    public function query()
     {
-        return $this->repository->query($request);
+        return $this->repository->query();
     }
     
     public function store($data)
     {
-        $data['photo'] = $this->addFileToPublic($data['photo'], '/photo');
-        $data['degree_copy'] = $this->addFileToPublic($data['degree_copy'], '/degree_copy');
+        $data['photo'] = $this->addFileToPublic($data['photo'], FolderName::PHOTO);
+        $data['degree_copy'] = $this->addFileToPublic($data['degree_copy'], FolderName::DEGREE_COPY);
         $doctor = $this->repository->store($data);
         return $doctor;
     }
