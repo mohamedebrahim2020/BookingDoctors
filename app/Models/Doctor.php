@@ -34,4 +34,9 @@ class Doctor extends Authenticatable
     {
         $this->attributes['password'] = Hash::make($value);
     }
+
+    public function workingDays()
+    {
+        return $this->hasMany(DoctorWorkingDays::class, 'doctor_id');
+    }
 }
