@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::prefix('patient')->group(function () {
+    Route::post('register', [PatientController::class, 'register'])->name('patientRegister');
+    Route::post('verify', [PatientController::class, 'verify'])->name('patientVerify');
+    Route::post('login',[PatientController::class, 'login'])->name('patientLogin');
+});
 
-Route::post('patient/register', [PatientController::class, 'register'])->name('patientRegister');
-Route::post('patient/verify', [PatientController::class, 'verify'])->name('patientVerify');
-Route::post('patient/login',[PatientController::class, 'login'])->name('patientLogin');
 
 
