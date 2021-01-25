@@ -11,12 +11,12 @@ use BenSampo\Enum\Enum;
  */
 final class WeekDays extends Enum
 {
-    const SUNDAY = "1";
-    const MONDAY = "2";
-    const TUESDAY = "3";
-    const WEDNESDAY = "4";
-    const THURSDAY = "5";
-    const FRIDAY = "6";
-    const SATRDAYU = "7";
+    const SUNDAY = 1;
+    const MONDAY = 2;
+    const TUESDAY = 3;
+    const WEDNESDAY = 4;
+    const THURSDAY = 5;
+    const FRIDAY = 6;
+    const SATURDAY = 7;
 
 }

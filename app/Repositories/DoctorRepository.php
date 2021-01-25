@@ -29,12 +29,16 @@ class DoctorRepository extends BaseRepository
        return $doctors;
    }
 
-   public function storeWorkingDay($data, $doctor)
+   public function storeWorkingDay($data)
    {
-       $doctor->verificationCode()->create([
-            'code' => ,
-            'expired_at' => ,
+       $doctor = $this->find(auth('doctor')->user()->id);
+       $workingDay = $doctor->workingDays()->create([
+           'day' =>  $data['day'],
+           'from' => $data['from'],
+           'to' => $data['to'],
+           'is_all_day' => $data['is_all_day'],
        ]);
+       return $workingDay;
    }
 
 }   

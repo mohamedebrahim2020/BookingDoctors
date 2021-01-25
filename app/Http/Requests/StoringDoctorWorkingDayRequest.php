@@ -26,10 +26,9 @@ class StoringDoctorWorkingDayRequest extends FormRequest
     public function rules()
     {
         return [
-            'day' => ['required', new EnumValue(WeekDays::class)],
-            'from' => 'nullable|date_format:H:i',
-            'to' => 'nullable|date_format:H:i|after:from',
-
+            'day' => ['required', new EnumValue(WeekDays::class, false)],
+            'from' => 'nullable|required_with:to|date_format:g:a',
+            'to' => 'nullable|required_with:from|date_format:g:a|after:from',
         ];
     }
 }

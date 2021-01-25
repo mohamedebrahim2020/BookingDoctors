@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoringDoctorWorkingDayRequest;
 use App\Services\DoctorService;
+use App\Transformers\CreatedResource;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class WorkingDayController extends Controller
 {
@@ -16,6 +18,7 @@ class WorkingDayController extends Controller
     }
     public function store(StoringDoctorWorkingDayRequest $request)
     {
-        $this->doctorService->addWorkingDay($request->all());
+        $workingDay = $this->doctorService->addWorkingDay($request->except('is_all_day'));
+        return response()->json(new CreatedResource($workingDay), Response::HTTP_CREATED);
     }
 }

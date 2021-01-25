@@ -23,7 +23,7 @@ Route::post('doctor/register',[DoctorController::class, 'register'])->name('doct
 Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('doctors', DoctorController::class)->only('index','show');
 });
-Route::group(['middleware' => ['auth:doctor']], function () {
+Route::group(['middleware' => ['auth:doctor','EnsureDoctorIsActivated']], function () {
     Route::apiResource('workingdays', WorkingDayController::class)->only('store');
 });
 
