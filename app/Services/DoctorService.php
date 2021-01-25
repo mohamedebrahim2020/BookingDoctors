@@ -70,4 +70,8 @@ class DoctorService extends BaseService
         Storage::put($fileNametostore, $img);
         return $fileNametostore;
     }
+
+    public function addWorkingDay($data)
+    {
+    }
 }

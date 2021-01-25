@@ -29,4 +29,12 @@ class DoctorRepository extends BaseRepository
        return $doctors;
    }
 
+   public function storeWorkingDay($data, $doctor)
+   {
+       $doctor->verificationCode()->create([
+            'code' => ,
+            'expired_at' => ,
+       ]);
+   }
+
 }   
