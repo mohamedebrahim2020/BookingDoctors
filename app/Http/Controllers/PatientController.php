@@ -7,6 +7,7 @@ use App\Http\Requests\PatientRegisterationRequest;
 use App\Http\Requests\VerifyPatientEmailRequest;
 use App\Services\PatientService;
 use App\Traits\LoginTrait;
+use App\Transformers\CreatedResource;
 use App\Transformers\TokenResource;
 use Illuminate\Http\Response;
 
@@ -23,8 +24,8 @@ class PatientController extends Controller
 
     public function register(PatientRegisterationRequest $request)
     {
-        $this->patientService->store($request->except('verified_at'));
-        return response()->json([], Response::HTTP_CREATED);
+        $patient = $this->patientService->store($request->except('verified_at'));
+        return response()->json(new CreatedResource($patient), Response::HTTP_CREATED);
     }
 
     public function verify (VerifyPatientEmailRequest $request)

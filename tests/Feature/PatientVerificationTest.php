@@ -64,6 +64,7 @@ class PatientVerificationTest extends TestCase
             "code" => $code->code . "kkf"
         ];
         $response = $this->postJson(route('patientVerify'), $data, ["Accept" => "application/json"]);
-        $response->assertStatus(400);
+        $response->assertJsonValidationErrors('code');
+        $response->assertStatus(422);
     }
 }

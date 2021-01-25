@@ -17,11 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('doctor/login',[DoctorController::class, 'login'])->name('doctorLogin');
-<<<<<<< HEAD
-=======
 Route::apiResource('specializations', SpecializationController::class)->only(['index']);
 Route::post('doctor/register',[DoctorController::class, 'register'])->name('doctorRegister');
->>>>>>> 611abd0ea9d3299ce1b2b02bf663031742a0a3a4
 Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('doctors', DoctorController::class)->only('index','show');
 });

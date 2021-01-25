@@ -33,7 +33,7 @@ class DoctorRegistrationRequest extends FormRequest
             'password' => 'required|min:4',
             'photo' => 'required|file|mimes:png',
             'degree_copy' =>'required|file|mimes:png',
-            'gender' => ['required', new EnumValue(GenderType::class)],
+            'gender' => ['required', new EnumValue(GenderType::class, false)],
         ];
     }
 }

@@ -28,7 +28,7 @@ class PatientRepository extends BaseRepository
 
    public function findPatientByEmail()
    {
-        $patient = Patient::filter(app(PatientFilters::class))->firstorfail();
+        $patient = $this->model->filter(app(PatientFilters::class))->firstorfail();
         return $patient;
    }
 }   

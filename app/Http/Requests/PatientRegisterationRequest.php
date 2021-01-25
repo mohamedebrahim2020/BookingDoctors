@@ -31,7 +31,7 @@ class PatientRegisterationRequest extends FormRequest
             'password' => 'required|min:6',
             'phone' => 'required|unique:patients,phone',
             'photo' => 'required|file|mimes:png',
-            'gender' => ['required', new EnumValue(GenderType::class)],
+            'gender' => ['required', new EnumValue(GenderType::class, false)],
         ];
     }
 }

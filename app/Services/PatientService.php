@@ -36,6 +36,7 @@ class PatientService extends BaseService
         $patient = $this->repository->findPatientByEmail();
         if ($patient->verificationCode->code == $data['code'] && Carbon::now()->lessThanOrEqualTo($patient->verificationCode->expired_at)) {
             $this->repository->update(["verified_at" => Carbon::now()], $patient->id);
+            $patient->verificationCode->update(['expired_at' => Carbon::now()]);
         } else {
             abort(Response::HTTP_BAD_REQUEST);
         }
