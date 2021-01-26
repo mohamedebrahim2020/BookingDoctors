@@ -6,7 +6,7 @@ use App\Http\Requests\DoctorLoginRequest;
 use App\Services\DoctorService;
 use App\Traits\LoginTrait;
 use App\Http\Requests\DoctorRegistrationRequest;
-use App\Transformers\CreatedDoctorResource;
+use App\Transformers\CreatedResource;
 use App\Transformers\IndexDoctorResource;
 use App\Transformers\ShowDoctorResource;
 use App\Transformers\TokenResource;
@@ -45,6 +45,6 @@ class DoctorController extends Controller
     public function register(DoctorRegistrationRequest $request)
     {
         $doctor = $this->doctorService->store($request->except('activated_at'));
-        return response()->json(new CreatedDoctorResource($doctor), Response::HTTP_CREATED);
+        return response()->json(new CreatedResource($doctor), Response::HTTP_CREATED);
     }
 }

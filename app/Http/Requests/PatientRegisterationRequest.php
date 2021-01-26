@@ -3,10 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Enums\GenderType;
-use Illuminate\Foundation\Http\FormRequest;
 use BenSampo\Enum\Rules\EnumValue;
+use Illuminate\Foundation\Http\FormRequest;
 
-class DoctorRegistrationRequest extends FormRequest
+class PatientRegisterationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,12 +27,10 @@ class DoctorRegistrationRequest extends FormRequest
     {
         return [
             'name' => 'required|max:100',
-            'email' => 'required|email|unique:doctors,email',
-            'phone' => 'required|unique:doctors,phone',
-            'specialization_id' => 'required|exists:specializations,id',
-            'password' => 'required|min:4',
+            'email' => 'required|email|unique:patients,email',
+            'password' => 'required|min:6',
+            'phone' => 'required|unique:patients,phone',
             'photo' => 'required|file|mimes:png',
-            'degree_copy' =>'required|file|mimes:png',
             'gender' => ['required', new EnumValue(GenderType::class, false)],
         ];
     }

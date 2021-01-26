@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 trait LoginTrait 
@@ -22,6 +23,10 @@ trait LoginTrait
             'POST'
         );
         $tokens = json_decode(Route::dispatch($tokensApi)->getContent());
-        return $tokens;
+        if ($tokens == null) {
+            abort(Response::HTTP_BAD_REQUEST);
+        } else {
+            return $tokens;
+        }
     }
 }
