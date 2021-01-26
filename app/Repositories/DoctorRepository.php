@@ -19,13 +19,13 @@ class DoctorRepository extends BaseRepository
 
    public function findDoctorByEmail()
    {
-       $doctor = Doctor::filter(app(DoctorFilters::class))->firstorfail();
+       $doctor = $this->model->filter(app(DoctorFilters::class))->firstorfail();
        return $doctor;
    }
 
    public function query()
    {
-       $doctors = Doctor::filter(app(DoctorFilters::class))->get();
+       $doctors = $this->model->filter(app(DoctorFilters::class))->get();
        return $doctors;
    }
 
