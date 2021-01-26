@@ -26,7 +26,7 @@ class DoctorAddWorkingDayTest extends TestCase
     {
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         Passport::actingAs($doctor, ['*'], 'doctor');
-        $data = DoctorWorkingDays::factory()->state(['doctor_id' => $doctor->id])->raw();
+        $data = DoctorWorkingDays::factory()->raw();
         $response = $this->postJson(route('workingdays.store'),$data);
         $response->assertCreated();        
     }
@@ -46,9 +46,70 @@ class DoctorAddWorkingDayTest extends TestCase
     {
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         Passport::actingAs($doctor, ['*'], 'doctor');
-        $data = DoctorWorkingDays::factory()->state(['day' => 9,'doctor_id' => $doctor->id])->raw();
+        $data = [
+            "working_days"=> [
+                [
+                    "day"=> "9",
+                    "from"=> "10:00 PM",
+                    "to"=> "11:00 PM",
+                    "is_all_day"=> "0"
+                ],
+                [
+                    "day"=> "3",
+                    "is_all_day"=> "1"
+                ]
+            ]
+        ];
         $response = $this->postJson(route('workingdays.store'), $data);
-        $response->assertJsonValidationErrors('day');
+        $response->assertJsonValidationErrors('working_days.0.day');
+        $response->assertStatus(422);
+    }
+
+        /** @test */
+    public function doctor_fail_to_add_working_day_when_from_is_nullable_and_all_day_is_zero()
+    {
+        $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
+        Passport::actingAs($doctor, ['*'], 'doctor');
+        $data = [
+            "working_days" => [
+                [
+                    "day" => "9",
+                    "from" => "",
+                    "to" => "",
+                    "is_all_day" => "0"
+                ],
+                [
+                    "day" => "3",
+                    "is_all_day" => "1"
+                ]
+            ]
+        ];
+        $response = $this->postJson(route('workingdays.store'), $data);
+        $response->assertJsonValidationErrors('working_days.0.from');
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function doctor_fail_to_add_working_day_when_from_is_nullable_and_all_day_is_nullable()
+    {
+        $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
+        Passport::actingAs($doctor, ['*'], 'doctor');
+        $data = [
+            "working_days" => [
+                [
+                    "day" => "9",
+                    "from" => "",
+                    "to" => "",
+                    "is_all_day" => ""
+                ],
+                [
+                    "day" => "3",
+                    "is_all_day" => "1"
+                ]
+            ]
+        ];
+        $response = $this->postJson(route('workingdays.store'), $data);
+        $response->assertJsonValidationErrors('working_days.0.is_all_day');
         $response->assertStatus(422);
     }
 }

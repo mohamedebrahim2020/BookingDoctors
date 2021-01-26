@@ -26,10 +26,18 @@ class DoctorWorkingDaysFactory extends Factory
     public function definition()
     {
         return [
-            'day' => WeekDays::getRandomValue(),
-            'from' => $this->faker->numberBetween($min = 1, $max = 5).":". "am",
-            'to' => $this->faker->numberBetween($min = 5, $max = 10).":". "am",
-            'doctor_id' => 1,
+            "working_days" => [
+                [
+                    "day"=> "1",
+                    "from"=> "10:00 PM",
+                    "to"=> "11:00 PM",
+                    "is_all_day"=> "0"
+                ],
+                [
+                    "day"=> "3",
+                    "is_all_day"=> "1"
+                ]
+            ]
         ];
     }
 }
