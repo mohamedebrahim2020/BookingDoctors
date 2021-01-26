@@ -73,12 +73,7 @@ class DoctorService extends BaseService
 
     public function addWorkingDay($data)
     {
-        $data['is_all_day'] = 0;
-        if (!array_key_exists('from', $data) || !$data['from']) {
-            $data['is_all_day'] = 1;
-            $data['from'] = $data['to']  = null;
-        }
-        $workingDay = $this->repository->storeWorkingDay($data);
-        return $workingDay;
+        $workingDays = $this->repository->storeWorkingDay($data);
+        return $workingDays;
     }
 }

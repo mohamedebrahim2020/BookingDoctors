@@ -17,8 +17,8 @@ class WorkingDayController extends Controller
         $this->doctorService = $doctorService;
     }
     public function store(StoringDoctorWorkingDayRequest $request)
-    {
-        $workingDay = $this->doctorService->addWorkingDay($request->except('is_all_day'));
-        return response()->json(new CreatedResource($workingDay), Response::HTTP_CREATED);
+    {        
+        $workingDays = $this->doctorService->addWorkingDay($request->all());
+        return response()->json(CreatedResource::collection($workingDays), Response::HTTP_CREATED);
     }
 }

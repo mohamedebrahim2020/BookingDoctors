@@ -31,14 +31,9 @@ class DoctorRepository extends BaseRepository
 
    public function storeWorkingDay($data)
    {
-       $doctor = $this->find(auth('doctor')->user()->id);
-       $workingDay = $doctor->workingDays()->create([
-           'day' =>  $data['day'],
-           'from' => $data['from'],
-           'to' => $data['to'],
-           'is_all_day' => $data['is_all_day'],
-       ]);
-       return $workingDay;
+      $doctor = $this->find(auth('doctor')->user()->id);
+      $doctor->workingDays()->createMany($data["working_days"]);
+      return $doctor->workingDays;
    }
 
 }   

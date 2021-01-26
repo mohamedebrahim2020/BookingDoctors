@@ -26,9 +26,11 @@ class StoringDoctorWorkingDayRequest extends FormRequest
     public function rules()
     {
         return [
-            'day' => ['required', new EnumValue(WeekDays::class, false)],
-            'from' => 'nullable|required_with:to|date_format:g:a',
-            'to' => 'nullable|required_with:from|date_format:g:a|after:from',
+            'working_days' => 'required|array',
+            'working_days.*.day' => ['required', new EnumValue(WeekDays::class, false)],
+            'working_days.*.from' => 'nullable|required_with:working_days.*.to|date_format:h:i A|required_if:working_days.*.is_all_day,0',
+            'working_days.*.to' => 'nullable|required_with:working_days.*.from|date_format:h:i A|after:working_days.*.from',
+            'working_days.*.is_all_day' => 'required_if:working_days.*.from,|boolean'    
         ];
     }
 }
