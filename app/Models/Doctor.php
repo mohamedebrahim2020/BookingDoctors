@@ -34,4 +34,14 @@ class Doctor extends Authenticatable
     {
         $this->attributes['password'] = Hash::make($value);
     }
+
+    public function workingDays()
+    {
+        return $this->hasMany(DoctorWorkingDays::class, 'doctor_id');
+    }
+
+    public function patients()
+    {
+        return $this->belongsToMany(Patient::class, 'appointments', 'doctor_id', 'patient_id')->withPivot('time', 'duration');
+    }
 }

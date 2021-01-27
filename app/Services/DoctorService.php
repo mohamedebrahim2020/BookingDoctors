@@ -70,4 +70,19 @@ class DoctorService extends BaseService
         Storage::put($fileNametostore, $img);
         return $fileNametostore;
     }
+
+    public function storeAppointment($data, $doctorID)
+    {
+        $this->repository->fiterDoctorShifts($doctorID);
+        // $this->repository->filterDoctorAppointments($doctorId);
+        // $this->repository->storeAppointment($data, $doctorID);
+        // $this->checkDoctorShifts($data, $doctorID);
+    }
+
+    public function checkDoctorShifts($data, $doctorID)
+    {
+        $day = (Carbon::parse($data['time'])->dayOfWeek);
+        dd($day);
+        $doctor = $this->show($doctorID); 
+    }
 }
