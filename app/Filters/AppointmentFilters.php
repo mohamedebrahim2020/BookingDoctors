@@ -1,13 +1,12 @@
 <?php
 namespace App\Filters;
 
-use Carbon\Carbon;
+use App\Enums\AppointmentStatus;
 
 class AppointmentFilters extends QueryFilters
-{    
+{   
     public function time($day)
     {
-        return $this->builder->where('time', Carbon::parse($day)->dayOfWeek);
+        return $this->builder->where('time','<=',$day)->where('status', AppointmentStatus::APPROVED);
     }
-
 }    

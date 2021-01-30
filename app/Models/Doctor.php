@@ -40,8 +40,8 @@ class Doctor extends Authenticatable
         return $this->hasMany(DoctorWorkingDays::class, 'doctor_id');
     }
 
-    public function patients()
+    public function appointments()
     {
-        return $this->belongsToMany(Patient::class, 'appointments', 'doctor_id', 'patient_id')->withPivot('time', 'duration');
+        return $this->hasMany(Appointment::class);
     }
 }

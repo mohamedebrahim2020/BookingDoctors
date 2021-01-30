@@ -24,7 +24,7 @@ class PatientReserveAppointmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'time' => 'required|date|date_format:Y-m-d H:i:s|after:today',
+            'time' => 'required|date_format: U|after:today',
             'duration' => 'required|integer|min:30|max:120'
         ];
     }

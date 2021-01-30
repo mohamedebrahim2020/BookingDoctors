@@ -11,7 +11,8 @@ use BenSampo\Enum\Enum;
  */
 final class AppointmentStatus extends Enum
 {
-    const PENDING =   1;
-    const APPROVED =   2;
-    const CANCELLED = 3;
+    const PENDING = 1;
+    const APPROVED = 2;
+    const REJECTED = 3;
+    const CANCELLED = 4;
 }

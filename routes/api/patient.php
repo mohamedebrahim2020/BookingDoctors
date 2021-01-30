@@ -19,7 +19,7 @@ Route::prefix('patient')->group(function () {
     Route::post('register', [PatientController::class, 'register'])->name('patientRegister');
     Route::post('verify', [PatientController::class, 'verify'])->name('patientVerify');
     Route::post('login',[PatientController::class, 'login'])->name('patientLogin');
-    Route::group(['middleware' => ['auth:patient']], function () {
+    Route::group(['middleware' => ['auth:patient', 'EnsurePatientIsVerified']], function () {
         Route::apiResource('doctors.appointments', DoctorAppointmentController::class)->only(['store']);      
     });
 });

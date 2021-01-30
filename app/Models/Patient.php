@@ -32,4 +32,9 @@ class Patient extends Authenticatable
     {
         $this->attributes['password'] = Hash::make($value);
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
 }

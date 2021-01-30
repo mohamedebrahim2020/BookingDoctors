@@ -6,6 +6,7 @@ use App\Enums\FolderName;
 use App\Repositories\DoctorRepository;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\DoctorActivationMail;
+use App\Notifications\RequestAppointmentNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -71,18 +72,17 @@ class DoctorService extends BaseService
         return $fileNametostore;
     }
 
-    public function storeAppointment($data, $doctorID)
+    public function checkDoctorIsActivated($id)
     {
-        $this->repository->fiterDoctorShifts($doctorID);
-        // $this->repository->filterDoctorAppointments($doctorId);
-        // $this->repository->storeAppointment($data, $doctorID);
-        // $this->checkDoctorShifts($data, $doctorID);
+        $doctor = $this->show($id);
+        if (!$doctor->activated_at) {
+            abort(Response::HTTP_FORBIDDEN, 'doctor is not activated yet');
+        }
     }
 
-    public function checkDoctorShifts($data, $doctorID)
+    public function recieveAppointmentRequest($doctorId,$appointmentData,$patient)
     {
-        $day = (Carbon::parse($data['time'])->dayOfWeek);
-        dd($day);
-        $doctor = $this->show($doctorID); 
+        $doctor = $this->show($doctorId);
+        $doctor->notify(new RequestAppointmentNotification($doctor->name, $appointmentData, $patient));       
     }
 }

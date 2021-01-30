@@ -31,4 +31,12 @@ class PatientRepository extends BaseRepository
         $patient = $this->model->filter(app(PatientFilters::class))->firstorfail();
         return $patient;
    }
+
+   public function storeAppointment($data, $doctorID)
+   {
+       $data['doctor_id'] = $doctorID;
+       $patient = $this->find(auth()->user()->id);
+       $appointment = $patient->appointments()->create($data);
+       return $appointment;
+   }
 }   

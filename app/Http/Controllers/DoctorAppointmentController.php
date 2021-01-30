@@ -4,28 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PatientReserveAppointmentRequest;
 use App\Services\DoctorService;
-use Illuminate\Http\Request;
+use App\Services\PatientService;
+use App\Transformers\CreatedResource;
 use Illuminate\Http\Response;
 
 class DoctorAppointmentController extends Controller
 {
     protected $doctorService;
+    protected $patientService;
 
-    public function __construct(DoctorService $doctorService)
+    public function __construct(DoctorService $doctorService, PatientService $patientService)
     {
         $this->doctorService = $doctorService;
-        $this->middleware(function ($request, $next) {
-            $doctor = $this->doctorService->show($request->doctor);
-            if ($doctor->activated_at) {
-                return $next($request);
-            } else {
-                abort(Response::HTTP_FORBIDDEN, 'doctor is not activated yet');
-            }
-        })->only('store');
+        $this->patientService = $patientService;
     }
 
     public function store(PatientReserveAppointmentRequest $request)
     {
-        $this->doctorService->storeAppointment($request->except('status','cancel_reason'), $request->doctor);
+        $this->doctorService->checkDoctorIsActivated($request->doctor);
+        $appointment = $this->patientService->storeAppointment($request->except('status','cancel_reason'), $request->doctor);
+        return response()->json(new CreatedResource($appointment), Response::HTTP_CREATED);
     }
 }
