@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Filters\AppointmentFilters;
 use App\Filters\DoctorFilters;
+use App\Filters\WorkingDayFilters;
 use App\Models\Doctor;
 use Illuminate\Http\Response;
 
@@ -34,7 +35,7 @@ class DoctorRepository extends BaseRepository
    public function fiterDoctorShifts($doctorID)
    {
         $this->model = $this->find($doctorID);
-        $shift = $this->model->workingDays()->filter(app(DoctorFilters::class))->get();
+        $shift = $this->model->workingDays()->filter(app(WorkingDayFilters::class))->get();
         return $shift;  
    }
 

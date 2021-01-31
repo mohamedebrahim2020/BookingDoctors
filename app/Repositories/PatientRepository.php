@@ -32,11 +32,4 @@ class PatientRepository extends BaseRepository
         return $patient;
    }
 
-   public function storeAppointment($data, $doctorID)
-   {
-       $data['doctor_id'] = $doctorID;
-       $patient = $this->find(auth()->user()->id);
-       $appointment = $patient->appointments()->create($data);
-       return $appointment;
-   }
 }   

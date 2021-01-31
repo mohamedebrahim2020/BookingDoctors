@@ -78,6 +78,7 @@ class DoctorService extends BaseService
         if (!$doctor->activated_at) {
             abort(Response::HTTP_FORBIDDEN, 'doctor is not activated yet');
         }
+        return $doctor;
     }
 
     public function recieveAppointmentRequest($doctorId,$appointmentData,$patient)
@@ -85,7 +86,7 @@ class DoctorService extends BaseService
         $doctor = $this->show($doctorId);
         $doctor->notify(new RequestAppointmentNotification($doctor->name, $appointmentData, $patient));
     }
-               
+
     public function addWorkingDay($data)
     {
         $workingDays = $this->repository->storeWorkingDay($data);
