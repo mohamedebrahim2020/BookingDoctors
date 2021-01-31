@@ -46,4 +46,11 @@ class DoctorRepository extends BaseRepository
             abort(Response::HTTP_BAD_REQUEST, 'doctor has an appointment at this time');
         }
    }
+   public function storeWorkingDay($data)
+   {
+      $doctor = $this->find(auth('doctor')->user()->id);
+      $doctor->workingDays()->createMany($data["working_days"]);
+      return $doctor->workingDays;
+   }
+
 }   

@@ -87,5 +87,4 @@ class PatientLoginTest extends TestCase
         $response->assertJsonValidationErrors('email');
         $response->assertStatus(422);
     }
-
 }

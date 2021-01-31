@@ -84,5 +84,9 @@ class DoctorService extends BaseService
     {
         $doctor = $this->show($doctorId);
         $doctor->notify(new RequestAppointmentNotification($doctor->name, $appointmentData, $patient));       
+    public function addWorkingDay($data)
+    {
+        $workingDays = $this->repository->storeWorkingDay($data);
+        return $workingDays;
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\SpecializationController;
+use App\Http\Controllers\WorkingDayController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,9 @@ Route::apiResource('specializations', SpecializationController::class)->only(['i
 Route::post('doctor/register',[DoctorController::class, 'register'])->name('doctorRegister');
 Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('doctors', DoctorController::class)->only('index','show');
+});
+Route::group(['middleware' => ['auth:doctor','EnsureDoctorIsActivated']], function () {
+    Route::apiResource('workingdays', WorkingDayController::class)->only('store');
 });
 
 

@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'EnsurePatientIsVerified' => \App\Http\Middleware\EnsurePatientIsVerified::class,
+        'EnsureDoctorIsActivated' => \App\Http\Middleware\EnsureDoctorIsActivated::class,
     ];
 }
