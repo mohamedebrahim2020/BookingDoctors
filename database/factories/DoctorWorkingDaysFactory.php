@@ -26,7 +26,7 @@ class DoctorWorkingDaysFactory extends Factory
                 [
                     "day"=> "1",
                     "from"=> "10:00 PM",
-                    "to"=> "12:00 PM",
+                    "to"=> "11:00 PM",
                     "is_all_day"=> "0"
                 ],
                 [

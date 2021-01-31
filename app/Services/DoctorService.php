@@ -83,7 +83,9 @@ class DoctorService extends BaseService
     public function recieveAppointmentRequest($doctorId,$appointmentData,$patient)
     {
         $doctor = $this->show($doctorId);
-        $doctor->notify(new RequestAppointmentNotification($doctor->name, $appointmentData, $patient));       
+        $doctor->notify(new RequestAppointmentNotification($doctor->name, $appointmentData, $patient));
+    }
+               
     public function addWorkingDay($data)
     {
         $workingDays = $this->repository->storeWorkingDay($data);

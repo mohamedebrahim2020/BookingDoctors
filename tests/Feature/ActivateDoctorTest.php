@@ -30,6 +30,7 @@ class ActivateDoctorTest extends TestCase
     /** @test */
     public function superadmin_successfully_activate_doctor()
     {
+        $this->withoutExceptionHandling();
         Notification::fake();
         Queue::fake();
         $admin = Admin::where('is_super', 1)->first();
