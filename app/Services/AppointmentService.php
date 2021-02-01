@@ -13,15 +13,15 @@ class AppointmentService extends BaseService
         $this->repository = $repository;
     }
 
-    public function storeAppointment($data, $doctorID)
+    public function store($data)
     {
-        $doctor = app(DoctorService::class)->checkDoctorIsActivated($doctorID);
-        $shift = app(DoctorService::class)->repository->fiterDoctorShifts($doctorID);
+        $doctor = app(DoctorService::class)->checkDoctorIsActivated(request()->doctor);
+        $shift = app(DoctorService::class)->repository->fiterDoctorShifts(request()->doctor);
         $this->checkDurationWithShift($shift, $data['duration']);
         $approvedAppointments = $this->repository->fiterDoctorAppointments($doctor);
-        $this->checkDurationWithAppointment($approvedAppointments, $data);
+        $this->checkAppointment($approvedAppointments);
         $appointment = $this->repository->storeAppointment($data, $doctor);
-        app(DoctorService::class)->recieveAppointmentRequest($doctorID,$data, auth()->user()->name);
+        app(DoctorService::class)->recieveAppointmentRequest(request()->doctor, $data, auth()->user()->name);
         return $appointment;
     }
 
@@ -40,15 +40,10 @@ class AppointmentService extends BaseService
         } 
     }
 
-    public function checkDurationWithAppointment($approvedAppointments, $data)
+    public function checkAppointment($approvedAppointments)
     {
         if ($approvedAppointments->count() > 0) {
-            $appointments = $approvedAppointments->map(
-                function ($item, $key) use ($data) {
-                    return (($item->time + ($item->duration * 60000)) > $data['time']);
-                }
-            );
-            ($appointments[0]) ? abort(Response::HTTP_BAD_REQUEST, "there is an already approved appointment at this time") : "";
+            abort(Response::HTTP_BAD_REQUEST, "there is an already approved appointment at this time");
         }
     }
 }    

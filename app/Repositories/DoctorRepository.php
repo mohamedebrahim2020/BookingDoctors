@@ -39,14 +39,6 @@ class DoctorRepository extends BaseRepository
         return $shift;  
    }
 
-   public function fiterDoctorAppointments($doctorID)
-   {
-        $this->model = $this->find($doctorID);
-        $appointment = $this->model->appointments()->filter(app(AppointmentFilters::class))->get();
-        if ($appointment->count() == 1) {
-            abort(Response::HTTP_BAD_REQUEST, 'doctor has an appointment at this time');
-        }
-   }
    public function storeWorkingDay($data)
    {
       $doctor = $this->find(auth('doctor')->user()->id);

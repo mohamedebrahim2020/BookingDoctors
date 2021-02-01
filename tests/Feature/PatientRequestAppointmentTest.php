@@ -22,14 +22,11 @@ class PatientRequestAppointmentTest extends TestCase
     {
         parent::setUp();
         $this->seed(DoctorSpecializationsSeeder::class);
-        $this->artisan('passport:client', ['--password' => null, '--no-interaction' => true, '--provider' => 'doctors', '--name' => 'DoctorGrantClient']);
-        $this->artisan('passport:client', ['--password' => null, '--no-interaction' => true, '--provider' => 'patients', '--name' => 'PatientsGrantClient']);
     }
 
     /** @test */
     public function patient_successfully_request_an_appointment()
     {
-        $this->withoutExceptionHandling();
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $doctor->workingDays()->create(

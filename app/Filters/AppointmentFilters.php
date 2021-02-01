@@ -2,6 +2,7 @@
 namespace App\Filters;
 
 use App\Enums\AppointmentStatus;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentFilters extends QueryFilters
 {   
@@ -10,6 +11,6 @@ class AppointmentFilters extends QueryFilters
         $from = $time;
         $to = $time + (request()->duration * 60000);
         $checkBefore = 120 * 60000;
-        return $this->builder->whereBetween('time', [$from - $checkBefore, $to])->where('status', AppointmentStatus::APPROVED);
+        return $this->builder->whereBetween(DB::raw('time + (duration * 60000)'), [$from, $to])->where('status', AppointmentStatus::APPROVED);
     }
 }    

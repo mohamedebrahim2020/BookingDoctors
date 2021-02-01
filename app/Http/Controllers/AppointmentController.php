@@ -11,16 +11,16 @@ use Illuminate\Http\Response;
 
 class AppointmentController extends Controller
 {
-    protected $appointmentService;
+    protected $service;
 
-    public function __construct(AppointmentService $appointmentService)
+    public function __construct(AppointmentService $service)
     {
-        $this->appointmentService = $appointmentService;
+        $this->service = $service;
     }
 
     public function store(PatientReserveAppointmentRequest $request)
     {
-        $appointment = $this->appointmentService->storeAppointment($request->except('status','cancel_reason'), $request->doctor);
+        $appointment = $this->service->store($request->except('status','cancel_reason'), $request->doctor);
         return response()->json(new CreatedResource($appointment), Response::HTTP_CREATED);
     }
 }

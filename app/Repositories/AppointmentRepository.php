@@ -22,9 +22,6 @@ class AppointmentRepository extends BaseRepository
    {
         $approvedAppointment = $doctor->appointments()->filter(app(AppointmentFilters::class))->get();
         return $approvedAppointment;
-        // if ($appointment->count() == 1) {
-        //     abort(Response::HTTP_BAD_REQUEST, 'doctor has an appointment at this time');
-        // }
    }
 
    public function storeAppointment($data, $doctor)
