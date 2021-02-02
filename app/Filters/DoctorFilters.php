@@ -1,7 +1,7 @@
 <?php
 namespace App\Filters;
 
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class DoctorFilters extends QueryFilters
 {    
@@ -18,4 +18,5 @@ class DoctorFilters extends QueryFilters
             return $this->builder->where('activated_at', null);
         }
     }
+
 }    

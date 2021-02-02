@@ -21,4 +21,17 @@ class AppointmentRepository extends BaseRepository
    {
        return request()->user('doctor')->appointments()->filter(app(AppointmentFilters::class))->get();
    }
-} 
+ 
+   public function fiterDoctorAppointments($doctor)
+   {
+        $approvedAppointment = $doctor->appointments()->filter(app(AppointmentFilters::class))->get();
+        return $approvedAppointment;
+   }
+
+   public function storeAppointment($data, $doctor)
+   {
+       $data['patient_id'] = auth()->user()->id;
+       $appointment = $doctor->appointments()->create($data);
+       return $appointment;
+   }
+}   

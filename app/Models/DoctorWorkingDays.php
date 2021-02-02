@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Filters\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DoctorWorkingDays extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
     /**
      * The table associated with the model.
