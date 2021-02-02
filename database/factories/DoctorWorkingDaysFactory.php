@@ -2,11 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\WeekDays;
-use App\Models\Doctor;
 use App\Models\DoctorWorkingDays;
-use App\Models\Model;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DoctorWorkingDaysFactory extends Factory

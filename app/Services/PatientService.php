@@ -47,4 +47,31 @@ class PatientService extends BaseService
         $patient = $this->repository->findPatientByEmail($data);
         (!Hash::check($data['password'], $patient->password) || !$patient->verified_at) ? abort(Response::HTTP_UNAUTHORIZED) : "" ;
     }
+
+    public function storeAppointment($data, $doctorID)
+    {
+        $patient = $this->show(auth()->user()->id);
+        $shift = app(DoctorService::class)->repository->fiterDoctorShifts($doctorID);
+        $this->checkDuration($shift, $data['duration']);
+        app(DoctorService::class)->repository->fiterDoctorAppointments($doctorID);
+        $appointment = $this->repository->storeAppointment($data, $doctorID);
+        app(DoctorService::class)->recieveAppointmentRequest($doctorID,$data,$patient->name);
+        return $appointment;
+    }
+
+    public function checkDuration($shift, $duration)
+    {
+        if ($shift->count() == 0) {
+            abort(Response::HTTP_BAD_REQUEST, 'doctor has no shift at this time');
+        } else {
+            $shift = $shift->toArray();
+            if ($shift[0]['is_all_day'] == 1) {
+
+                return true;
+            } else {
+                $shiftDuration = Carbon::parse($shift[0]["to"])->diffInMinutes(Carbon::parse($shift[0]["from"]));
+                ($shiftDuration < $duration) ? abort(Response::HTTP_BAD_REQUEST, 'duration is longer than shift'):'';
+            }
+        } 
+    }
 }

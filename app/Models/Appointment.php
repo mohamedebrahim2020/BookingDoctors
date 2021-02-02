@@ -6,16 +6,9 @@ use App\Filters\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DoctorWorkingDays extends Model
+class Appointment extends Model
 {
     use HasFactory, Filterable;
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-    */
-    protected $table = 'working_days';
 
     /**
      * The attributes that are mass assignable.
@@ -23,11 +16,7 @@ class DoctorWorkingDays extends Model
      * @var array
     */
     protected $fillable = [
-        'day', 'from', 'to', 'is_all_day', 'doctor_id',
+        'time', 'duration', 'patient_id'
     ];
 
-    public function doctor()
-    {
-        return $this->belongsTo(Doctor::class);
-    }
 }

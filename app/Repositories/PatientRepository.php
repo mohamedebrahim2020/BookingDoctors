@@ -31,4 +31,5 @@ class PatientRepository extends BaseRepository
         $patient = $this->model->filter(app(PatientFilters::class))->firstorfail();
         return $patient;
    }
+
 }   

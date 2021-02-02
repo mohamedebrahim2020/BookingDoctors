@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('admin/login', [AdminController::class, 'login'])->name('adminLogin');
 Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('admins', AdminController::class);
-    Route::group(['prefix' => 'admin',], function () {
+    Route::group(['prefix' => 'admin'], function () {
         Route::get('permissions', [AdminController::class,'getPermissions']);
         Route::post('doctors/{doctor}/activate', [AdminController::class,'activateDoctor'])->name('activate.doctor');
     });

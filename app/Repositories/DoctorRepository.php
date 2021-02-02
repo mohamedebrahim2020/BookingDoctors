@@ -2,8 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Filters\AppointmentFilters;
 use App\Filters\DoctorFilters;
+use App\Filters\WorkingDayFilters;
 use App\Models\Doctor;
+use Illuminate\Http\Response;
 
 class DoctorRepository extends BaseRepository 
 {
@@ -27,6 +30,13 @@ class DoctorRepository extends BaseRepository
    {
        $doctors = $this->model->filter(app(DoctorFilters::class))->get();
        return $doctors;
+   }
+
+   public function fiterDoctorShifts($doctorID)
+   {
+        $this->model = $this->find($doctorID);
+        $shift = $this->model->workingDays()->filter(app(WorkingDayFilters::class))->get();
+        return $shift;  
    }
 
    public function storeWorkingDay($data)
