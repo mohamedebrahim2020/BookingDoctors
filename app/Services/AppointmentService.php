@@ -49,15 +49,15 @@ class AppointmentService extends BaseService
         }
     }
 
-    public function reject($data)
+    public function reject($data, $appointmentId)
     {
         $data['status'] = AppointmentStatus::REJECTED;
-        $appointment = $this->repository->find(request()->appointment);
+        $appointment = $this->repository->find($appointmentId);
         $doctor = auth()->user();  
         $this->checkDoctorHasThisAppointment($doctor, $appointment);
         $this->checkAvailabiltyToReject($appointment);
         $this->update($data , $appointment->id);
-        $appointment->patient->notify(new AppointmentNotification($this->repository->find(request()->appointment)));
+        $appointment->patient->notify(new AppointmentNotification($this->repository->find($appointmentId)));
         return $appointment;
 
    
