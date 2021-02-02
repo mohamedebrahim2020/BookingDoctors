@@ -19,4 +19,14 @@ class Appointment extends Model
         'time', 'duration', 'patient_id'
     ];
 
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
+    }
+
 }
