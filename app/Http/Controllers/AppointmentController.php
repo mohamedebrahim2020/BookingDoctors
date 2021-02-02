@@ -27,9 +27,9 @@ class AppointmentController extends Controller
         return response()->json(new CreatedResource($appointment), Response::HTTP_CREATED);
     }
 
-    public function reject(RejectAppointmentRequest $request, $appointment)
+    public function reject(RejectAppointmentRequest $request, $id)
     {
-        $appointment = $this->service->reject($request->except('status'), $appointment);
+        $appointment = $this->service->reject($request->except('status'), $id);
         return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);        
     }
 }
