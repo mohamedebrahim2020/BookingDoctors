@@ -24,9 +24,9 @@ class AppointmentController extends Controller
         return response()->json(IndexAppointmentResource::collection($appointments), Response::HTTP_OK);
     }
 
-    public function approve()
+    public function approve($id)
     {
-        $appointment = $this->service->approve();
+        $appointment = $this->service->approve($id);
         return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);
     }    
     public function store(PatientReserveAppointmentRequest $request)
