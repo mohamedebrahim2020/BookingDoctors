@@ -93,7 +93,7 @@ class DoctorApproveAppointmentTest extends TestCase
         Notification::fake();
         Queue::fake();
         $response = $this->postJson(route('appointments.approve', ['appointment' => $appointment->id]), ["Accept" => "application/json"]);
-        $response->assertStatus(405);
+        $response->assertStatus(400);
     }
 
     /** @test */

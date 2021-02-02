@@ -6,6 +6,7 @@ use App\Services\AppointmentService;
 use App\Transformers\IndexAppointmentResource;
 use App\Http\Requests\PatientReserveAppointmentRequest;
 use App\Transformers\CreatedResource;
+use App\Transformers\UpdatedResource;
 use Illuminate\Http\Response;
 
 class AppointmentController extends Controller
@@ -25,8 +26,8 @@ class AppointmentController extends Controller
 
     public function approve()
     {
-        $this->service->approve();
-        return response()->json([], Response::HTTP_OK);
+        $appointment = $this->service->approve();
+        return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);
     }    
     public function store(PatientReserveAppointmentRequest $request)
     {

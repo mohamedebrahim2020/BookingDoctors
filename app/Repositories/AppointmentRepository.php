@@ -19,7 +19,7 @@ class AppointmentRepository extends BaseRepository
 
    public function filterAppointmentsByStatus()
    {
-       return request()->user('doctor')->appointments()->filter(app(AppointmentFilters::class))->get();
+       return auth()->user()->appointments()->filter(app(AppointmentFilters::class))->get();
    }
  
    public function fiterDoctorAppointments($doctor)

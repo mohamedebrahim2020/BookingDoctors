@@ -30,17 +30,18 @@ class AppointmentService extends BaseService
         $this->checkAvailabiltyToApprove($appointment);
         $this->update(['status' => AppointmentStatus::APPROVED] , $appointment->id);
         $appointment->patient->notify(new AppointmentNotification($this->repository->find(request()->appointment)));
+        return $appointment;
     }
 
     public function checkDoctorHasThisAppointment($doctor, $appointment)
     {
-        $doctor->appointments->contains($appointment) ? "" : abort(Response::HTTP_METHOD_NOT_ALLOWED);
+        $doctor->appointments->contains($appointment) ? "" : abort(Response::HTTP_BAD_REQUEST);
     }
 
     public function checkAvailabiltyToApprove($appointment)
     {
         $nowInMs = Carbon::now()->timestamp * 1000;
-        if ($appointment->status ==2 || $appointment->time <= $nowInMs) {
+        if ($appointment->status == AppointmentStatus::APPROVED || $appointment->time <= $nowInMs) {
             abort(Response::HTTP_BAD_REQUEST,"already approved or expired");            
         }
     }
