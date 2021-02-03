@@ -6,13 +6,12 @@ use App\Enums\AppointmentStatus;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class AppointmentNotification extends Notification implements ShouldQueue 
 {
-    use Queueable, InteractsWithExceptionHandling;
+    use Queueable;
 
     public $appointment;
 
@@ -70,9 +69,4 @@ class AppointmentNotification extends Notification implements ShouldQueue
             //
         ];
     }
-
-    public function failed(\Exception $e)
-{
-    \Illuminate\Support\Facades\Log::debug('MyNotification failed');
-}
 }

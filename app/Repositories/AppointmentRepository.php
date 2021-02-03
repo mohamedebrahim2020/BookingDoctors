@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Filters\AppointmentFilters;
 use App\Models\Appointment;
-use Illuminate\Http\Response;
 
 class AppointmentRepository extends BaseRepository 
 {
@@ -18,6 +17,11 @@ class AppointmentRepository extends BaseRepository
        parent::__construct($model);
    }
 
+   public function filterAppointmentsByStatus()
+   {
+       return auth()->user()->appointments()->filter(app(AppointmentFilters::class))->get();
+   }
+ 
    public function fiterDoctorAppointments($doctor)
    {
         $approvedAppointment = $doctor->appointments()->filter(app(AppointmentFilters::class))->get();
