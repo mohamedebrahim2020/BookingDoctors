@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\WorkingDayController;
@@ -25,6 +26,8 @@ Route::group(['middleware' => ['auth:admin']], function () {
 });
 Route::group(['middleware' => ['auth:doctor','EnsureDoctorIsActivated']], function () {
     Route::apiResource('workingdays', WorkingDayController::class)->only('store');
+    Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
+    Route::apiResource('/appointments', AppointmentController::class)->only('index');
 });
 
 

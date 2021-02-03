@@ -16,7 +16,17 @@ class Appointment extends Model
      * @var array
     */
     protected $fillable = [
-        'time', 'duration', 'patient_id'
+        'time', 'duration', 'patient_id', 'status', 'cancel_reason'
     ];
+
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
+    }
 
 }

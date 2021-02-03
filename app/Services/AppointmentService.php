@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\AppointmentStatus;
+use App\Notifications\AppointmentNotification;
 use App\Repositories\AppointmentRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
@@ -44,6 +46,32 @@ class AppointmentService extends BaseService
     {
         if ($approvedAppointments->count() > 0) {
             abort(Response::HTTP_BAD_REQUEST, "there is an already approved appointment at this time");
+        }
+    }
+
+    public function cancel($data, $appointmentId)
+    {
+        $data['status'] = AppointmentStatus::CANCELLED;
+        $appointment = $this->repository->find($appointmentId);
+        $doctor = auth()->user();  
+        $this->checkDoctorHasThisAppointment($doctor, $appointment);
+        $this->checkAvailabiltyToCancel($appointment);
+        $this->update($data , $appointment->id);
+        $appointment->patient->notify(new AppointmentNotification($this->repository->find($appointmentId)));
+        return $appointment; 
+    }
+
+    public function checkDoctorHasThisAppointment($doctor, $appointment)
+    {
+        $doctor->appointments->contains($appointment) ? "" : abort(Response::HTTP_BAD_REQUEST);
+    }
+
+    public function checkAvailabiltyToCancel($appointment)
+    {
+        $time = Carbon::parse($appointment->time/1000);
+        $nowInMs = Carbon::now()->timestamp * 1000;
+        if ($appointment->status != AppointmentStatus::APPROVED || $appointment->time <= $nowInMs || $time->diffInHours() <= 24) {
+            abort(Response::HTTP_BAD_REQUEST,"already cancelled or before less than 24 hrs or expired");            
         }
     }
 }    
