@@ -81,6 +81,27 @@ class AppointmentService extends BaseService
         }
     }
 
+    public function cancel($data, $appointmentId)
+    {
+        $data['status'] = AppointmentStatus::CANCELLED;
+        $appointment = $this->repository->find($appointmentId);
+        $doctor = auth()->user();  
+        $this->checkDoctorHasThisAppointment($doctor, $appointment);
+        $this->checkAvailabiltyToCancel($appointment);
+        $this->update($data , $appointment->id);
+        $appointment->patient->notify(new AppointmentNotification($this->repository->find($appointmentId)));
+        return $appointment; 
+    }
+
+    public function checkAvailabiltyToCancel($appointment)
+    {
+        $time = Carbon::parse($appointment->time/1000);
+        $nowInMs = Carbon::now()->timestamp * 1000;
+        if ($appointment->status != AppointmentStatus::APPROVED || $appointment->time <= $nowInMs || $time->diffInHours() <= 24) {
+            abort(Response::HTTP_BAD_REQUEST,"already cancelled or before less than 24 hrs or expired");            
+        }
+    }
+        
     public function reject($data, $appointmentId)
     {
         $data['status'] = AppointmentStatus::REJECTED;
@@ -91,8 +112,6 @@ class AppointmentService extends BaseService
         $this->update($data , $appointment->id);
         $appointment->patient->notify(new AppointmentNotification($this->repository->find($appointmentId)));
         return $appointment;
-
-   
     }
 
     public function checkAvailabiltyToReject($appointment)

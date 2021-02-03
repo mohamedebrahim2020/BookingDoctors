@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CancelAppointmentRequest;
 use App\Http\Requests\PatientReserveAppointmentRequest;
 use App\Http\Requests\RejectAppointmentRequest;
 use App\Services\AppointmentService;
@@ -36,6 +37,10 @@ class AppointmentController extends Controller
         return response()->json(new CreatedResource($appointment), Response::HTTP_CREATED);
     }
 
+    public function cancel(CancelAppointmentRequest $request, $id)
+    {
+        $appointment = $this->service->cancel($request->except('status'), $id);
+    }    
     public function reject(RejectAppointmentRequest $request, $id)
     {
         $appointment = $this->service->reject($request->except('status'), $id);
