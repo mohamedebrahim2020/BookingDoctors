@@ -49,7 +49,7 @@ class AppointmentNotification extends Notification implements ShouldQueue
             [
                 'doctor_name' => $this->appointment->doctor->name,
                 'patient_name' => $this->appointment->patient->name,
-                'time' => Carbon::createFromTimestamp($this->appointment->time) ->toDateTimeString(),
+                'time' => (Carbon::createFromTimestamp($this->appointment->time/1000)->toDateTimeString()),
                 'duration' => $this->appointment->duration,
                 'status' => AppointmentStatus::fromValue($this->appointment->status)->description,
                 'reason' => $this->appointment->cancel_reason,
