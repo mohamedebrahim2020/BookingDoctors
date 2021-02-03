@@ -80,4 +80,26 @@ class AppointmentService extends BaseService
             abort(Response::HTTP_BAD_REQUEST, "there is an already approved appointment at this time");
         }
     }
+
+    public function reject($data, $appointmentId)
+    {
+        $data['status'] = AppointmentStatus::REJECTED;
+        $appointment = $this->repository->find($appointmentId);
+        $doctor = auth()->user();  
+        $this->checkDoctorHasThisAppointment($doctor, $appointment);
+        $this->checkAvailabiltyToReject($appointment);
+        $this->update($data , $appointment->id);
+        $appointment->patient->notify(new AppointmentNotification($this->repository->find($appointmentId)));
+        return $appointment;
+
+   
+    }
+
+    public function checkAvailabiltyToReject($appointment)
+    {
+        $nowInMs = Carbon::now()->timestamp * 1000;
+        if ($appointment->status != AppointmentStatus::PENDING || $appointment->time <= $nowInMs) {
+            abort(Response::HTTP_BAD_REQUEST,"already rejected or expired");            
+        }
+    }
 }    

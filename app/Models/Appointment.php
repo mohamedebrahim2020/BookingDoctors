@@ -16,7 +16,7 @@ class Appointment extends Model
      * @var array
     */
     protected $fillable = [
-        'time', 'duration', 'patient_id', 'status'
+        'time', 'duration', 'patient_id', 'status', 'cancel_reason'
     ];
 
     public function patient()

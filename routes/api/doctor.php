@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
 Route::group(['middleware' => ['auth:doctor','EnsureDoctorIsActivated']], function () {
     Route::apiResource('workingdays', WorkingDayController::class)->only('store');
     Route::post('/appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
+    Route::post('/appointments/{appointment}/reject', [AppointmentController::class, 'reject'])->name('appointments.reject');
     Route::apiResource('/appointments', AppointmentController::class)->only('index');
 });
 

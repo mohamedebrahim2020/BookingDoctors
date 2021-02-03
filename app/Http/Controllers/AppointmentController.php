@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PatientReserveAppointmentRequest;
+use App\Http\Requests\RejectAppointmentRequest;
 use App\Services\AppointmentService;
 use App\Transformers\IndexAppointmentResource;
-use App\Http\Requests\PatientReserveAppointmentRequest;
 use App\Transformers\CreatedResource;
 use App\Transformers\UpdatedResource;
 use Illuminate\Http\Response;
@@ -33,5 +34,11 @@ class AppointmentController extends Controller
     {
         $appointment = $this->service->store($request->except('status','cancel_reason'), $request->doctor);
         return response()->json(new CreatedResource($appointment), Response::HTTP_CREATED);
+    }
+
+    public function reject(RejectAppointmentRequest $request, $id)
+    {
+        $appointment = $this->service->reject($request->except('status'), $id);
+        return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);        
     }
 }
