@@ -6,6 +6,7 @@ use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AppointmentFactory extends Factory
@@ -27,8 +28,8 @@ class AppointmentFactory extends Factory
         return [
             'patient_id' => Patient::factory(),
             'doctor_id' => Doctor::factory(),
-            'time' => 1612821897,
-            'duration' => 60,
+            'time' => Carbon::parse(now())->next('Monday')->timestamp * 1000,
+            'duration' => 90,
             'status' => AppointmentStatus::APPROVED,
             'cancel_reason' => null,
         ];

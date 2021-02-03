@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\AppointmentStatus;
+use App\Notifications\AppointmentNotification;
 use App\Repositories\AppointmentRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
@@ -13,6 +15,38 @@ class AppointmentService extends BaseService
         $this->repository = $repository;
     }
 
+    public function index()
+    {
+        if (request()->user('doctor')) {
+            return $this->repository->filterAppointmentsByStatus();
+        }
+    }
+
+    public function approve($id)
+    {
+        $appointment = $this->repository->find($id);
+        $doctor = request()->user();
+        $this->checkDoctorHasThisAppointment($doctor, $appointment);
+        $this->checkAvailabiltyToApprove($appointment);
+        $this->update(['status' => AppointmentStatus::APPROVED] , $appointment->id);
+        $appointment->patient->notify(new AppointmentNotification($this->repository->find($id)));
+        return $appointment;
+    }
+
+    public function checkDoctorHasThisAppointment($doctor, $appointment)
+    {
+        $doctor->appointments->contains($appointment) ? "" : abort(Response::HTTP_BAD_REQUEST);
+    }
+
+    public function checkAvailabiltyToApprove($appointment)
+    {
+        $nowInMs = Carbon::now()->timestamp * 1000;
+        if ($appointment->status == AppointmentStatus::APPROVED || $appointment->time <= $nowInMs) {
+            abort(Response::HTTP_BAD_REQUEST,"already approved or expired");            
+        }
+    }
+
+ 
     public function store($data)
     {
         $doctor = app(DoctorService::class)->checkDoctorIsActivated(request()->doctor);
