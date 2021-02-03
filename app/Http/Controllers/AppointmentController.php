@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CancelAppointmentRequest;
 use App\Http\Requests\PatientReserveAppointmentRequest;
-use App\Http\Requests\PatientReserveAppointmentRequest;
 use App\Http\Requests\RejectAppointmentRequest;
 use App\Services\AppointmentService;
 use App\Transformers\IndexAppointmentResource;
