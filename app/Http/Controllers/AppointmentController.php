@@ -6,6 +6,7 @@ use App\Http\Requests\CancelAppointmentRequest;
 use App\Http\Requests\PatientReserveAppointmentRequest;
 use App\Http\Requests\RejectAppointmentRequest;
 use App\Services\AppointmentService;
+use App\Services\FirebaseService;
 use App\Transformers\IndexAppointmentResource;
 use App\Transformers\CreatedResource;
 use App\Transformers\UpdatedResource;
@@ -45,5 +46,11 @@ class AppointmentController extends Controller
     {
         $appointment = $this->service->reject($request->except('status'), $id);
         return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);        
+    }
+
+    public function notifications()
+    {
+        $appointment = app(FirebaseService::class)->getAppointment();
+        return response()->json($appointment, Response::HTTP_OK);        
     }
 }
