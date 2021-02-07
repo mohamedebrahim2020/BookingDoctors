@@ -15,13 +15,8 @@ class FirebaseService
         ]);
     }
 
-    public function getAppointment()
+    public function resetAppointment()
     {
-        $check = app(Database::class)->getReference('doctor_' . auth()->user()->id . '/has_new_appointment')->getValue();
-        if ($check) {
-            $appointment = app(Database::class)->getReference('doctor_' . auth()->user()->id . '/last_new_appointment_id')->getValue();
-            app(Database::class)->getReference()->update(['doctor_' . auth()->user()->id . '/has_new_appointment' =>'false']);
-            return $appointment;
-        }
+        app(Database::class)->getReference()->update(['doctor_' . auth()->user()->id . '/has_new_appointment' => 'false']);
     }
 }
