@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PatientLoginRequest;
 use App\Http\Requests\PatientRegisterationRequest;
+use App\Http\Requests\ResendVerificationCodeRequest;
 use App\Http\Requests\VerifyPatientEmailRequest;
 use App\Services\PatientService;
 use App\Traits\LoginTrait;
 use App\Transformers\CreatedResource;
 use App\Transformers\TokenResource;
+use App\Transformers\UpdatedResource;
 use Illuminate\Http\Response;
 
 class PatientController extends Controller
@@ -38,5 +40,11 @@ class PatientController extends Controller
     {
         $this->patientService->checkAuth($request->all());
         return response()->json(new TokenResource($this->requestTokensFromPassport($request)), Response::HTTP_OK);
+    }
+
+    public function codeResend(ResendVerificationCodeRequest $request)
+    {
+        $patient = $this->patientService->codeResend($request->all());
+        return response(new UpdatedResource($patient), Response::HTTP_OK);
     }
 }
