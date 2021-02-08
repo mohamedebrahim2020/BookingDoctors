@@ -44,7 +44,8 @@ class DoctorProfileTest extends TestCase
             "working_days"
         ]);
     }
-
+    
+    /** @test */
     public function unactivated_doctor_failed_to_get_his_profile()
     {
         $doctor = Doctor::factory()->create();
