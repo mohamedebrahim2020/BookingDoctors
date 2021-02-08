@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\AppointmentStatus;
+use App\Jobs\StoreAppointment;
 use App\Notifications\AppointmentNotification;
 use App\Repositories\AppointmentRepository;
 use Carbon\Carbon;
@@ -56,6 +57,7 @@ class AppointmentService extends BaseService
         $this->checkAppointment($approvedAppointments);
         $appointment = $this->repository->storeAppointment($data, $doctor);
         app(DoctorService::class)->recieveAppointmentRequest(request()->doctor, $data, auth()->user()->name);
+        StoreAppointment::dispatch($doctor->id, $appointment->id)->afterResponse();
         return $appointment;
     }
 
