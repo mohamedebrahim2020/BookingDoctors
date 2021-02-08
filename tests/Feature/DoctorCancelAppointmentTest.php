@@ -27,6 +27,7 @@ class DoctorCancelAppointmentTest extends TestCase
     /** @test */
     public function doctor_successfully_cancel_an_appointment()
     {
+        $this->withoutExceptionHandling();
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $doctor->workingDays()->create(

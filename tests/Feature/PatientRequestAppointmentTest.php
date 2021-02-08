@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\StoreAppointment;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
@@ -9,6 +10,7 @@ use App\Notifications\RequestAppointmentNotification;
 use Carbon\Carbon;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Passport\Passport;
@@ -38,12 +40,14 @@ class PatientRequestAppointmentTest extends TestCase
         Passport::actingAs($patient, ['*'], 'patient');
         Notification::fake();
         Queue::fake();
+        Bus::fake();
         $data = [
             'time'  => 1612821897,
             'duration' => 30,
         ];
         $response = $this->postJson(route('doctors.appointments.store', ['doctor' =>$doctor->id]),$data, ["Accept" => "application/json"]);
         Notification::assertSentTo([$doctor], RequestAppointmentNotification::class);
+        Bus::assertDispatched(StoreAppointment::class);
         $response->assertCreated();
     }
 

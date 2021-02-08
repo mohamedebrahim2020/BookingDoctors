@@ -26,6 +26,9 @@ Route::prefix('patient')->group(function () {
             'index' => 'doctors.list',
             'show' => 'doctors.details'
         ]); 
+        Route::apiResource('/appointments', AppointmentController::class)->only('show')->names([
+            'show' => 'appointments.patient.show'
+        ]);
     });
 });
 

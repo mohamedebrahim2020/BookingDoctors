@@ -6,9 +6,13 @@ use Illuminate\Support\Facades\DB;
 
 class AppointmentFilters extends QueryFilters
 {    
-    public function status ($value)
+    public function status ($value = null)
     {
-        return $this->builder->where('status', $value);
+        if (!$value) {
+            return $this->builder;
+        } else {
+            return $this->builder->where('status', $value);
+        }
     }
    
     public function time($time)

@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CancelAppointmentRequest;
 use App\Http\Requests\PatientReserveAppointmentRequest;
 use App\Http\Requests\RejectAppointmentRequest;
+use App\Models\Appointment;
 use App\Services\AppointmentService;
+use App\Services\FirebaseService;
 use App\Transformers\IndexAppointmentResource;
 use App\Transformers\CreatedResource;
+use App\Transformers\ShowAppointmentResource;
 use App\Transformers\UpdatedResource;
 use Illuminate\Http\Response;
 
@@ -40,10 +43,24 @@ class AppointmentController extends Controller
     public function cancel(CancelAppointmentRequest $request, $id)
     {
         $appointment = $this->service->cancel($request->except('status'), $id);
+        return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);        
     }    
     public function reject(RejectAppointmentRequest $request, $id)
     {
         $appointment = $this->service->reject($request->except('status'), $id);
         return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);        
+    }
+
+    public function reset()
+    {
+        app(FirebaseService::class)->resetAppointment();
+        return response()->json([], Response::HTTP_OK);        
+    }
+
+    public function show($id)
+    {
+        $this->authorize('view', $this->service->show($id));
+        $appointment = $this->service->show($id);
+        return response(new ShowAppointmentResource($appointment), Response::HTTP_OK);
     }
 }
