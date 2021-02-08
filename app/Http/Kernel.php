@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'EnsurePatientIsVerified' => \App\Http\Middleware\EnsurePatientIsVerified::class,
         'EnsureDoctorIsActivated' => \App\Http\Middleware\EnsureDoctorIsActivated::class,
+        'customthrottle' => \App\Http\Middleware\CustomThrottleMiddleware::class,
     ];
 }

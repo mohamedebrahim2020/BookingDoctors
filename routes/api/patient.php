@@ -27,6 +27,9 @@ Route::prefix('patient')->group(function () {
             'show' => 'doctors.details'
         ]); 
     });
+    Route::group(['middleware' => ['customthrottle:3,30']], function () {
+        Route::post('code/resend', [PatientController::class, 'codeResend'])->name('codeResend');
+    });
 });
 
 

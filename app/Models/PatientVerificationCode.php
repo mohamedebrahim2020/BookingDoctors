@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Filters\Filterable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PatientVerificationCode extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, Filterable;
 
     /**
      * The table associated with the model.

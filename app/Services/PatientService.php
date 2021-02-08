@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\FolderName;
 use App\Notifications\PatientVerificationMail;
 use App\Repositories\PatientRepository;
+use App\Repositories\PatientVerificationCodeRepository;
 use App\Traits\StoreFileTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
@@ -73,5 +74,17 @@ class PatientService extends BaseService
                 ($shiftDuration < $duration) ? abort(Response::HTTP_BAD_REQUEST, 'duration is longer than shift'):'';
             }
         } 
+    }
+
+    public function codeResend($data)
+    {
+        $patient = $this->repository->findPatientByEmail($data);
+        (!Hash::check($data['password'], $patient->password)) ? abort(Response::HTTP_UNAUTHORIZED) : "" ;
+        ($patient->verified_at) ? abort(Response::HTTP_BAD_REQUEST) : "" ;
+        app(PatientVerificationCodeService::class)->deletePatientOldCode($patient);
+        $verificationCode = Str::random(10);
+        $this->repository->storeCode($patient, $verificationCode);
+        $patient->notify(new PatientVerificationMail($patient->email, $verificationCode));
+        return $patient;
     }
 }
