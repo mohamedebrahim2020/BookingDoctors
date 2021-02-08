@@ -25,7 +25,6 @@ class ResendVerificationCodeRequest extends FormRequest
     {
         return [
             'email' => 'required|email|exists:patients,email',
-            'password' => 'required',
         ];
     }
 }

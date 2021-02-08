@@ -14,8 +14,6 @@ class ResendPatientActivationCodeTest extends TestCase
 {
     use RefreshDatabase;
 
-    use RefreshDatabase;
-
     /** @test */
     public function patient_successfully_request_activation_code()
     {
@@ -24,7 +22,6 @@ class ResendPatientActivationCodeTest extends TestCase
         $patient = Patient::factory()->create();
         $data = [
             'email' => $patient->email,
-            'password' => 123456789
         ]; 
         $response = $this->postJson(route('codeResend'), $data, ["Accept"=>"application/json"]);
         Notification::assertSentTo([$patient], PatientVerificationMail::class);
@@ -39,24 +36,9 @@ class ResendPatientActivationCodeTest extends TestCase
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $data = [
             'email' => $patient->email,
-            'password' => 123456789
         ];
         $response = $this->postJson(route('codeResend'), $data, ["Accept" => "application/json"]);
         $response->assertStatus(400);
-    }
-
-    /** @test */
-    public function unauthenticated_patient_fail_to_request_activation_code()
-    {
-        Notification::fake();
-        Queue::fake();
-        $patient = Patient::factory()->create();
-        $data = [
-            'email' => $patient->email,
-            'password' => 123456  // wrong password
-        ];
-        $response = $this->postJson(route('codeResend'), $data, ["Accept" => "application/json"]);
-        $response->assertUnauthorized();
     }
 
     /** @test */
@@ -67,7 +49,6 @@ class ResendPatientActivationCodeTest extends TestCase
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $data = [
             'email' => $patient->email . 'jdkd',
-            'password' => 12345689
         ];
         $response = $this->postJson(route('codeResend'), $data, ["Accept" => "application/json"]);
         $response->assertJsonValidationErrors('email');
@@ -82,7 +63,6 @@ class ResendPatientActivationCodeTest extends TestCase
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $data = [
             'email' => $patient->email,
-            'password' => 123456789
         ];
         $i = 0;
         while ($i <= 4) {

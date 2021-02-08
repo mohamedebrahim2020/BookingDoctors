@@ -79,12 +79,25 @@ class PatientService extends BaseService
     public function codeResend($data)
     {
         $patient = $this->repository->findPatientByEmail($data);
-        (!Hash::check($data['password'], $patient->password)) ? abort(Response::HTTP_UNAUTHORIZED) : "" ;
-        ($patient->verified_at) ? abort(Response::HTTP_BAD_REQUEST) : "" ;
-        app(PatientVerificationCodeService::class)->deletePatientOldCode($patient);
+        $this->checkVerification($patient);
+        $this->deletePatientOldCode($patient);
         $verificationCode = Str::random(10);
         $this->repository->storeCode($patient, $verificationCode);
         $patient->notify(new PatientVerificationMail($patient->email, $verificationCode));
         return $patient;
+    }
+
+    public function deletePatientOldCode($patient)
+    {
+        if ($patient->verified_at) {
+            abort(Response::HTTP_BAD_REQUEST);
+        }    
+    }
+
+    public function checkVerification($patient)
+    {
+        if ($patient->verificationCode) {
+            $patient->verificationCode->delete();
+        }    
     }
 }

@@ -46,9 +46,4 @@ class AppointmentController extends Controller
         $appointment = $this->service->reject($request->except('status'), $id);
         return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);        
     }
-
-    public function test()
-    {
-        dd('hima');
-    }
 }
