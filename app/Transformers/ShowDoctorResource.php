@@ -22,8 +22,8 @@ class ShowDoctorResource extends JsonResource
             'photo' => $this->photo,
             'degree_copy' => $this->degree_copy,
             'is_active' => (bool) $this->activated_at,
-            'regestired_at' => $this->created_at->timestamp
-
+            'regestired_at' => $this->created_at->timestamp,
+            'working_days' => DoctorWorkingDaysResource::collection($this->WorkingDays)
         ];
     }
 }

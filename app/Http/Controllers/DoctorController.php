@@ -60,6 +60,6 @@ class DoctorController extends Controller
     public function profile()
     {
         $doctor = $this->doctorService->show(auth()->user()->id);
-        return response()->json(new DoctorProfileResource($doctor), Response::HTTP_OK);
+        return response()->json(new ShowDoctorResource($doctor), Response::HTTP_OK);
     }
 }
