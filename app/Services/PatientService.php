@@ -103,8 +103,10 @@ class PatientService extends BaseService
 
     public function changePassword($data)
     {
-        $patient = $this->show(auth()->user()->id);
-        (!Hash::check($data['old_password'], $patient->password)) ? abort(Response::HTTP_UNAUTHORIZED, 'unauthenticated') : "" ;
+        $patient = auth()->user();
+        if (!Hash::check($data['old_password'], $patient->password)) {
+            abort(Response::HTTP_UNAUTHORIZED, 'unauthenticated');
+        }
         $data['password'] = $data['new_password'];
         $this->update($data, $patient->id);
         $this->deleteOtherSessions();
