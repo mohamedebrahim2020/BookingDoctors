@@ -16,20 +16,6 @@ class GetSpecializationsTest extends TestCase
     {
         $this->seed(DoctorSpecializationsSeeder::class);
         $response = $this->getJson(route('specializations.index'));
-        $response->assertExactJson([
-            [
-                "id" => 1,
-                "name" => "ortho"
-            ],
-            [
-                "id" => 2,
-                "name" => "dentist"
-            ],
-            [
-                "id" => 3,
-                "name" => "knee"
-            ]
-        ]);
         $response->assertOk();
     }
     /** @test */
