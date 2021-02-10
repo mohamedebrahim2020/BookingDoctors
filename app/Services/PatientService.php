@@ -100,4 +100,27 @@ class PatientService extends BaseService
             $patient->verificationCode->delete();
         }    
     }
+
+    public function changePassword($data)
+    {
+        $patient = auth()->user();
+        if (!Hash::check($data['old_password'], $patient->password)) {
+            abort(Response::HTTP_UNAUTHORIZED, 'unauthenticated');
+        }
+        $data['password'] = $data['new_password'];
+        $this->update($data, $patient->id);
+        $this->deleteOtherSessions();
+        return $patient;
+    }
+
+    public function deleteOtherSessions()
+    {
+        $currentTokenId = auth()->user()->token()->id;
+        $tokens = auth()->user()->tokens;
+        foreach ($tokens as $token) {
+            if ($token->id != $currentTokenId ) {
+                $token->revoke();
+            }
+        }
+    }
 }

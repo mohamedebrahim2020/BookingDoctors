@@ -29,6 +29,8 @@ Route::prefix('patient')->group(function () {
         Route::apiResource('/appointments', AppointmentController::class)->only('show')->names([
             'show' => 'appointments.patient.show'
         ]);
+        Route::get('profile', [PatientController::class, 'profile'])->name('patient.profile');
+        Route::post('change/password', [PatientController::class, 'changePassword'])->name('patient.changePassword');
     });
     Route::group(['middleware' => ['customthrottle:3,30']], function () {
         Route::post('code/resend', [PatientController::class, 'codeResend'])->name('codeResend');
