@@ -7,6 +7,7 @@ use App\Filters\DoctorFilters;
 use App\Filters\WorkingDayFilters;
 use App\Models\Doctor;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class DoctorRepository extends BaseRepository 
 {
@@ -28,7 +29,10 @@ class DoctorRepository extends BaseRepository
 
    public function query()
    {
-       $doctors = $this->model->filter(app(DoctorFilters::class))->get();
+       $key = 'doctors' . request()->getQueryString();
+       $doctors = Cache::remember($key, 33600, function () {
+           return $this->model->filter(app(DoctorFilters::class))->get();
+       });
        return $doctors;
    }
 
