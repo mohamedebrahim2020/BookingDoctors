@@ -44,4 +44,12 @@ class Doctor extends Authenticatable
     {
         return $this->hasMany(Appointment::class);
     }
+
+    /**
+     * Get all of the patient`s firebase tokens.
+    */
+    public function firebaseTokens()
+    {
+        return $this->morphMany(FirebaseToken::class, 'tokenable');
+    }
 }
