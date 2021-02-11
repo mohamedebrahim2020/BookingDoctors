@@ -22,6 +22,7 @@ class DoctorProfileTest extends TestCase
     /** @test */
     public function doctor_successfully_get_his_profile()
     {
+        $this->withoutExceptionHandling();
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $doctor->workingDays()->create(
             [
