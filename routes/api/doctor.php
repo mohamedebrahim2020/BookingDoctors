@@ -34,7 +34,10 @@ Route::group(['middleware' => ['auth:doctor','EnsureDoctorIsActivated']], functi
     Route::apiResource('/appointments', AppointmentController::class)->only(['index', 'show'])->names([
         'show' => 'appointments.doctor.show'
     ]);
-
+    Route::prefix('doctor')->group(function () {
+        Route::get('profile', [DoctorController::class, 'profile'])->name('doctor.profile');
+        Route::post('change/password', [DoctorController::class, 'changePassword'])->name('doctor.changePassword');
+    });
 });
 
 

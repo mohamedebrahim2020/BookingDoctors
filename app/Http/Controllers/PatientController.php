@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\PatientLoginRequest;
 use App\Http\Requests\PatientRegisterationRequest;
 use App\Http\Requests\ResendVerificationCodeRequest;
@@ -9,6 +10,7 @@ use App\Http\Requests\VerifyPatientEmailRequest;
 use App\Services\PatientService;
 use App\Traits\LoginTrait;
 use App\Transformers\CreatedResource;
+use App\Transformers\PatientProfileResource;
 use App\Transformers\TokenResource;
 use App\Transformers\UpdatedResource;
 use Illuminate\Http\Response;
@@ -46,5 +48,17 @@ class PatientController extends Controller
     {
         $patient = $this->patientService->codeResend($request->all());
         return response(new UpdatedResource($patient), Response::HTTP_OK);
+    }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $patient = $this->patientService->changePassword($request->all());
+        return response()->json(new UpdatedResource($patient), Response::HTTP_OK);
+    }
+
+    public function profile()
+    {
+        $patient = $this->patientService->show(auth()->user()->id);
+        return response()->json(new PatientProfileResource($patient), Response::HTTP_OK);
     }
 }

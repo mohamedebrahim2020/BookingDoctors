@@ -42,7 +42,7 @@ class PatientRequestAppointmentTest extends TestCase
         Queue::fake();
         Bus::fake();
         $data = [
-            'time'  => 1612821897,
+            'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
             'duration' => 30,
         ];
         $response = $this->postJson(route('doctors.appointments.store', ['doctor' =>$doctor->id]),$data, ["Accept" => "application/json"]);
@@ -66,7 +66,7 @@ class PatientRequestAppointmentTest extends TestCase
         Notification::fake();
         Queue::fake();
         $data = [
-            'time'  => 1612821897,
+            'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
             'duration' => 30,
         ];
         $response = $this->postJson(route('doctors.appointments.store', ['doctor' => $doctor->id]), $data, ["Accept" => "application/json"]);
@@ -88,7 +88,7 @@ class PatientRequestAppointmentTest extends TestCase
         Notification::fake();
         Queue::fake();
         $data = [
-            'time'  => 1612821897,
+            'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
             'duration' => 30,
         ];
         $response = $this->postJson(route('doctors.appointments.store', ['doctor' => $doctor->id]), $data, ["Accept" => "application/json"]);
@@ -110,7 +110,7 @@ class PatientRequestAppointmentTest extends TestCase
         Notification::fake();
         Queue::fake();
         $data = [
-            'time'  => 1612821897,
+            'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
             'duration' => 30,
         ];
         $response = $this->postJson(route('doctors.appointments.store', ['doctor' => $doctor->id]), $data, ["Accept" => "application/json"]);
@@ -134,7 +134,7 @@ class PatientRequestAppointmentTest extends TestCase
         Notification::fake();
         Queue::fake();
         $data = [
-            'time'  => 1612821897,
+            'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
             'duration' => 90,
         ];
         $response = $this->postJson(route('doctors.appointments.store', ['doctor' => $doctor->id]), $data, ["Accept" => "application/json"]);
@@ -144,7 +144,7 @@ class PatientRequestAppointmentTest extends TestCase
     /** @test */
     public function patient_fail_to_request_an_appointment_has_same_time_of_already_approved_appointment()
     {
-        $time = 1612821897;
+        $time = Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000;
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $doctor->workingDays()->create(

@@ -92,4 +92,27 @@ class DoctorService extends BaseService
         $workingDays = $this->repository->storeWorkingDay($data);
         return $workingDays;
     }
+
+    public function changePassword($data)
+    {
+        $doctor = auth()->user();
+        if (!Hash::check($data['old_password'], $doctor->password)) {
+            abort(Response::HTTP_UNAUTHORIZED, 'unauthenticated');
+        }
+        $data['password'] = $data['new_password'];
+        $this->update($data, $doctor->id);
+        $this->deleteOtherSessions();
+        return $doctor;
+    }
+
+    public function deleteOtherSessions()
+    {
+        $currentTokenId = auth()->user()->token()->id;
+        $tokens = auth()->user()->tokens;
+        foreach ($tokens as $token) {
+            if ($token->id != $currentTokenId ) {
+                $token->revoke();
+            }
+        }
+    }
 }
