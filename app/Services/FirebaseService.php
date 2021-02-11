@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Kreait\Firebase\Database;
+use Kreait\Firebase\Messaging\Message;
 
 class FirebaseService 
 {
@@ -18,5 +19,24 @@ class FirebaseService
     public function resetAppointment()
     {
         app(Database::class)->getReference()->update(['doctor_' . auth()->user()->id . '/has_new_appointment' => 'false']);
+    }
+
+    public function pushNotification()
+    {
+        app(Message::class)->withTarget;
+//         $deviceToken = '...';
+
+// $message = CloudMessage::withTarget('token', $deviceToken)
+//     ->withNotification($notification) // optional
+//     ->withData($data) // optional
+// ;
+
+// $message = CloudMessage::fromArray([
+//     'token' => $deviceToken,
+//     'notification' => [/* Notification data as array */], // optional
+//     'data' => [/* data array */], // optional
+// ]);
+
+// $messaging->send($message);
     }
 }
