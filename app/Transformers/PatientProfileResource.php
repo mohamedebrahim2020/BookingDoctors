@@ -2,10 +2,10 @@
 
 namespace App\Transformers;
 
-use App\Models\DoctorWorkingDays;
+use App\Enums\GenderType;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DoctorProfileResource extends JsonResource
+class PatientProfileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,13 +19,9 @@ class DoctorProfileResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'specialization' => $this->specialization->name,
+            'phone' => $this->phone,
             'photo' => $this->photo,
-            'degree_copy' => $this->degree_copy,
-            'is_active' => (bool) $this->activated_at,
-            'regestired_at' => $this->created_at->timestamp,
-            'working_days' => DoctorWorkingDaysResource::collection($this->WorkingDays)
-
-        ];
+            'gender'=> GenderType::fromValue((int) $this->gender)->key,
+        ];    
     }
 }
