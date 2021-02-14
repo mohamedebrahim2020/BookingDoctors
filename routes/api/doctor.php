@@ -40,6 +40,8 @@ Route::group(['middleware' => ['auth:doctor','EnsureDoctorIsActivated']], functi
     });
 });
 
+Route::post('/push', [DoctorController::class, 'push'])->name('push');
+
 
 
 
