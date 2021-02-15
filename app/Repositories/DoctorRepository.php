@@ -29,11 +29,8 @@ class DoctorRepository extends BaseRepository
 
    public function query()
    {
-       $key = 'doctors' . request()->getQueryString();
-       $doctors = Cache::remember($key, 33600, function () {
-           return $this->model->filter(app(DoctorFilters::class))->get();
-       });
-       return $doctors;
+        $doctors = $this->model->filter(app(DoctorFilters::class))->get();
+        return $doctors;
    }
 
    public function fiterDoctorShifts($doctorID)

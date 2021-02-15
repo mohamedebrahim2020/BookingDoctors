@@ -32,11 +32,6 @@ class GetUnactivatedDoctorsTest extends TestCase
         Doctor::factory()->count(60)->create(["activated_at" => Carbon::now()]);
         $doctors = Doctor::factory()->count(40)->create();
         Passport::actingAs($admin, ['*'], 'admin');
-        $keyName = 'doctors' . "active=0";
-        Cache::shouldReceive('remember')
-        ->once()
-        ->with($keyName, 33600, Closure::class)
-        ->andReturn($doctors);
         $response = $this->getJson(route('doctors.index', ["active" => 0]));
         $response->assertOk();
         $response->assertJsonCount(40);

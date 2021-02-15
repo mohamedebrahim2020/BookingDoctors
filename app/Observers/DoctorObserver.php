@@ -32,6 +32,7 @@ class DoctorObserver
         $key = 'doctor_'. $doctor->id;
         if (Cache::has($key)) {
             Cache::forget($key);
+            Cache::put($key, $doctor, 33600);
         }
     }
 

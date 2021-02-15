@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\Doctor;
 use Carbon\Carbon;
+use Closure;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -22,8 +24,11 @@ class DoctorProfileTest extends TestCase
     /** @test */
     public function doctor_successfully_get_his_profile()
     {
-        $this->withoutExceptionHandling();
-        $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
+        $doctor = Doctor::factory()->create([
+            "activated_at" => Carbon::now(),            
+            'photo' => 'photo1.png',
+            'degree_copy' => 'photo2.png'
+        ]);
         $doctor->workingDays()->create(
             [
                 "day"=> "1",
@@ -31,6 +36,11 @@ class DoctorProfileTest extends TestCase
             ]
         );
         Passport::actingAs($doctor, ['*'], 'doctor');
+        $keyName = 'doctor_' . $doctor->id;
+        Cache::shouldReceive('remember')
+        ->once()
+        ->with($keyName, 33600, Closure::class)
+        ->andReturn($doctor);
         $response = $this->getJson(route('doctor.profile'));
         $response->assertOk();
         $response->assertJsonStructure([
