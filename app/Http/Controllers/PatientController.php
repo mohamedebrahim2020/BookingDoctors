@@ -6,6 +6,7 @@ use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\PatientLoginRequest;
 use App\Http\Requests\PatientRegisterationRequest;
 use App\Http\Requests\ResendVerificationCodeRequest;
+use App\Http\Requests\StoreDeviceTokenRequest;
 use App\Http\Requests\VerifyPatientEmailRequest;
 use App\Services\PatientService;
 use App\Traits\LoginTrait;
@@ -60,5 +61,10 @@ class PatientController extends Controller
     {
         $patient = $this->patientService->show(auth()->user()->id);
         return response()->json(new PatientProfileResource($patient), Response::HTTP_OK);
+    }
+
+    public function storeDeviceToken(StoreDeviceTokenRequest $request)
+    {
+        $token = $this->patientService->storeDeviceToken($request->all());        
     }
 }

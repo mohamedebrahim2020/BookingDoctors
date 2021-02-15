@@ -29,9 +29,9 @@ class FirebaseService
     {
         $messaging = app(Messaging::class);
         $validateOnly = true;
-        $deviceTokens = ['dYrgLmSME70mk04J7xVRK8:APA91bGiWwS05eMKVtWMz2M2grQqw6bsoxEyRSgUpgqk_2aWI3YnxJqz3tVbS5R9Bfrn-fUFZGZGcKszC9s_hmymc1mpIxPRHlwNrR3ZIMoGSt1yxF17Bm9YFv2_Lm3yjzUVa360Rez9'];
+        $deviceTokens = ['dDUkcN2Q2vwxBRPAlAquWK:APA91bHKpQ5Op_o4r9AM9Q_Jd0CL75ijk_9sVles7tQ68Q42Xav9X1Stsnt2UxfjcmNuJXI3r4N8BHtw8iqhaf3Bh1Ry1QwcokPGyh-tdgUKf46hPykyKUBolbzcTxo89IwA1RVrpzYP', 'jfjfjjllldkekoeoeoeoeoeoeooeoeoooooooooooooldll'];
         $title = 'My Notification Title';
-        $body = 'My Notification Body';
+        $body = 'My Notification Body' . "\u{1F603}";
         $imageUrl = 'http://lorempixel.com/400/200/';
 
         $notification = Notification::fromArray([
@@ -40,9 +40,7 @@ class FirebaseService
             'image' => $imageUrl,
         ]);
 
-        $message = CloudMessage::new()->withNotification($notification);
-        return $messaging->sendMulticast($message, $deviceTokens, $validateOnly);
-
-
+        $message = CloudMessage::new()->withNotification($notification)->withDefaultSounds();
+        $messaging->sendMulticast($message, $deviceTokens);
     }
 }

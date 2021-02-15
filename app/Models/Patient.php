@@ -43,6 +43,6 @@ class Patient extends Authenticatable
     */
     public function firebaseTokens()
     {
-        return $this->morphMany(FirebaseToken::class, 'tokenable');
+        return $this->morphMany(FirebaseToken::class, 'user');
     }
 }

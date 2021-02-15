@@ -7,6 +7,7 @@ use App\Http\Requests\DoctorLoginRequest;
 use App\Services\DoctorService;
 use App\Traits\LoginTrait;
 use App\Http\Requests\DoctorRegistrationRequest;
+use App\Http\Requests\StoreDeviceTokenRequest;
 use App\Services\FirebaseService;
 use App\Transformers\CreatedResource;
 use App\Transformers\DoctorProfileResource;
@@ -66,40 +67,12 @@ class DoctorController extends Controller
 
     public function push()
     {
-        // $token = "dYrgLmSME70mk04J7xVRK8:APA91bGiWwS05eMKVtWMz2M2grQqw6bsoxEyRSgUpgqk_2aWI3YnxJqz3tVbS5R9Bfrn-fUFZGZGcKszC9s_hmymc1mpIxPRHlwNrR3ZIMoGSt1yxF17Bm9YFv2_Lm3yjzUVa360Rez9";  
-        // $from = "AAAA_YGBlGw:APA91bEdGi8Ond2Apc6neOfzklzaaBf7UPr3UUxySCslcjjkBRklDT7_MEWKazyDcdqAM0FhCeXu3L3A4PlhHPbO3EKucKb1oKgjsID9f0qgylcq2L_jjBujvr66-ZBYzWINiBdthW5q";
-        // $msg = array
-        //       (
-        //         'body'  => "Testing Testing",
-        //         'title' => "Hi, From Raj",
-        //         'receiver' => 'erw',
-        //         'icon'  => "https://image.flaticon.com/icons/png/512/270/270014.png",/*Default Icon*/
-        //         'sound' => 'mySound'/*Default sound*/
-        //       );
-
-        // $fields = array
-        //         (
-        //             'to'        => $token,
-        //             'notification'  => $msg
-        //         );
-
-        // $headers = array
-        //         (
-        //             'Authorization: key=' . $from,
-        //             'Content-Type: application/json'
-        //         );
-        // //#Send Reponse To FireBase Server 
-        // $ch = curl_init();
-        // curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
-        // curl_setopt( $ch,CURLOPT_POST, true );
-        // curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-        // curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-        // curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-        // curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-        // $result = curl_exec($ch );
-        // dd($result);
-        // curl_close( $ch );
         $result = app(FirebaseService::class)->pushNotification();
         return response()->json($result);
+    }
+
+    public function storeDeviceToken(StoreDeviceTokenRequest $request)
+    {
+        $token = $this->doctorService->storeDeviceToken($request->all());        
     }
 }

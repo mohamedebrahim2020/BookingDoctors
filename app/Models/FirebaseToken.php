@@ -17,6 +17,15 @@ class FirebaseToken extends Model
     protected $table = 'firebase_tokens';
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+    */
+    protected $fillable = [
+        'user_id', 'user_type', 'platform', 'token',
+    ];
+
+    /**
      * Get the parent tokenable model (patient or doctor).
     */
     public function tokenable()

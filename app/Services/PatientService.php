@@ -123,4 +123,15 @@ class PatientService extends BaseService
             }
         }
     }
+
+    public function storeDeviceToken($data)
+    {
+        $data['user_type'] =  get_class(auth()->user());
+        auth()->user()->firebaseTokens()->updateOrCreate(
+            ['user_type' => $data['user_type'], 'platform' => $data['platform']],
+            ['token' => $data['token']]
+        );
+        dd('hima');
+
+    }
 }

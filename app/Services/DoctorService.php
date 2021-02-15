@@ -110,9 +110,20 @@ class DoctorService extends BaseService
         $currentTokenId = auth()->user()->token()->id;
         $tokens = auth()->user()->tokens;
         foreach ($tokens as $token) {
-            if ($token->id != $currentTokenId ) {
+            if ($token->id != $currentTokenId) {
                 $token->revoke();
             }
         }
+    }
+
+    public function storeDeviceToken($data)
+    {
+        $data['user_type'] =  get_class(auth()->user());
+        auth()->user()->firebaseTokens()->updateOrCreate(
+            ['user_type' => $data['user_type'], 'platform' => $data['platform']],
+            ['token' => $data['token']]
+        );
+        dd('hima');
+
     }
 }
