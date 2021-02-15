@@ -11,11 +11,13 @@ class DoctorFilters extends QueryFilters
 
     }
   
-    public function active($term) {
+    public function active($term = null) {
         if ($term == 1) {
             return $this->builder->where('activated_at','!=', null);
         } elseif ($term == 0) {
             return $this->builder->where('activated_at', null);
+        } else {
+            return $this->builder;
         }
     }
 

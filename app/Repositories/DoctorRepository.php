@@ -7,6 +7,7 @@ use App\Filters\DoctorFilters;
 use App\Filters\WorkingDayFilters;
 use App\Models\Doctor;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class DoctorRepository extends BaseRepository 
 {
@@ -28,8 +29,8 @@ class DoctorRepository extends BaseRepository
 
    public function query()
    {
-       $doctors = $this->model->filter(app(DoctorFilters::class))->get();
-       return $doctors;
+        $doctors = $this->model->filter(app(DoctorFilters::class))->get();
+        return $doctors;
    }
 
    public function fiterDoctorShifts($doctorID)

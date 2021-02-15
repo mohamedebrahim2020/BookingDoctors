@@ -8,7 +8,6 @@ use App\Services\DoctorService;
 use App\Traits\LoginTrait;
 use App\Http\Requests\DoctorRegistrationRequest;
 use App\Transformers\CreatedResource;
-use App\Transformers\DoctorProfileResource;
 use App\Transformers\IndexDoctorResource;
 use App\Transformers\ShowDoctorResource;
 use App\Transformers\TokenResource;
@@ -59,7 +58,7 @@ class DoctorController extends Controller
 
     public function profile()
     {
-        $doctor = $this->doctorService->show(auth()->user()->id);
+        $doctor = $this->doctorService->Profile();
         return response()->json(new ShowDoctorResource($doctor), Response::HTTP_OK);
     }
 }
