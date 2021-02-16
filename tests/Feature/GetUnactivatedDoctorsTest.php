@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use App\Models\Admin;
 use App\Models\Doctor;
 use Carbon\Carbon;
+use Closure;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Database\Seeders\SuperAdminSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -26,14 +28,13 @@ class GetUnactivatedDoctorsTest extends TestCase
     /** @test */
     public function superadmin_successfully_get_unactivated_doctors()
     {
-        $this->withoutExceptionHandling();
         $admin = Admin::where('is_super', 1)->first();
         Doctor::factory()->count(60)->create(["activated_at" => Carbon::now()]);
-        Doctor::factory()->count(40)->create();
+        $doctors = Doctor::factory()->count(40)->create();
         Passport::actingAs($admin, ['*'], 'admin');
         $response = $this->getJson(route('doctors.index', ["active" => 0]));
         $response->assertOk();
-        $response->assertJsonCount(40, $key = null);
+        $response->assertJsonCount(40);
         $this->assertDatabaseCount('doctors', 100);
     }
 

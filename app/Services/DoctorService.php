@@ -3,12 +3,14 @@
 namespace App\Services;
 
 use App\Enums\FolderName;
+use App\Models\Doctor;
 use App\Repositories\DoctorRepository;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\DoctorActivationMail;
 use App\Notifications\RequestAppointmentNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
@@ -124,5 +126,13 @@ class DoctorService extends BaseService
             ['token' => $data['token']]
         );
         return $token;
+    }    
+    public function Profile()
+    {
+        $key = 'doctor_' . auth()->user()->id;
+        $doctor = Cache::remember($key, 33600, function ()  {
+            return $this->show(auth()->user()->id);
+        });
+        return $doctor;
     }
 }
