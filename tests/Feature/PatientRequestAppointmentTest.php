@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Passport\Passport;
@@ -41,6 +42,7 @@ class PatientRequestAppointmentTest extends TestCase
         Notification::fake();
         Queue::fake();
         Bus::fake();
+        Event::fake();
         $data = [
             'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
             'duration' => 30,
@@ -65,6 +67,7 @@ class PatientRequestAppointmentTest extends TestCase
         Passport::actingAs($patient, ['*'], 'patient');
         Notification::fake();
         Queue::fake();
+        Event::fake();
         $data = [
             'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
             'duration' => 30,
@@ -87,6 +90,7 @@ class PatientRequestAppointmentTest extends TestCase
         Passport::actingAs($patient, ['*'], 'patient');
         Notification::fake();
         Queue::fake();
+        Event::fake();
         $data = [
             'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
             'duration' => 30,
@@ -109,33 +113,10 @@ class PatientRequestAppointmentTest extends TestCase
         Passport::actingAs($patient, ['*'], 'patient');
         Notification::fake();
         Queue::fake();
+        Event::fake();
         $data = [
             'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
             'duration' => 30,
-        ];
-        $response = $this->postJson(route('doctors.appointments.store', ['doctor' => $doctor->id]), $data, ["Accept" => "application/json"]);
-        $response->assertForbidden();
-    }
-
-    /** @test */
-    public function patient_fail_to_request_an_appointment_not_meet_doctor_shift_duration()
-    {
-        $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
-        $patient = Patient::factory()->create();
-        $doctor->workingDays()->create(
-            [
-                "day" => "1",
-                "from" => "10:00 PM",
-                "to" => "11:00 PM",
-                "is_all_day" => "0"
-            ]
-        );
-        Passport::actingAs($patient, ['*'], 'patient');
-        Notification::fake();
-        Queue::fake();
-        $data = [
-            'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
-            'duration' => 90,
         ];
         $response = $this->postJson(route('doctors.appointments.store', ['doctor' => $doctor->id]), $data, ["Accept" => "application/json"]);
         $response->assertForbidden();
@@ -162,6 +143,7 @@ class PatientRequestAppointmentTest extends TestCase
         ])->create();
         Passport::actingAs($patient, ['*'], 'patient');
         Notification::fake();
+        Event::fake();
         Queue::fake();
         $data = [
             'time'  => $time,

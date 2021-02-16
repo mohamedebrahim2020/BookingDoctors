@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Passport\Passport;
@@ -44,6 +45,7 @@ class DoctorApproveAppointmentTest extends TestCase
         Passport::actingAs($doctor, ['*'], 'doctor');
         Notification::fake();
         Queue::fake();
+        Event::fake();
         $response = $this->postJson(route('appointments.approve', ['appointment' =>$appointment->id]), ["Accept" => "application/json"]);
         Notification::assertSentTo([$patient], AppointmentNotification::class);
         $response->assertOk();

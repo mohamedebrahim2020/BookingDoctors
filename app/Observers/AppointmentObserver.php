@@ -5,6 +5,8 @@ namespace App\Observers;
 use App\Models\Appointment;
 use App\Services\DoctorService;
 use App\Services\FirebaseService;
+use App\Services\PatientService;
+use Illuminate\Http\Response;
 
 class AppointmentObserver
 {
@@ -17,8 +19,10 @@ class AppointmentObserver
     public function created(Appointment $appointment)
     {
         $doctor = app(DoctorService::class)->show($appointment->doctor_id);
-        $tokens = $doctor->firebaseTokens()->pluck('token')->toArray();
-        app(FirebaseService::class)->pushNotification($tokens);
+        if ($doctor->firebaseTokens()->count() > 0) {
+            $tokens = $doctor->firebaseTokens()->pluck('token')->toArray();
+            app(FirebaseService::class)->pushNotification($tokens);
+        }
     }
 
     /**
@@ -29,8 +33,10 @@ class AppointmentObserver
      */
     public function updated(Appointment $appointment)
     {
-        $patient = app(DoctorService::class)->show($appointment->patient_id);
-        $tokens = $patient->firebaseTokens()->pluck('token')->toArray();
-        app(FirebaseService::class)->pushNotification($tokens);
+        $patient = app(PatientService::class)->show($appointment->patient_id);
+        if ($patient->firebaseTokens()->count() > 0) {
+            $tokens = $patient->firebaseTokens()->pluck('token')->toArray();
+            app(FirebaseService::class)->pushNotification($tokens);
+        }
     }
 }
