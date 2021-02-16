@@ -70,4 +70,12 @@ class RequestAppointmentNotification extends Notification implements ShouldQueue
             //
         ];
     }
+
+    public function failed($e)
+    {
+        if (method_exists($this->notification, 'failed')) {
+            $d = $this->notification->failed($e);
+            dd($d);
+        }
+    }
 }

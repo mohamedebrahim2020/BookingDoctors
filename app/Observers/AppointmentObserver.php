@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Appointment;
+use App\Services\DoctorService;
+use App\Services\FirebaseService;
 
 class AppointmentObserver
 {
@@ -14,7 +16,9 @@ class AppointmentObserver
      */
     public function created(Appointment $appointment)
     {
-        //
+        $doctor = app(DoctorService::class)->show($appointment->doctor_id);
+        $tokens = $doctor->firebaseTokens()->pluck('token')->toArray();
+        app(FirebaseService::class)->pushNotification($tokens);
     }
 
     /**
@@ -25,39 +29,8 @@ class AppointmentObserver
      */
     public function updated(Appointment $appointment)
     {
-        //
-    }
-
-    /**
-     * Handle the Appointment "deleted" event.
-     *
-     * @param  \App\Models\Appointment  $appointment
-     * @return void
-     */
-    public function deleted(Appointment $appointment)
-    {
-        //
-    }
-
-    /**
-     * Handle the Appointment "restored" event.
-     *
-     * @param  \App\Models\Appointment  $appointment
-     * @return void
-     */
-    public function restored(Appointment $appointment)
-    {
-        //
-    }
-
-    /**
-     * Handle the Appointment "force deleted" event.
-     *
-     * @param  \App\Models\Appointment  $appointment
-     * @return void
-     */
-    public function forceDeleted(Appointment $appointment)
-    {
-        //
+        $patient = app(DoctorService::class)->show($appointment->patient_id);
+        $tokens = $patient->firebaseTokens()->pluck('token')->toArray();
+        app(FirebaseService::class)->pushNotification($tokens);
     }
 }

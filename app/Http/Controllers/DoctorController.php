@@ -65,14 +65,10 @@ class DoctorController extends Controller
         return response()->json(new ShowDoctorResource($doctor), Response::HTTP_OK);
     }
 
-    public function push()
-    {
-        $result = app(FirebaseService::class)->pushNotification();
-        return response()->json($result);
-    }
 
     public function storeDeviceToken(StoreDeviceTokenRequest $request)
     {
-        $token = $this->doctorService->storeDeviceToken($request->all());        
+        $token = $this->doctorService->storeDeviceToken($request->all());
+        return response()->json(new CreatedResource($token), Response::HTTP_CREATED);        
     }
 }

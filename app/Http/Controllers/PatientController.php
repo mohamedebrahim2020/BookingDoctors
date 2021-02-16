@@ -65,6 +65,7 @@ class PatientController extends Controller
 
     public function storeDeviceToken(StoreDeviceTokenRequest $request)
     {
-        $token = $this->patientService->storeDeviceToken($request->all());        
+        $token = $this->patientService->storeDeviceToken($request->all());
+        return response()->json(new CreatedResource($token), Response::HTTP_CREATED);        
     }
 }
