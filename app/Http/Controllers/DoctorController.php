@@ -67,7 +67,7 @@ class DoctorController extends Controller
 
     public function storeDeviceToken(StoreDeviceTokenRequest $request)
     {
-        $token = $this->doctorService->storeDeviceToken($request->all());
+        $token = app(FirebaseService::class)->storeDeviceToken($request->all());
         return response()->json(new CreatedResource($token), Response::HTTP_CREATED);        
     }
 }

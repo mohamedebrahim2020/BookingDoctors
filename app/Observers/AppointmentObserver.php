@@ -2,9 +2,10 @@
 
 namespace App\Observers;
 
+use App\Enums\AppointmentStatus;
+use App\Jobs\PushNotification;
 use App\Models\Appointment;
 use App\Services\DoctorService;
-use App\Services\FirebaseService;
 use App\Services\PatientService;
 use Illuminate\Http\Response;
 
@@ -21,7 +22,9 @@ class AppointmentObserver
         $doctor = app(DoctorService::class)->show($appointment->doctor_id);
         if ($doctor->firebaseTokens()->count() > 0) {
             $tokens = $doctor->firebaseTokens()->pluck('token')->toArray();
-            app(FirebaseService::class)->pushNotification($tokens);
+            $title = 'new appointment is created'; 
+            $body = 'you have an appointment request from' . $appointment->patient->name;
+            PushNotification::dispatch($tokens, $title, $body)->afterResponse();
         }
     }
 
@@ -36,7 +39,9 @@ class AppointmentObserver
         $patient = app(PatientService::class)->show($appointment->patient_id);
         if ($patient->firebaseTokens()->count() > 0) {
             $tokens = $patient->firebaseTokens()->pluck('token')->toArray();
-            app(FirebaseService::class)->pushNotification($tokens);
+            $title = 'appointment status updated'; 
+            $body = 'appointment status is' . AppointmentStatus::fromValue((int) $appointment->status)->key;
+            PushNotification::dispatch($tokens, $title, $body)->afterResponse();
         }
     }
 }

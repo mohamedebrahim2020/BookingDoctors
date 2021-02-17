@@ -51,7 +51,7 @@ class RequestAppointmentNotification extends Notification implements ShouldQueue
             'mail.requestAppointmentMail',
             [
                 'doctor' => $this->doctor,
-                'time' => Carbon::createFromTimestamp($this->appointment['time']) ->toDateTimeString(), 
+                'time' =>(Carbon::createFromTimestamp($this->appointment->time/1000)->toDateTimeString()), 
                 'duration' => $this->appointment['duration'],
                 'patient' => $this->patient
             ]
@@ -71,11 +71,4 @@ class RequestAppointmentNotification extends Notification implements ShouldQueue
         ];
     }
 
-    public function failed($e)
-    {
-        if (method_exists($this->notification, 'failed')) {
-            $d = $this->notification->failed($e);
-            dd($d);
-        }
-    }
 }

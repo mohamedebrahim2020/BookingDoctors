@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Enums\AppointmentStatus;
+use App\Enums\PlatformType;
+use App\Jobs\PushNotification;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
@@ -10,6 +12,7 @@ use App\Notifications\AppointmentNotification;
 use Carbon\Carbon;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
@@ -41,14 +44,20 @@ class DoctorCancelAppointmentTest extends TestCase
             'patient_id' => $patient->id,
             'status' => AppointmentStatus::APPROVED,
         ])->create();
+        $patient->firebaseTokens()->updateOrCreate(
+            ['platform' => PlatformType::WEB],
+            ['token' => 'jjj'],
+        );
         Passport::actingAs($doctor, ['*'], 'doctor');
         Notification::fake();
         Queue::fake();
-        Event::fake();
+        Bus::fake();
         $data = ['cancel_reason' => 'i have alot meetings'];
         $response = $this->postJson(route('appointments.cancel', ['appointment' =>$appointment->id]), $data, ["Accept" => "application/json"]);
         Notification::assertSentTo([$patient], AppointmentNotification::class);
         $response->assertOk();
+        Bus::assertDispatched(PushNotification::class);
+        Bus::assertDispatchedAfterResponse(PushNotification::class);
     }
 
     /** @test */

@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PlatformType;
+use App\Jobs\PushNotification;
 use App\Jobs\StoreAppointment;
 use App\Models\Appointment;
 use App\Models\Doctor;
@@ -38,11 +40,14 @@ class PatientRequestAppointmentTest extends TestCase
                 "is_all_day"=> "1"
             ]
         );
+        $doctor->firebaseTokens()->updateOrCreate(
+            ['platform' => PlatformType::WEB],
+            ['token' => 'jjj'],
+        );
         Passport::actingAs($patient, ['*'], 'patient');
         Notification::fake();
         Queue::fake();
         Bus::fake();
-        Event::fake();
         $data = [
             'time'  => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp * 1000,
             'duration' => 30,
@@ -50,6 +55,9 @@ class PatientRequestAppointmentTest extends TestCase
         $response = $this->postJson(route('doctors.appointments.store', ['doctor' =>$doctor->id]),$data, ["Accept" => "application/json"]);
         Notification::assertSentTo([$doctor], RequestAppointmentNotification::class);
         Bus::assertDispatched(StoreAppointment::class);
+        Bus::assertDispatchedAfterResponse(StoreAppointment::class);
+        Bus::assertDispatched(PushNotification::class);
+        Bus::assertDispatchedAfterResponse(PushNotification::class);
         $response->assertCreated();
     }
 

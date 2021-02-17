@@ -25,11 +25,9 @@ class FirebaseService
         app(Database::class)->getReference()->update(['doctor_' . auth()->user()->id . '/has_new_appointment' => 'false']);
     }
 
-    public function pushNotification($tokens)
+    public function pushNotification($tokens, $title, $body)
     {
         $messaging = app(Messaging::class);
-        $title = 'My Notification Title';
-        $body = 'My Notification Body' . "\u{1F603}";
         $imageUrl = 'http://lorempixel.com/400/200/';
 
         $notification = Notification::fromArray([
@@ -40,5 +38,14 @@ class FirebaseService
 
         $message = CloudMessage::new()->withNotification($notification)->withDefaultSounds();
         $messaging->sendMulticast($message, $tokens);
+    }
+
+    public function storeDeviceToken($data)
+    {
+        $token = auth()->user()->firebaseTokens()->updateOrCreate(
+            ['platform' => $data['platform']],
+            ['token' => $data['token']]
+        );
+        return $token;
     }
 }
