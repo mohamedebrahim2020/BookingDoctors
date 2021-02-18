@@ -112,12 +112,12 @@ class DoctorService extends BaseService
         $currentTokenId = auth()->user()->token()->id;
         $tokens = auth()->user()->tokens;
         foreach ($tokens as $token) {
-            if ($token->id != $currentTokenId ) {
+            if ($token->id != $currentTokenId) {
                 $token->revoke();
             }
         }
     }
-
+   
     public function Profile()
     {
         $key = 'doctor_' . auth()->user()->id;

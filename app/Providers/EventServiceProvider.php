@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Appointment;
+use App\Observers\AppointmentObserver;
 use App\Models\Doctor;
 use App\Observers\DoctorObserver;
 use Illuminate\Auth\Events\Registered;
@@ -29,6 +31,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Appointment::observe(AppointmentObserver::class);
         Doctor::observe(DoctorObserver::class);
     }
 }

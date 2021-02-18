@@ -37,6 +37,7 @@ Route::group(['middleware' => ['auth:doctor','EnsureDoctorIsActivated']], functi
     Route::prefix('doctor')->group(function () {
         Route::get('profile', [DoctorController::class, 'profile'])->name('doctor.profile');
         Route::post('change/password', [DoctorController::class, 'changePassword'])->name('doctor.changePassword');
+        Route::post('device/token', [DoctorController::class, 'storeDeviceToken'])->name('doctor.storeDeviceToken');
     });
 });
 

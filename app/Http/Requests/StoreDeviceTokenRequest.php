@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\PlatformType;
+use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PatientReserveAppointmentRequest extends FormRequest
+class StoreDeviceTokenRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +25,9 @@ class PatientReserveAppointmentRequest extends FormRequest
      */
     public function rules()
     {
-        $duration = array(30, 60, 120);
-        $nowInMs = now()->timestamp*1000;
         return [
-            'time' => 'required|numeric|gt:'. $nowInMs,
-            'duration' => 'required|integer|in:' . implode(',', $duration),
+            'platform' => ['required', new EnumValue(PlatformType::class, false)],
+            'token'  => 'required'
         ];
     }
-
 }

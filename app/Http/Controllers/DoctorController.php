@@ -7,6 +7,8 @@ use App\Http\Requests\DoctorLoginRequest;
 use App\Services\DoctorService;
 use App\Traits\LoginTrait;
 use App\Http\Requests\DoctorRegistrationRequest;
+use App\Http\Requests\StoreDeviceTokenRequest;
+use App\Services\FirebaseService;
 use App\Transformers\CreatedResource;
 use App\Transformers\IndexDoctorResource;
 use App\Transformers\ShowDoctorResource;
@@ -60,5 +62,12 @@ class DoctorController extends Controller
     {
         $doctor = $this->doctorService->Profile();
         return response()->json(new ShowDoctorResource($doctor), Response::HTTP_OK);
+    }
+
+
+    public function storeDeviceToken(StoreDeviceTokenRequest $request)
+    {
+        $token = app(FirebaseService::class)->storeDeviceToken($request->all());
+        return response()->json(new CreatedResource($token), Response::HTTP_CREATED);        
     }
 }

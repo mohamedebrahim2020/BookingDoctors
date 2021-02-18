@@ -6,7 +6,9 @@ use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\PatientLoginRequest;
 use App\Http\Requests\PatientRegisterationRequest;
 use App\Http\Requests\ResendVerificationCodeRequest;
+use App\Http\Requests\StoreDeviceTokenRequest;
 use App\Http\Requests\VerifyPatientEmailRequest;
+use App\Services\FirebaseService;
 use App\Services\PatientService;
 use App\Traits\LoginTrait;
 use App\Transformers\CreatedResource;
@@ -60,5 +62,11 @@ class PatientController extends Controller
     {
         $patient = $this->patientService->show(auth()->user()->id);
         return response()->json(new PatientProfileResource($patient), Response::HTTP_OK);
+    }
+
+    public function storeDeviceToken(StoreDeviceTokenRequest $request)
+    {
+        $token = app(FirebaseService::class)->storeDeviceToken($request->all());
+        return response()->json(new CreatedResource($token), Response::HTTP_CREATED);        
     }
 }

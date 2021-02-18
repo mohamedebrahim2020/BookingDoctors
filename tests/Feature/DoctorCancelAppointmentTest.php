@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Enums\AppointmentStatus;
+use App\Enums\PlatformType;
+use App\Jobs\PushNotification;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
@@ -10,6 +12,8 @@ use App\Notifications\AppointmentNotification;
 use Carbon\Carbon;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Passport\Passport;
@@ -27,7 +31,6 @@ class DoctorCancelAppointmentTest extends TestCase
     /** @test */
     public function doctor_successfully_cancel_an_appointment()
     {
-        $this->withoutExceptionHandling();
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $doctor->workingDays()->create(
@@ -41,13 +44,20 @@ class DoctorCancelAppointmentTest extends TestCase
             'patient_id' => $patient->id,
             'status' => AppointmentStatus::APPROVED,
         ])->create();
+        $patient->firebaseTokens()->updateOrCreate(
+            ['platform' => PlatformType::WEB],
+            ['token' => 'jjj'],
+        );
         Passport::actingAs($doctor, ['*'], 'doctor');
         Notification::fake();
         Queue::fake();
+        Bus::fake();
         $data = ['cancel_reason' => 'i have alot meetings'];
         $response = $this->postJson(route('appointments.cancel', ['appointment' =>$appointment->id]), $data, ["Accept" => "application/json"]);
         Notification::assertSentTo([$patient], AppointmentNotification::class);
         $response->assertOk();
+        Bus::assertDispatched(PushNotification::class);
+        Bus::assertDispatchedAfterResponse(PushNotification::class);
     }
 
     /** @test */
@@ -142,7 +152,8 @@ class DoctorCancelAppointmentTest extends TestCase
         Notification::fake();
         Queue::fake();
         $data = ['cancel_reason' => 'i have alot meetings'];
-        $response = $this->postJson(route('appointments.cancel', ['appointment' => $appointment->id]), $data, ["Accept" => "application/json"]);        $response->assertStatus(400);
+        $response = $this->postJson(route('appointments.cancel', ['appointment' => $appointment->id]), $data, ["Accept" => "application/json"]);
+        $response->assertStatus(400);
     }
 
     /** @test */
