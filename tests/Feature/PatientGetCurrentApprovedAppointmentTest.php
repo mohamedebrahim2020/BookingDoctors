@@ -34,7 +34,7 @@ class PatientGetCurrentApprovedAppointmentTest extends TestCase
                 "is_all_day"=> "1"
             ]
         );
-        Appointment::factory()->state([
+        $appointment = Appointment::factory()->state([
             'doctor_id' => $doctor->id,
             'patient_id' => $patient->id,
             'status' => AppointmentStatus::APPROVED,
@@ -44,7 +44,6 @@ class PatientGetCurrentApprovedAppointmentTest extends TestCase
         Passport::actingAs($patient, ['*'], 'patient');
         $response = $this->getJson(route('patient.get.current.appointment', ["currentAppointment" => 1]));
         $response->assertOk();
-
     }
 
     /** @test */
@@ -68,6 +67,6 @@ class PatientGetCurrentApprovedAppointmentTest extends TestCase
         ])->create();
         Passport::actingAs($patient, ['*'], 'patient');
         $response = $this->getJson(route('patient.get.current.appointment', ["currentAppointment" => 1]));
-        $response->assertStatus(400);
+        $response->assertok();
     }
 }

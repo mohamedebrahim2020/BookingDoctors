@@ -37,7 +37,7 @@ class AppointmentRepository extends BaseRepository
 
    public function getCurrent()
    {
-        $currentAppointment = auth()->user()->appointments()->filter(app(AppointmentFilters::class))->get();
+        $currentAppointment = auth()->user()->appointments()->filter(app(AppointmentFilters::class))->first();
         return $currentAppointment; 
    }
 }   

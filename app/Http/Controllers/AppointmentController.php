@@ -69,13 +69,14 @@ class AppointmentController extends Controller
     public function getCurrent()
     {
         $appointment = $this->service->getCurrent();
-        return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);        
+        return response()->json(new ShowAppointmentResource($appointment), Response::HTTP_OK);        
     }
 
     public function checkCurrent($id)
     {
-        $this->authorize('view', $this->service->show($id));
-        $appointment = $this->service->checkCurrent($id);
+        $appointment = $this->service->show($id);
+        $this->authorize('view', $appointment);
+        $this->service->checkCurrent($appointment);
         return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);        
     }
 }

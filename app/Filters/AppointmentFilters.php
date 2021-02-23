@@ -3,7 +3,6 @@ namespace App\Filters;
 
 use App\Enums\AppointmentStatus;
 use Carbon\Carbon;
-use Google\Cloud\Core\Timestamp;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
@@ -30,13 +29,8 @@ class AppointmentFilters extends QueryFilters
         if (env('DB_CONNECTION') === 'sqlite') {
             $results = DB::connection('sqlite')->select('select * from appointments WHERE
             strftime("%s",time) <=  strftime("%s","now") AND status = 2');
-            //       AND(strftime("%s",time) + (duration *60)) >= strftime("%s","now")
-            if ($results == []) {
-                abort(Response::HTTP_BAD_REQUEST);
-            } else {
-                return $results;
-            }
-            
+                //   AND(strftime("%s",time) + (duration *60)) >= strftime("%s","now")
+            return $results;
         } else {
             $now = Carbon::now()->timestamp;
             return $this->builder

@@ -21,12 +21,14 @@ class Appointment extends Model
     ];
 
     protected $casts = [
-        'time' => 'datetime'
+        'time' => 'timestamp'
     ];
 
-    public function getTimeAttribute($value)
+    public function setTimeAttribute($value)
     {
-        return Carbon::parse($value)->timestamp;
+        if ($value) {
+            $this->attributes['time'] = Carbon::createFromTimestamp($value)->format('Y-m-d H:i:s');
+        }    
     }
 
     public function patient()

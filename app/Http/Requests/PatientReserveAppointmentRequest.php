@@ -27,7 +27,7 @@ class PatientReserveAppointmentRequest extends FormRequest
         $duration = array(30, 60, 120);
         $nowInMs = Carbon::now()->addDay()->timestamp;
         return [
-            'time' => 'required|numeric|gt:'. $nowInMs,
+            // 'time' => 'required|numeric|gt:'. $nowInMs,
             'duration' => 'required|integer|in:' . implode(',', $duration),
         ];
     }
