@@ -22,7 +22,7 @@ class AppointmentRepository extends BaseRepository
        return auth()->user()->appointments()->filter(app(AppointmentFilters::class))->get();
    }
  
-   public function fiterDoctorAppointments($doctor)
+   public function filterDoctorAppointments($doctor)
    {
         $approvedAppointment = $doctor->appointments()->filter(app(AppointmentFilters::class))->get();
         return $approvedAppointment;
@@ -33,5 +33,11 @@ class AppointmentRepository extends BaseRepository
        $data['patient_id'] = auth()->user()->id;
        $appointment = $doctor->appointments()->create($data);
        return $appointment;
+   }
+
+   public function getCurrent()
+   {
+        $currentAppointment = auth()->user()->appointments()->filter(app(AppointmentFilters::class))->first();
+        return $currentAppointment; 
    }
 }   
