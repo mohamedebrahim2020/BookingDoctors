@@ -33,7 +33,7 @@ class DoctorRepository extends BaseRepository
         return $doctors;
    }
 
-   public function fiterDoctorShifts($doctorID)
+   public function filterDoctorShifts($doctorID)
    {
         $this->model = $this->find($doctorID);
         $shift = $this->model->workingDays()->filter(app(WorkingDayFilters::class))->get();

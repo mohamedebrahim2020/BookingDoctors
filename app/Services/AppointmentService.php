@@ -41,7 +41,7 @@ class AppointmentService extends BaseService
 
     public function checkAvailabiltyToApprove($appointment)
     {
-        $nowInMs = Carbon::now()->timestamp * 1000;
+        $nowInMs = Carbon::now()->timestamp;
         if ($appointment->status == AppointmentStatus::APPROVED || $appointment->time <= $nowInMs) {
             abort(Response::HTTP_BAD_REQUEST,"already approved or expired");            
         }
@@ -51,9 +51,9 @@ class AppointmentService extends BaseService
     public function store($data)
     {
         $doctor = app(DoctorService::class)->checkDoctorIsActivated(request()->doctor);
-        $shift = app(DoctorService::class)->repository->fiterDoctorShifts(request()->doctor);
+        $shift = app(DoctorService::class)->repository->filterDoctorShifts(request()->doctor);
         $this->checkDurationWithShift($shift, $data['duration']);
-        $approvedAppointments = $this->repository->fiterDoctorAppointments($doctor);
+        $approvedAppointments = $this->repository->filterDoctorAppointments($doctor);
         $this->checkAppointment($approvedAppointments);
         $appointment = $this->repository->storeAppointment($data, $doctor);
         app(DoctorService::class)->recieveAppointmentRequest(request()->doctor, $data, auth()->user()->name);
@@ -97,8 +97,8 @@ class AppointmentService extends BaseService
 
     public function checkAvailabiltyToCancel($appointment)
     {
-        $time = Carbon::parse($appointment->time/1000);
-        $nowInMs = Carbon::now()->timestamp * 1000;
+        $time = Carbon::parse($appointment->time);
+        $nowInMs = Carbon::now()->timestamp;
         if ($appointment->status != AppointmentStatus::APPROVED || $appointment->time <= $nowInMs || $time->diffInHours() <= 24) {
             abort(Response::HTTP_BAD_REQUEST,"already cancelled or before less than 24 hrs or expired");            
         }
@@ -118,9 +118,33 @@ class AppointmentService extends BaseService
 
     public function checkAvailabiltyToReject($appointment)
     {
-        $nowInMs = Carbon::now()->timestamp * 1000;
+        $nowInMs = Carbon::now()->timestamp;
         if ($appointment->status != AppointmentStatus::PENDING || $appointment->time <= $nowInMs) {
             abort(Response::HTTP_BAD_REQUEST,"already rejected or expired");            
         }
     }
+
+    public function getCurrent()
+    {
+        $appointment = $this->repository->getCurrent();
+        if ($appointment->count() == 1) {
+            $appointment = $appointment->first();
+            return $appointment;
+        } else {
+            abort(Response::HTTP_BAD_REQUEST,'not found current appointment to checkin');
+        }
+    }
+    
+    public function checkCurrent($id)
+    {
+        $appointment = $this->show($id);
+        $now = Carbon::now()->timestamp;
+        if ($now < ($appointment->time + $appointment->duration *60) && $appointment->status == AppointmentStatus::APPROVED) {
+            $this->update(['status' => AppointmentStatus::CHECKED] , $appointment->id);
+            return $appointment;
+        } else {
+            abort(Response::HTTP_BAD_REQUEST,'may be appointment is not approved or already completed');
+        }
+    }
+    
 }    

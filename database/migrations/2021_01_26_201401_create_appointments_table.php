@@ -21,10 +21,11 @@ class CreateAppointmentsTable extends Migration
     $table->unsignedBigInteger('doctor_id');
     $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade')
     ->onUpdate('cascade');
-    $table->bigInteger('time');
+    $table->timestamp('time');
     $table->tinyInteger('duration');
     $table->tinyInteger('status')->default(1);
     $table->text('cancel_reason')->nullable();
+    $table->softDeletes();
     $table->timestamps();
         });
     }
