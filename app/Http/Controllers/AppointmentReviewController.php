@@ -10,7 +10,7 @@ use App\Transformers\CreatedResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class ReviewController extends Controller
+class AppointmentReviewController extends Controller
 {
     public $service;
 

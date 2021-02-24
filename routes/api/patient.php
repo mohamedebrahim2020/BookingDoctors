@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AppointmentReviewController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\DoctorReviewController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
@@ -33,7 +35,7 @@ Route::prefix('patient')->group(function () {
         Route::get('profile', [PatientController::class, 'profile'])->name('patient.profile');
         Route::post('change/password', [PatientController::class, 'changePassword'])->name('patient.changePassword');
         Route::post('device/token', [PatientController::class, 'storeDeviceToken'])->name('patient.storeDeviceToken');
-        Route::apiResource('appointments.reviews', ReviewController::class)->only('store')->names([
+        Route::apiResource('appointments.reviews', AppointmentReviewController::class)->only('store')->names([
             'store' => 'appointments.reviews.store'
         ]);
     });
