@@ -131,7 +131,7 @@ class AppointmentService extends BaseService
         if ($appointmentFinishedAt > $nowInMs || $appointment->status != AppointmentStatus::CHECKED || $appointment->status == AppointmentStatus::COMPLETED) {
             abort(Response::HTTP_BAD_REQUEST,"not checked or not finished or already completed");            
         }
-        // $this->update(['status' => AppointmentStatus::COMPLETED] , $appointment->id);
-        $appointment->patient->notify(new AppointmentNotification($this->update(['status' => AppointmentStatus::COMPLETED] , $appointment->id)));
+        $this->update(['status' => AppointmentStatus::COMPLETED] , $appointment->id);
+        $appointment->patient->notify(new AppointmentNotification($this->show($appointment->id)));
     }
 }    

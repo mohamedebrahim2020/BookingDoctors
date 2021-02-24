@@ -9,13 +9,10 @@ use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Notifications\AppointmentNotification;
-use App\Observers\AppointmentObserver;
 use Carbon\Carbon;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
 use Laravel\Passport\Passport;
@@ -31,7 +28,7 @@ class DoctorCompletedAppointmentTest extends TestCase
         $this->seed(DoctorSpecializationsSeeder::class);
     }
     /** @test */
-    public function doctor_successfully_approve_an_appointment()
+    public function doctor_successfully_complete_an_appointment()
     {
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
@@ -44,7 +41,8 @@ class DoctorCompletedAppointmentTest extends TestCase
         $appointment = Appointment::factory()->state([
             'doctor_id' => $doctor->id,
             'patient_id' => $patient->id,
-            'status' => AppointmentStatus::PENDING,
+            'time' => Carbon::parse(now())->subHours(2)->timestamp,
+            'status' => AppointmentStatus::CHECKED,
         ])->create();
         $patient->firebaseTokens()->updateOrCreate(
             ['platform' => PlatformType::WEB],
@@ -54,7 +52,7 @@ class DoctorCompletedAppointmentTest extends TestCase
         Notification::fake();
         Queue::fake();
         Bus::fake();
-        $response = $this->postJson(route('appointments.approve', ['appointment' =>$appointment->id]), ["Accept" => "application/json"]);
+        $response = $this->postJson(route('appointments.complete', ['appointment' =>$appointment->id]), ["Accept" => "application/json"]);
         Notification::assertSentTo([$patient], AppointmentNotification::class);
         $response->assertOk();
         Bus::assertDispatched(PushNotification::class);
@@ -62,7 +60,7 @@ class DoctorCompletedAppointmentTest extends TestCase
     }
 
     /** @test */
-    public function doctor_failed_to_approve_not_found_appointment()
+    public function doctor_failed_to_complete_not_found_appointment()
     {
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
@@ -75,17 +73,17 @@ class DoctorCompletedAppointmentTest extends TestCase
         $appointment = Appointment::factory()->state([
             'doctor_id' => $doctor->id,
             'patient_id' => $patient->id,
-            'status' => AppointmentStatus::PENDING,
+            'status' => AppointmentStatus::CHECKED,
         ])->create();
         Passport::actingAs($doctor, ['*'], 'doctor');
         Notification::fake();
         Queue::fake();
-        $response = $this->postJson(route('appointments.approve', ['appointment' => 2]), ["Accept" => "application/json"]);
+        $response = $this->postJson(route('appointments.complete', ['appointment' => 2]), ["Accept" => "application/json"]);
         $response->assertNotFound();
     }
 
     /** @test */
-    public function doctor_failed_to_approve_an_appointment_not_belong_to_him()
+    public function doctor_failed_to_complete_an_appointment_not_belong_to_him()
     {
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $notBelongDoctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
@@ -99,17 +97,17 @@ class DoctorCompletedAppointmentTest extends TestCase
         $appointment = Appointment::factory()->state([
             'doctor_id' => $doctor->id,
             'patient_id' => $patient->id,
-            'status' => AppointmentStatus::PENDING,
+            'status' => AppointmentStatus::CHECKED,
         ])->create();
         Passport::actingAs($notBelongDoctor, ['*'], 'doctor');
         Notification::fake();
         Queue::fake();
-        $response = $this->postJson(route('appointments.approve', ['appointment' => $appointment->id]), ["Accept" => "application/json"]);
-        $response->assertStatus(400);
+        $response = $this->postJson(route('appointments.complete', ['appointment' => $appointment->id]), ["Accept" => "application/json"]);
+        $response->assertForbidden();
     }
 
     /** @test */
-    public function doctor_failed_to_approve_an_appointment_that_already_approved()
+    public function doctor_failed_to_complete_an_appointment_that_already_completed()
     {
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
@@ -122,17 +120,17 @@ class DoctorCompletedAppointmentTest extends TestCase
         $appointment = Appointment::factory()->state([
             'doctor_id' => $doctor->id,
             'patient_id' => $patient->id,
-            'status' => AppointmentStatus::APPROVED,
+            'status' => AppointmentStatus::COMPLETED,
         ])->create();
         Passport::actingAs($doctor, ['*'], 'doctor');
         Notification::fake();
         Queue::fake();
-        $response = $this->postJson(route('appointments.approve', ['appointment' => $appointment->id]), ["Accept" => "application/json"]);
+        $response = $this->postJson(route('appointments.complete', ['appointment' => $appointment->id]), ["Accept" => "application/json"]);
         $response->assertStatus(400);
     }
 
     /** @test */
-    public function doctor_failed_to_approve_an_appointment_that_has_expired_date()
+    public function doctor_failed_to_complete_an_appointment_that_finished_after_now()
     {
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
@@ -145,13 +143,13 @@ class DoctorCompletedAppointmentTest extends TestCase
         $appointment = Appointment::factory()->state([
             'doctor_id' => $doctor->id,
             'patient_id' => $patient->id,
-            'time' => Carbon::parse(now())->next('Monday')->subWeeks(2)->timestamp * 1000,
+            'time' => Carbon::parse(now())->addHour()->timestamp,
             'status' => AppointmentStatus::PENDING,
         ])->create();
         Passport::actingAs($doctor, ['*'], 'doctor');
         Notification::fake();
         Queue::fake();
-        $response = $this->postJson(route('appointments.approve', ['appointment' => $appointment->id]), ["Accept" => "application/json"]);
+        $response = $this->postJson(route('appointments.complete', ['appointment' => $appointment->id]), ["Accept" => "application/json"]);
         $response->assertStatus(400);
     }
 }
