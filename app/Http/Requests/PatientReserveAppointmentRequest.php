@@ -26,7 +26,7 @@ class PatientReserveAppointmentRequest extends FormRequest
         $duration = array(30, 60, 120);
         $nowInMs = now()->timestamp*1000;
         return [
-            // 'time' => 'required|numeric|gt:'. $nowInMs,
+            'time' => 'required|numeric|gt:'. $nowInMs,
             'duration' => 'required|integer|in:' . implode(',', $duration),
         ];
     }
