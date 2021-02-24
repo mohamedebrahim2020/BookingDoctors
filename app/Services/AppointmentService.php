@@ -41,7 +41,7 @@ class AppointmentService extends BaseService
 
     public function checkAvailabiltyToApprove($appointment)
     {
-        $nowInMs = Carbon::now()->timestamp * 1000;
+        $nowInMs = Carbon::now()->timestamp;
         if ($appointment->status == AppointmentStatus::APPROVED || $appointment->time <= $nowInMs) {
             abort(Response::HTTP_BAD_REQUEST,"already approved or expired");            
         }
@@ -97,8 +97,8 @@ class AppointmentService extends BaseService
 
     public function checkAvailabiltyToCancel($appointment)
     {
-        $time = Carbon::parse($appointment->time/1000);
-        $nowInMs = Carbon::now()->timestamp * 1000;
+        $time = Carbon::parse($appointment->time);
+        $nowInMs = Carbon::now()->timestamp ;
         if ($appointment->status != AppointmentStatus::APPROVED || $appointment->time <= $nowInMs || $time->diffInHours() <= 24) {
             abort(Response::HTTP_BAD_REQUEST,"already cancelled or before less than 24 hrs or expired");            
         }
@@ -118,9 +118,20 @@ class AppointmentService extends BaseService
 
     public function checkAvailabiltyToReject($appointment)
     {
-        $nowInMs = Carbon::now()->timestamp * 1000;
+        $nowInMs = Carbon::now()->timestamp;
         if ($appointment->status != AppointmentStatus::PENDING || $appointment->time <= $nowInMs) {
             abort(Response::HTTP_BAD_REQUEST,"already rejected or expired");            
         }
+    }
+
+    public function complete($appointment)
+    {
+        $nowInMs = Carbon::now()->timestamp;
+        $appointmentFinishedAt = ($appointment->time + ($appointment->duration * 60));
+        if ($appointmentFinishedAt > $nowInMs || $appointment->status != AppointmentStatus::CHECKED || $appointment->status == AppointmentStatus::COMPLETED) {
+            abort(Response::HTTP_BAD_REQUEST,"not checked or not finished or already completed");            
+        }
+        // $this->update(['status' => AppointmentStatus::COMPLETED] , $appointment->id);
+        $appointment->patient->notify(new AppointmentNotification($this->update(['status' => AppointmentStatus::COMPLETED] , $appointment->id)));
     }
 }    
