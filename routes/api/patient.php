@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,12 +27,15 @@ Route::prefix('patient')->group(function () {
             'index' => 'doctors.list',
             'show' => 'doctors.details'
         ]); 
-        Route::apiResource('/appointments', AppointmentController::class)->only('show')->names([
+        Route::apiResource('appointments', AppointmentController::class)->only('show')->names([
             'show' => 'appointments.patient.show'
         ]);
         Route::get('profile', [PatientController::class, 'profile'])->name('patient.profile');
         Route::post('change/password', [PatientController::class, 'changePassword'])->name('patient.changePassword');
         Route::post('device/token', [PatientController::class, 'storeDeviceToken'])->name('patient.storeDeviceToken');
+        Route::apiResource('appointments.reviews', ReviewController::class)->only('store')->names([
+            'store' => 'appointments.reviews.store'
+        ]);
     });
     Route::group(['middleware' => ['customthrottle:3,30']], function () {
         Route::post('code/resend', [PatientController::class, 'codeResend'])->name('codeResend');
