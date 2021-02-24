@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Filters\AppointmentFilters;
 use App\Models\Appointment;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentRepository extends BaseRepository 
 {
@@ -37,7 +38,18 @@ class AppointmentRepository extends BaseRepository
 
    public function getCurrent()
    {
-        $currentAppointment = auth()->user()->appointments()->filter(app(AppointmentFilters::class))->first();
-        return $currentAppointment; 
+        if (env('DB_CONNECTION') === 'sqlite') {
+            $results = DB::connection('sqlite')->select('select * from appointments WHERE
+            strftime("%s",time) <=  strftime("%s","now") AND status = 2');
+            if ($results == []) {
+                return $results;
+            } else {
+                return $results[0];
+            }
+        } else {
+            $currentAppointment = auth()->user()->appointments()->filter(app(AppointmentFilters::class))->first();
+            return $currentAppointment;
+        }
+
    }
 }   

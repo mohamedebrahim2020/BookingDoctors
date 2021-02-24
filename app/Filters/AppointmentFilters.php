@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Filters;
 
 use App\Enums\AppointmentStatus;
@@ -7,8 +8,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class AppointmentFilters extends QueryFilters
-{    
-    public function status ($value = null)
+{
+    public function status($value = null)
     {
         if (!$value) {
             return $this->builder;
@@ -16,7 +17,7 @@ class AppointmentFilters extends QueryFilters
             return $this->builder->where('status', $value);
         }
     }
-   
+
     public function time($time)
     {
         $from = $time;
@@ -26,19 +27,12 @@ class AppointmentFilters extends QueryFilters
 
     public function currentAppointment()
     {
-        if (env('DB_CONNECTION') === 'sqlite') {
-            $results = DB::connection('sqlite')->select('select * from appointments WHERE
-            strftime("%s",time) <=  strftime("%s","now") AND status = 2');
-                //   AND(strftime("%s",time) + (duration *60)) >= strftime("%s","now")
-            return $results;
-        } else {
-            $now = Carbon::now()->timestamp;
-            return $this->builder
-            ->where(function ($query) use ($now){
-                $query->where('status','=', AppointmentStatus::APPROVED)
-                ->whereRaw("UNIX_TIMESTAMP(time) < $now")
-                ->whereRaw("(UNIX_TIMESTAMP(time) + (duration * 60)) > $now");              
+        $now = Carbon::now()->timestamp;
+        return $this->builder
+            ->where(function ($query) use ($now) {
+                $query->where('status', '=', AppointmentStatus::APPROVED)
+                    ->whereRaw("UNIX_TIMESTAMP(time) < $now")
+                    ->whereRaw("(UNIX_TIMESTAMP(time) + (duration * 60)) > $now");
             });
-        }
     }
-}    
+}
