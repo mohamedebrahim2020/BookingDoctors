@@ -25,6 +25,7 @@ class CreateAppointmentsTable extends Migration
             $table->tinyInteger('duration');
             $table->tinyInteger('status')->default(1);
             $table->text('cancel_reason')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
