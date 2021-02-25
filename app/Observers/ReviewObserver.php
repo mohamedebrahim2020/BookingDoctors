@@ -17,7 +17,7 @@ class ReviewObserver
     public function created(Review $review)
     {
         $doctor = $review->appointment->doctor;
-        app(DoctorService::class)->update(['average_reviews' => $doctor->reviews->avg('rank')]);
+        app(DoctorService::class)->update(['average_reviews' => $doctor->reviews->avg('rank')], $doctor->id);
         if ($doctor->firebaseTokens()->count() > 0) {
             $tokens = $doctor->firebaseTokens()->pluck('token')->toArray();
             $title = 'review is created'; 
