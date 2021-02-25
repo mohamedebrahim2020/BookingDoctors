@@ -20,7 +20,7 @@ class ShowAppointmentResource extends JsonResource
             'id' => $this->id,
             'doctor_id' => $this->doctor_id,
             'patient_id' => $this->patient_id,
-            'time' => Carbon::parse($this->time/1000)->toDateTimeString(),
+            'time' => $this->time,
             'duration' => $this->duration,
             'status' => AppointmentStatus::fromValue((int) $this->status)->key,
             'cancel_or_reject_reason' => $this->cancel_reason,

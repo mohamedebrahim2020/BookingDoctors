@@ -12,6 +12,8 @@ use App\Transformers\IndexAppointmentResource;
 use App\Transformers\CreatedResource;
 use App\Transformers\ShowAppointmentResource;
 use App\Transformers\UpdatedResource;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AppointmentController extends Controller
@@ -62,5 +64,19 @@ class AppointmentController extends Controller
         $this->authorize('view', $this->service->show($id));
         $appointment = $this->service->show($id);
         return response(new ShowAppointmentResource($appointment), Response::HTTP_OK);
+    }
+
+    public function getCurrent()
+    {
+        $appointment = $this->service->getCurrent();
+        return response()->json(new ShowAppointmentResource($appointment), Response::HTTP_OK);        
+    }
+
+    public function checkCurrent($id)
+    {
+        $appointment = $this->service->show($id);
+        $this->authorize('view', $appointment);
+        $this->service->checkCurrent($appointment);
+        return response()->json(new UpdatedResource($appointment), Response::HTTP_OK);        
     }
 }
