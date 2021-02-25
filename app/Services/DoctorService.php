@@ -126,11 +126,4 @@ class DoctorService extends BaseService
         });
         return $doctor;
     }
-
-    public function getReviews()
-    {
-        $doctor = $this->show(request()->doctor);
-        $reviews = $doctor->reviews;
-        return $reviews;
-    }
 }

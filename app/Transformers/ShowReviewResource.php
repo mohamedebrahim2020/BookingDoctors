@@ -4,7 +4,7 @@ namespace App\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IndexDoctorReviewsResource extends JsonResource
+class ShowReviewResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,10 @@ class IndexDoctorReviewsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'average_review' => $this->average_reviews,
-            'reviews' => ShowReviewResource::collection($this->reviews),
+            'rank' => $this->rank,
+            'comment' => $this->comment,
+            'respond' => $this->respond,
+            'date' => $this->created_at,
         ];
     }
 }

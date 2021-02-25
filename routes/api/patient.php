@@ -33,7 +33,7 @@ Route::prefix('patient')->group(function () {
         Route::get('profile', [PatientController::class, 'profile'])->name('patient.profile');
         Route::post('change/password', [PatientController::class, 'changePassword'])->name('patient.changePassword');
         Route::post('device/token', [PatientController::class, 'storeDeviceToken'])->name('patient.storeDeviceToken');
-        Route::apiResource('doctors.reviews', DoctorReviewController::class)->only(['index']);
+        Route::get('doctors/{doctor}/reviews', [DoctorController::class, 'getReviews'])->name('doctor.reviews');
     });
     Route::group(['middleware' => ['customthrottle:3,30']], function () {
         Route::post('code/resend', [PatientController::class, 'codeResend'])->name('codeResend');

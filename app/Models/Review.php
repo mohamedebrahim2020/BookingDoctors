@@ -15,7 +15,7 @@ class Review extends Model
      * @var array
     */
     protected $fillable = [
-        'rank', 'comment', 'respond',
+        'rank', 'comment', 'respond', 'average_reviews',
     ];
 
     public function appointment()
