@@ -46,7 +46,7 @@ class GetDoctorReviewsTest extends TestCase
             ]);
         }
         Passport::actingAs($patient, ['*'], 'patient');
-        $response = $this->getJson(route('doctors.reviews.index', ['doctor' =>$doctor->id]), ["Accept" => "application/json"]);
+        $response = $this->getJson(route('get.doctor.reviews', ['doctor' =>$doctor->id]), ["Accept" => "application/json"]);
         $response->assertOk();
         $response->assertJsonCount(4, 'reviews');
     }
@@ -68,7 +68,7 @@ class GetDoctorReviewsTest extends TestCase
             'status' => AppointmentStatus::COMPLETED,
         ])->create();
         Passport::actingAs($patient, ['*'], 'patient');
-        $response = $this->getJson(route('doctors.reviews.index', ['doctor' => $doctor->id]), ["Accept" => "application/json"]);
+        $response = $this->getJson(route('get.doctor.reviews', ['doctor' => $doctor->id]), ["Accept" => "application/json"]);
         $response->assertOk();
         $response->assertJsonCount(0, 'reviews');
     }
