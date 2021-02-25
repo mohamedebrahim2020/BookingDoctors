@@ -27,6 +27,8 @@ Route::prefix('patient')->group(function () {
             'index' => 'doctors.list',
             'show' => 'doctors.details'
         ]); 
+        Route::get('/appointments/current', [AppointmentController::class, 'getCurrent'])->name('patient.get.current.appointment');
+        Route::post('/appointments/{appointment}/check', [AppointmentController::class, 'checkCurrent'])->name('patient.check.current.appointment');
         Route::apiResource('/appointments', AppointmentController::class)->only('show')->names([
             'show' => 'appointments.patient.show'
         ]);
