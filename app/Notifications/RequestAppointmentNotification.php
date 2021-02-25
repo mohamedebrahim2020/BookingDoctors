@@ -51,7 +51,7 @@ class RequestAppointmentNotification extends Notification implements ShouldQueue
             'mail.requestAppointmentMail',
             [
                 'doctor' => $this->doctor,
-                'time' =>(Carbon::createFromTimestamp($this->appointment->time/1000)->toDateTimeString()), 
+                'time' =>(Carbon::createFromTimestamp($this->appointment['time'])->toDateTimeString()), 
                 'duration' => $this->appointment['duration'],
                 'patient' => $this->patient
             ]

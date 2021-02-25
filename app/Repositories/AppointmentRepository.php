@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Filters\AppointmentFilters;
 use App\Models\Appointment;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentRepository extends BaseRepository 
 {
@@ -22,7 +23,7 @@ class AppointmentRepository extends BaseRepository
        return auth()->user()->appointments()->filter(app(AppointmentFilters::class))->get();
    }
  
-   public function fiterDoctorAppointments($doctor)
+   public function filterDoctorAppointments($doctor)
    {
         $approvedAppointment = $doctor->appointments()->filter(app(AppointmentFilters::class))->get();
         return $approvedAppointment;
@@ -33,5 +34,22 @@ class AppointmentRepository extends BaseRepository
        $data['patient_id'] = auth()->user()->id;
        $appointment = $doctor->appointments()->create($data);
        return $appointment;
+   }
+
+   public function getCurrent()
+   {
+        if (env('DB_CONNECTION') === 'sqlite') {
+            $results = DB::connection('sqlite')->select('select * from appointments WHERE
+            strftime("%s",time) <=  strftime("%s","now") AND status = 2');
+            if ($results == []) {
+                return $results;
+            } else {
+                return $results[0];
+            }
+        } else {
+            $currentAppointment = auth()->user()->appointments()->filter(app(AppointmentFilters::class))->first();
+            return $currentAppointment;
+        }
+
    }
 }   

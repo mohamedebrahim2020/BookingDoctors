@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Filters\Filterable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,17 @@ class Appointment extends Model
     protected $fillable = [
         'time', 'duration', 'patient_id', 'status', 'cancel_reason'
     ];
+
+    protected $casts = [
+        'time' => 'timestamp'
+    ];
+
+    public function setTimeAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['time'] = Carbon::createFromTimestamp($value)->format('Y-m-d H:i:s');
+        }    
+    }
 
     public function patient()
     {
