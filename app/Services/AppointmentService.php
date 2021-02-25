@@ -128,7 +128,7 @@ class AppointmentService extends BaseService
     {
         $nowInMs = Carbon::now()->timestamp;
         $appointmentFinishedAt = ($appointment->time + ($appointment->duration * 60));
-        if ($appointmentFinishedAt > $nowInMs || $appointment->status != AppointmentStatus::CHECKED || $appointment->status == AppointmentStatus::COMPLETED) {
+        if ($appointmentFinishedAt > $nowInMs || $appointment->status != AppointmentStatus::CHECKED) {
             abort(Response::HTTP_BAD_REQUEST,"not checked or not finished or already completed");            
         }
         $this->update(['status' => AppointmentStatus::COMPLETED] , $appointment->id);
