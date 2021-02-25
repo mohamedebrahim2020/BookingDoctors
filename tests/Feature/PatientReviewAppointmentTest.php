@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Enums\AppointmentStatus;
 use App\Enums\PlatformType;
-use App\Enums\RankValue;
 use App\Jobs\PushNotification;
 use App\Models\Appointment;
 use App\Models\Doctor;
@@ -53,10 +52,11 @@ class PatientReviewAppointmentTest extends TestCase
         Queue::fake();
         Bus::fake();
         $data = [
-            'rank'  => RankValue::THREE,
+            'appointment_id' => $appointment->id,
+            'rank'  => rand(1, 5),
             'comment' => 'good appointment',
         ];
-        $response = $this->postJson(route('appointments.reviews.store', ['appointment' =>$appointment->id]),$data, ["Accept" => "application/json"]);
+        $response = $this->postJson(route('patient.reviews.store'),$data, ["Accept" => "application/json"]);
         Bus::assertDispatched(PushNotification::class);
         Bus::assertDispatchedAfterResponse(PushNotification::class);
         $response->assertCreated();
@@ -87,10 +87,11 @@ class PatientReviewAppointmentTest extends TestCase
         Queue::fake();
         Bus::fake();
         $data = [
+            'appointment_id' => $appointment->id,
             'rank'  => 6,
             'comment' => 'good appointment',
         ];
-        $response = $this->postJson(route('appointments.reviews.store', ['appointment' => $appointment->id]), $data, ["Accept" => "application/json"]);
+        $response = $this->postJson(route('patient.reviews.store'), $data, ["Accept" => "application/json"]);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('rank');
     }
@@ -120,11 +121,13 @@ class PatientReviewAppointmentTest extends TestCase
         Queue::fake();
         Bus::fake();
         $data = [
-            'rank'  => RankValue::THREE,
+            'appointment_id' => 2,
+            'rank'  => rand(1, 5),
             'comment' => 'good appointment',
         ];
-        $response = $this->postJson(route('appointments.reviews.store', ['appointment' => 2]), $data, ["Accept" => "application/json"]);
-        $response->assertNotFound();
+        $response = $this->postJson(route('patient.reviews.store'), $data, ["Accept" => "application/json"]);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('appointment_id');
     }
 
     /** @test */
@@ -160,10 +163,11 @@ class PatientReviewAppointmentTest extends TestCase
         Queue::fake();
         Bus::fake();
         $data = [
-            'rank'  => RankValue::THREE,
+            'appointment_id' => $appointment->id,
+            'rank'  => rand(1, 5),
             'comment' => 'good appointment',
         ];
-        $response = $this->postJson(route('appointments.reviews.store', ['appointment' => $appointment->id]), $data, ["Accept" => "application/json"]);
+        $response = $this->postJson(route('patient.reviews.store'), $data, ["Accept" => "application/json"]);
         $response->assertForbidden();
     }
 
@@ -189,17 +193,18 @@ class PatientReviewAppointmentTest extends TestCase
             'status' => AppointmentStatus::COMPLETED,
         ])->create();
         $appointment->review()->create([
-            'rank' => RankValue::FOUR,
+            'rank' => rand(1, 5),
             'comment' => 'good'
         ]);
         Passport::actingAs($patient, ['*'], 'patient');
         Queue::fake();
         Bus::fake();
         $data = [
-            'rank'  => RankValue::THREE,
+            'appointment_id' => $appointment->id,
+            'rank'  => rand(1, 5),
             'comment' => 'good appointment',
         ];
-        $response = $this->postJson(route('appointments.reviews.store', ['appointment' => $appointment->id]), $data, ["Accept" => "application/json"]);
+        $response = $this->postJson(route('patient.reviews.store'), $data, ["Accept" => "application/json"]);
         $response->assertStatus(400);
     }
 
@@ -228,10 +233,11 @@ class PatientReviewAppointmentTest extends TestCase
         Queue::fake();
         Bus::fake();
         $data = [
-            'rank'  => RankValue::THREE,
+            'appointment_id' => $appointment->id,
+            'rank'  => rand(1, 5),
             'comment' => 'good appointment',
         ];
-        $response = $this->postJson(route('appointments.reviews.store', ['appointment' => $appointment->id]), $data, ["Accept" => "application/json"]);
+        $response = $this->postJson(route('patient.reviews.store'), $data, ["Accept" => "application/json"]);
         $response->assertStatus(400);
     }
 }

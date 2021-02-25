@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RankValue;
-use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PatientStoreReviewRequest extends FormRequest
@@ -26,7 +24,8 @@ class PatientStoreReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            'rank' => ['required', new EnumValue(RankValue::class, false)],
+            'appointment_id' => 'required|exists:appointments,id',
+            'rank' => 'required|numeric|between:1,5',
             'comment'=> 'nullable'
         ];
     }

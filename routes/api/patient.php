@@ -1,12 +1,9 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\AppointmentReviewController;
 use App\Http\Controllers\DoctorController;
-use App\Http\Controllers\DoctorReviewController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ReviewController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,8 +32,8 @@ Route::prefix('patient')->group(function () {
         Route::get('profile', [PatientController::class, 'profile'])->name('patient.profile');
         Route::post('change/password', [PatientController::class, 'changePassword'])->name('patient.changePassword');
         Route::post('device/token', [PatientController::class, 'storeDeviceToken'])->name('patient.storeDeviceToken');
-        Route::apiResource('appointments.reviews', AppointmentReviewController::class)->only('store')->names([
-            'store' => 'appointments.reviews.store'
+        Route::apiResource('reviews', ReviewController::class)->only('store')->names([
+            'store' => 'patient.reviews.store'
         ]);
     });
     Route::group(['middleware' => ['customthrottle:3,30']], function () {

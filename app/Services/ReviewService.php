@@ -15,7 +15,7 @@ class ReviewService extends BaseService
 
     public function store($data)
     {
-        $appointment = $this->checkAppointmentExistence(request()->appointment);
+        $appointment = $this->checkAppointmentExistence(request()->appointment_id);
         $this->checkPatienHasThisAppointment($appointment);
         $this->checkAppointmentHasNoReview($appointment);
         $this->checkAppointmentIsCompleted($appointment);

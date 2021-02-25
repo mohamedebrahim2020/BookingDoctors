@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PatientStoreReviewRequest;
-use App\Models\Appointment;
-use App\Models\Review;
 use App\Services\ReviewService;
 use App\Transformers\CreatedResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class AppointmentReviewController extends Controller
+class ReviewController extends Controller
 {
     public $service;
 
