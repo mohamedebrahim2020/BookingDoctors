@@ -52,4 +52,12 @@ class Doctor extends Authenticatable
     {
         return $this->morphMany(FirebaseToken::class, 'user');
     }
+
+    /**
+     * Get all of the reviews for the project.
+    */
+    public function reviews()
+    {
+        return $this->hasManyThrough(Review::class, Appointment::class);
+    }
 }
