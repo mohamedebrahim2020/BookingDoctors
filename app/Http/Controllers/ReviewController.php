@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Services\ReviewService;
+use App\Transformers\IndexReviewResource;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ReviewController extends Controller
 {
@@ -16,6 +18,7 @@ class ReviewController extends Controller
 
     public function index()
     {
-        $this->service->index();       
+        $reviews = $this->service->index();
+        return response()->json(IndexReviewResource::collection($reviews), Response::HTTP_OK);       
     }
 }

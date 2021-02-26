@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Filters\ReviewFilters;
 use App\Models\Review;
 
 class ReviewRepository extends BaseRepository 
@@ -18,7 +19,7 @@ class ReviewRepository extends BaseRepository
 
    public function index()
    {
-       $reviews = $this->all()->filter(app(DoctorFilters::class))->firstorfail();
-       dd($reviews);
+       $reviews = $this->model->filter(app(ReviewFilters::class))->get();
+       return $reviews;
    }
 } 

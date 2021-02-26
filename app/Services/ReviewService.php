@@ -14,6 +14,7 @@ class ReviewService extends BaseService
     public function index()
     {
         $reviews = $this->repository->index();
+        return $reviews;
     }
 
 }    
