@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ReviewService;
+use App\Transformers\UpdatedResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -17,7 +18,8 @@ class ReviewController extends Controller
 
     public function delete($id)
     {
-        $this->service->delete($this->service->show($id));
-        return response()->json([], Response::HTTP_OK);       
+        $review = $this->service->show($id);
+        $this->service->delete($review);
+        return response()->json(new UpdatedResource($review), Response::HTTP_OK);       
     }
 }
