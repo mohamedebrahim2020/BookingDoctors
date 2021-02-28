@@ -9,6 +9,7 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Review;
 use Carbon\Carbon;
+use Database\Seeders\AdminPermissionSeeder;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -24,6 +25,7 @@ class AdminDeleteReviewTest extends TestCase
     {
         parent::setUp();
         $this->seed(DoctorSpecializationsSeeder::class);
+        $this->seed(AdminPermissionSeeder::class);
     }
 
     /** @test */
@@ -32,6 +34,7 @@ class AdminDeleteReviewTest extends TestCase
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $admin = Admin::factory()->create();
+        $admin->givePermissionTo('control doctors');
         $doctor->workingDays()->create(
             [
                 "day"=> "1",
@@ -55,6 +58,29 @@ class AdminDeleteReviewTest extends TestCase
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $admin = Admin::factory()->create();
+        $admin->givePermissionTo('control doctors');
+        $doctor->workingDays()->create(
+            [
+                "day" => "1",
+                "is_all_day" => "1"
+            ]
+        );
+        Passport::actingAs($admin, ['*'], 'admin');
+        Review::factory()->for(Appointment::factory()->state([
+            'doctor_id' => $doctor->id,
+            'patient_id' => $patient->id,
+            'status' => AppointmentStatus::COMPLETED,
+        ]))->create();
+        $response = $this->deleteJson(route('reviews.delete', ['review' => 2]), ["Accept" => "application/json"]);
+        $response->assertNotFound();
+    }
+
+    /** @test */
+    public function admin_with_no_permission_failed_to_delete_review()
+    {
+        $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
+        $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
+        $admin = Admin::factory()->create();
         $doctor->workingDays()->create(
             [
                 "day" => "1",
@@ -67,7 +93,7 @@ class AdminDeleteReviewTest extends TestCase
             'patient_id' => $patient->id,
             'status' => AppointmentStatus::COMPLETED,
         ]))->create();
-        $response = $this->deleteJson(route('reviews.delete', ['review' => 2]), ["Accept" => "application/json"]);
-        $response->assertNotFound();
+        $response = $this->deleteJson(route('reviews.delete', ['review' => $review->id]), ["Accept" => "application/json"]);
+        $response->assertForbidden();
     }
 }

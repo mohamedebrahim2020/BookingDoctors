@@ -19,10 +19,10 @@ class ReviewController extends Controller
 
     public function delete($id)
     {
-        $review = $this->service->show($id);
-        $this->service->delete($review);
-        return response()->json(new UpdatedResource($review), Response::HTTP_OK);
-    }  
+        $this->authorize('activateDoctor', Admin::class);
+        $this->service->delete($this->service->show($id));
+        return response()->json([], Response::HTTP_OK);
+    }
              
     public function store(PatientStoreReviewRequest $request)
     {
