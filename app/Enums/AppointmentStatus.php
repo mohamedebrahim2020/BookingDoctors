@@ -16,4 +16,5 @@ final class AppointmentStatus extends Enum
     const REJECTED = 3;
     const CANCELLED = 4;
     const CHECKED = 5;
+    const COMPLETED = 6;
 }

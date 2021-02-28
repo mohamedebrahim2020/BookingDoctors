@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorController;
-use App\Http\Controllers\FirebaseController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\WorkingDayController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth:doctor','EnsureDoctorIsActivated']], functi
         Route::get('profile', [DoctorController::class, 'profile'])->name('doctor.profile');
         Route::post('change/password', [DoctorController::class, 'changePassword'])->name('doctor.changePassword');
         Route::post('device/token', [DoctorController::class, 'storeDeviceToken'])->name('doctor.storeDeviceToken');
+        Route::put('reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
     });
 });
 
