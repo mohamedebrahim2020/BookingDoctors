@@ -23,7 +23,6 @@ class CreateReviewsTable extends Migration
             $table->string('respond')->nullable();
             $table->softDeletes();
             $table->timestamps();
-
         });
     }
 

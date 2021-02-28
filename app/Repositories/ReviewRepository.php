@@ -22,4 +22,10 @@ class ReviewRepository extends BaseRepository
        $reviews = $this->model->filter(app(ReviewFilters::class))->get();
        return $reviews;
    }
+   public function storeReview($data, $appointment)
+   {
+        $review = $appointment->review()->create($data);
+        return $review;
+   }
+   
 } 

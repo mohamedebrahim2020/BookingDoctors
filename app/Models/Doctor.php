@@ -21,8 +21,7 @@ class Doctor extends Authenticatable
      * @var array
     */
     protected $fillable = [
-        'name', 'email', 'password', 'phone','specialization_id', 'gender'
-        , 'photo', 'degree_copy', 'activated_at'
+        'name', 'email', 'password', 'phone','specialization_id', 'gender', 'photo', 'degree_copy', 'activated_at', 'average_reviews',
     ];
 
     public function specialization()
