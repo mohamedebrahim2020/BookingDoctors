@@ -66,6 +66,13 @@ class AppointmentController extends Controller
         return response(new ShowAppointmentResource($appointment), Response::HTTP_OK);
     }
 
+    public function complete($id)
+    {
+        $appointment = $this->service->show($id);
+        $this->authorize('view', $appointment);
+        $this->service->complete($appointment);
+        return response(new UpdatedResource($appointment), Response::HTTP_OK);
+    }    
     public function getCurrent()
     {
         $appointment = $this->service->getCurrent();

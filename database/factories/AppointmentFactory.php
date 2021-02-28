@@ -28,7 +28,7 @@ class AppointmentFactory extends Factory
         return [
             'patient_id' => Patient::factory(),
             'doctor_id' => Doctor::factory(),
-            'time' => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp ,
+            'time' => Carbon::parse(now())->addWeeks(3)->next('Monday')->timestamp,
             'duration' => 90,
             'status' => AppointmentStatus::APPROVED,
             'cancel_reason' => null,
