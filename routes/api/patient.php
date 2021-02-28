@@ -2,9 +2,8 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorController;
-use App\Http\Controllers\DoctorReviewController;
 use App\Http\Controllers\PatientController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +35,9 @@ Route::prefix('patient')->group(function () {
         Route::post('change/password', [PatientController::class, 'changePassword'])->name('patient.changePassword');
         Route::post('device/token', [PatientController::class, 'storeDeviceToken'])->name('patient.storeDeviceToken');
         Route::get('doctors/{doctor}/reviews', [DoctorController::class, 'getReviews'])->name('get.doctor.reviews');
+        Route::apiResource('reviews', ReviewController::class)->only('store')->names([
+            'store' => 'patient.reviews.store'
+        ]);
     });
     Route::group(['middleware' => ['customthrottle:3,30']], function () {
         Route::post('code/resend', [PatientController::class, 'codeResend'])->name('codeResend');
