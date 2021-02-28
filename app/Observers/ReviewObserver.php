@@ -25,5 +25,4 @@ class ReviewObserver
             PushNotification::dispatch($tokens, $title, $body)->afterResponse();
         }
     }
-
 }
