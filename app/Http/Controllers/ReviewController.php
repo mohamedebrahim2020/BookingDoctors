@@ -20,6 +20,7 @@ class ReviewController extends Controller
 
     public function index()
     {
+        $this->authorize('activateDoctor', Admin::class);
         $reviews = $this->service->index();
         return response()->json(IndexReviewResource::collection($reviews), Response::HTTP_OK); 
     }

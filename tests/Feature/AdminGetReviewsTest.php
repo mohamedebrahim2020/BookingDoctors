@@ -9,6 +9,7 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Review;
 use Carbon\Carbon;
+use Database\Seeders\AdminPermissionSeeder;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -24,6 +25,7 @@ class AdminGetReviewsTest extends TestCase
     {
         parent::setUp();
         $this->seed(DoctorSpecializationsSeeder::class);
+        $this->seed(AdminPermissionSeeder::class);
     }
 
     /** @test */
@@ -32,6 +34,7 @@ class AdminGetReviewsTest extends TestCase
         $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $admin = Admin::factory()->create();
+        $admin->givePermissionTo('control doctors');
         $doctor->workingDays()->create(
             [
                 "day"=> "1",
@@ -56,6 +59,7 @@ class AdminGetReviewsTest extends TestCase
         $doctor2 = Doctor::factory()->create(["activated_at" => Carbon::now()]);
         $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
         $admin = Admin::factory()->create();
+        $admin->givePermissionTo('control doctors');
         $doctor->workingDays()->create(
             [
                 "day" => "1",
@@ -76,5 +80,33 @@ class AdminGetReviewsTest extends TestCase
         $response = $this->getJson(route('reviews.index', ['byDoctor' => $doctor2->id]), ["Accept" => "application/json"]);
         $response->assertOk();
         $response->assertJsonCount(5);
+    }
+
+    /** @test */
+    public function ordinary_admin_doctor_control_failed_to_get_reviews()
+    {
+        $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
+        $doctor2 = Doctor::factory()->create(["activated_at" => Carbon::now()]);
+        $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
+        $admin = Admin::factory()->create();
+        $doctor->workingDays()->create(
+            [
+                "day" => "1",
+                "is_all_day" => "1"
+            ]
+        );
+        Passport::actingAs($admin, ['*'], 'admin');
+        Review::factory()->count(3)->for(Appointment::factory()->state([
+            'doctor_id' => $doctor->id,
+            'patient_id' => $patient->id,
+            'status' => AppointmentStatus::COMPLETED,
+        ]))->create();
+        Review::factory()->count(5)->for(Appointment::factory()->state([
+            'doctor_id' => $doctor2->id,
+            'patient_id' => $patient->id,
+            'status' => AppointmentStatus::COMPLETED,
+        ]))->create();
+        $response = $this->getJson(route('reviews.index', ['byDoctor' => $doctor2->id]), ["Accept" => "application/json"]);
+        $response->assertForbidden();
     }
 }

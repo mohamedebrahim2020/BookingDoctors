@@ -19,7 +19,13 @@ class IndexReviewResource extends JsonResource
             'rank' => $this->rank,
             'comment' => $this->comment,
             'respond' => $this->email,
-            'created_at' => $this->created_at
+            'created_at' => $this->created_at,
+            'doctor' => [
+                'id' => $this->appointment->doctor->id,
+                'name' => $this->appointment->doctor->name,
+                'averall_rank' => $this->appointment->doctor->average_reviews
+            ],
+            'patient' => new ShowPatientResource($this->appointment->patient)
         ];    
     }
 }
