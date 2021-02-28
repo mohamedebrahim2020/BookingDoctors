@@ -2,24 +2,52 @@
 
 namespace App\Services;
 
-use App\Enums\FolderName;
-use App\Models\Doctor;
-use App\Repositories\DoctorRepository;
-use Illuminate\Support\Facades\Hash;
-use App\Notifications\DoctorActivationMail;
-use App\Notifications\RequestAppointmentNotification;
 use App\Repositories\ReviewRepository;
-use Carbon\Carbon;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Str;
+use App\Enums\AppointmentStatus;
 
 class ReviewService extends BaseService
 {
     public function __construct(ReviewRepository $repository)
     {
         $this->repository = $repository;
+    }
+
+    public function store($data)
+    {
+        $appointment = $this->checkAppointmentExistence(request()->appointment_id);
+        $this->checkPatienHasThisAppointment($appointment);
+        $this->checkAppointmentHasNoReview($appointment);
+        $this->checkAppointmentIsCompleted($appointment);
+        $review = $this->repository->storeReview($data, $appointment);
+        return $review;
+    }
+
+    public function checkPatienHasThisAppointment($appointment)
+    {
+        if ($appointment->patient->id != auth()->user()->id) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+        
+    }
+
+    public function checkAppointmentExistence($id)
+    {
+        $appointment = app(AppointmentService::class)->show($id);
+        return $appointment;
+    }
+
+    public function checkAppointmentHasNoReview($appointment)
+    {
+        if ($appointment->review) {
+            abort(Response::HTTP_BAD_REQUEST, 'this appointment already has review');
+        }
+    }
+
+    public function checkAppointmentIsCompleted($appointment)
+    {
+        if ($appointment->status != AppointmentStatus::COMPLETED) {
+            abort(Response::HTTP_BAD_REQUEST, 'this appointment is not completed to review');
+        }
     }
 }    
