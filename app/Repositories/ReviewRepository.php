@@ -15,4 +15,11 @@ class ReviewRepository extends BaseRepository
    {
        parent::__construct($model);
    }
+
+   public function storeReview($data, $appointment)
+   {
+        $review = $appointment->review()->create($data);
+        return $review;
+   }
+   
 } 

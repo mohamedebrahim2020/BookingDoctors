@@ -126,4 +126,5 @@ class DoctorService extends BaseService
         });
         return $doctor;
     }
+
 }

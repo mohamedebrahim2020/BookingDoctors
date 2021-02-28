@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth:doctor','EnsureDoctorIsActivated']], functi
     Route::post('/appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
     Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
     Route::post('/appointments/{appointment}/reject', [AppointmentController::class, 'reject'])->name('appointments.reject');
+    Route::post('/appointments/{appointment}/completed', [AppointmentController::class, 'complete'])->name('appointments.complete');
     Route::get('/appointments/reset', [AppointmentController::class, 'reset'])->name('appointments.reset');
     Route::apiResource('/appointments', AppointmentController::class)->only(['index', 'show'])->names([
         'show' => 'appointments.doctor.show'

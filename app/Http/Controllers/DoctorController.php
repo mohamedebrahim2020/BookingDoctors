@@ -11,6 +11,7 @@ use App\Http\Requests\StoreDeviceTokenRequest;
 use App\Services\FirebaseService;
 use App\Transformers\CreatedResource;
 use App\Transformers\IndexDoctorResource;
+use App\Transformers\IndexDoctorReviewsResource;
 use App\Transformers\ShowDoctorResource;
 use App\Transformers\TokenResource;
 use App\Transformers\UpdatedResource;
@@ -69,5 +70,11 @@ class DoctorController extends Controller
     {
         $token = app(FirebaseService::class)->storeDeviceToken($request->all());
         return response()->json(new CreatedResource($token), Response::HTTP_CREATED);        
+    }
+
+    public function getReviews()
+    {
+        $doctor = $this->doctorService->show(request()->doctor);
+        return response()->json(new IndexDoctorReviewsResource($doctor), Response::HTTP_OK);
     }
 }

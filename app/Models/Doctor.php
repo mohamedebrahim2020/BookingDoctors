@@ -21,8 +21,7 @@ class Doctor extends Authenticatable
      * @var array
     */
     protected $fillable = [
-        'name', 'email', 'password', 'phone','specialization_id', 'gender'
-        , 'photo', 'degree_copy', 'activated_at'
+        'name', 'email', 'password', 'phone','specialization_id', 'gender', 'photo', 'degree_copy', 'activated_at', 'average_reviews',
     ];
 
     public function specialization()
@@ -51,5 +50,13 @@ class Doctor extends Authenticatable
     public function firebaseTokens()
     {
         return $this->morphMany(FirebaseToken::class, 'user');
+    }
+
+    /**
+     * Get all of the reviews for the project.
+    */
+    public function reviews()
+    {
+        return $this->hasManyThrough(Review::class, Appointment::class);
     }
 }
