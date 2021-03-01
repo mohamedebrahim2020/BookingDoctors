@@ -18,11 +18,10 @@ class ReviewController extends Controller
         $this->service = $service;
     }
 
-    public function update(DoctorRespondReviewRequest $request, $id)
+    public function respond(DoctorRespondReviewRequest $request, $id)
     {
-        $review = $this->service->show($id);
-        $this->service->update($request->all('respond'), $review->id);
-        return response()->json(new UpdatedResource($review), Response::HTTP_OK);
+        $this->service->respond($request->all('respond'), $id);
+        return response()->json([], Response::HTTP_OK);
     }
 
     public function store(PatientStoreReviewRequest $request)

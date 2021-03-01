@@ -50,4 +50,26 @@ class ReviewService extends BaseService
             abort(Response::HTTP_BAD_REQUEST, 'this appointment is not completed to review');
         }
     }
+
+    public function respond($data, $id)
+    {
+        $review = $this->show($id);
+        $this->checkDoctorHasReview($review);
+        $this->checkReviewNotRespondedBefore($review);
+        $this->update($data, $id);        
+    }
+
+    public function checkDoctorHasReview($review)
+    {
+        if ($review->appointment->doctor->id != auth('doctor')->user()->id) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+    }
+
+    public function checkReviewNotRespondedBefore($review)
+    {
+        if ($review->respond != null) {
+            abort(Response::HTTP_BAD_REQUEST, 'this review was responded before');
+        }
+    }
 }    

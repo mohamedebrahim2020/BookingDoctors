@@ -39,7 +39,7 @@ Route::group(['middleware' => ['auth:doctor','EnsureDoctorIsActivated']], functi
         Route::get('profile', [DoctorController::class, 'profile'])->name('doctor.profile');
         Route::post('change/password', [DoctorController::class, 'changePassword'])->name('doctor.changePassword');
         Route::post('device/token', [DoctorController::class, 'storeDeviceToken'])->name('doctor.storeDeviceToken');
-        Route::put('reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+        Route::post('reviews/{review}/respond', [ReviewController::class, 'respond'])->name('reviews.respond');
     });
 });
 

@@ -54,7 +54,7 @@ class DoctorRespondToReviewTest extends TestCase
         );
         Queue::fake();
         Bus::fake();
-        $response = $this->putJson(route('reviews.update', ['review' => $review->id]), $data, ["Accept" => "application/json"]);
+        $response = $this->postJson(route('reviews.respond', ['review' => $review->id]), $data, ["Accept" => "application/json"]);
         $response->assertOk();
         Bus::assertDispatched(PushNotification::class);
         Bus::assertDispatchedAfterResponse(PushNotification::class);
@@ -73,6 +73,39 @@ class DoctorRespondToReviewTest extends TestCase
             ]
         );
         Passport::actingAs($doctor, ['*'], 'doctor');
+        Review::factory()->for(Appointment::factory()->state([
+            'doctor_id' => $doctor->id,
+            'patient_id' => $patient->id,
+            'status' => AppointmentStatus::COMPLETED,
+        ]))->create();
+        $data = [
+            'respond' => 'thanks'
+        ];
+        $patient->firebaseTokens()->updateOrCreate(
+            ['platform' => PlatformType::WEB],
+            ['token' => 'jjj'],
+        );
+        Queue::fake();
+        Bus::fake();
+        $response = $this->postJson(route('reviews.respond', ['review' => 2]), $data, ["Accept" => "application/json"]);
+        $response->assertNotFound();
+        Bus::assertNotDispatched(PushNotification::class);
+        Bus::assertNotDispatchedAfterResponse(PushNotification::class);
+    }
+
+    /** @test */
+    public function doctor_failed_to_respond_to_a_review_not_belong_to()
+    {
+        $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
+        $notBelongDoctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
+        $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
+        $doctor->workingDays()->create(
+            [
+                "day" => "1",
+                "is_all_day" => "1"
+            ]
+        );
+        Passport::actingAs($notBelongDoctor, ['*'], 'doctor');
         $review = Review::factory()->for(Appointment::factory()->state([
             'doctor_id' => $doctor->id,
             'patient_id' => $patient->id,
@@ -87,8 +120,40 @@ class DoctorRespondToReviewTest extends TestCase
         );
         Queue::fake();
         Bus::fake();
-        $response = $this->putJson(route('reviews.update', ['review' => 2]), $data, ["Accept" => "application/json"]);
-        $response->assertNotFound();
+        $response = $this->postJson(route('reviews.respond', ['review' => $review->id]), $data, ["Accept" => "application/json"]);
+        $response->assertForbidden();
+        Bus::assertNotDispatched(PushNotification::class);
+        Bus::assertNotDispatchedAfterResponse(PushNotification::class);
+    }
+
+    /** @test */
+    public function doctor_failed_to_respond_to_a_review_as_he_responded_before()
+    {
+        $doctor = Doctor::factory()->create(["activated_at" => Carbon::now()]);
+        $patient = Patient::factory()->create(["verified_at" => Carbon::now()]);
+        $doctor->workingDays()->create(
+            [
+                "day" => "1",
+                "is_all_day" => "1"
+            ]
+        );
+        Passport::actingAs($doctor, ['*'], 'doctor');
+        $review = Review::factory()->state(['respond' => 'thanks'])->for(Appointment::factory()->state([
+            'doctor_id' => $doctor->id,
+            'patient_id' => $patient->id,
+            'status' => AppointmentStatus::COMPLETED,
+        ]))->create();
+        $data = [
+            'respond' => 'thanks'
+        ];
+        $patient->firebaseTokens()->updateOrCreate(
+            ['platform' => PlatformType::WEB],
+            ['token' => 'jjj'],
+        );
+        Queue::fake();
+        Bus::fake();
+        $response = $this->postJson(route('reviews.respond', ['review' => $review->id]), $data, ["Accept" => "application/json"]);
+        $response->assertStatus(400);
         Bus::assertNotDispatched(PushNotification::class);
         Bus::assertNotDispatchedAfterResponse(PushNotification::class);
     }
