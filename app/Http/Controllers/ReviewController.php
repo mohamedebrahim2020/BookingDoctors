@@ -24,6 +24,13 @@ class ReviewController extends Controller
         return response()->json([], Response::HTTP_OK);
     }
         
+    public function delete($id)
+    {
+        $this->authorize('activateDoctor', Admin::class);
+        $this->service->delete($this->service->show($id));
+        return response()->json([], Response::HTTP_OK);
+    }
+             
     public function index()
     {
         $this->authorize('activateDoctor', Admin::class);

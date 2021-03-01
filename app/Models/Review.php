@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Review extends Model
 {
-    use HasFactory, SoftDeletes, Filterable;
+    use HasFactory, Filterable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.

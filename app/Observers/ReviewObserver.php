@@ -30,4 +30,10 @@ class ReviewObserver
             PushNotification::dispatch($tokens, $title, $body)->afterResponse();
         }
     }
+
+    public function deleted(Review $review)
+    {
+        $doctor = $review->appointment->doctor;
+        app(DoctorService::class)->update(['average_reviews' => $doctor->reviews->avg('rank')], $doctor->id); 
+    }
 }
