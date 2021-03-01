@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Enums\AppointmentStatus;
 use App\Repositories\ReviewRepository;
+use App\Enums\AppointmentStatus;
 use Illuminate\Http\Response;
 
 class ReviewService extends BaseService
@@ -11,6 +11,12 @@ class ReviewService extends BaseService
     public function __construct(ReviewRepository $repository)
     {
         $this->repository = $repository;
+    }
+
+    public function index()
+    {
+        $reviews = $this->repository->index();
+        return $reviews;
     }
 
     public function store($data)

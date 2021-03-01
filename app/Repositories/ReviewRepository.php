@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Filters\ReviewFilters;
 use App\Models\Review;
 
 class ReviewRepository extends BaseRepository 
@@ -16,6 +17,11 @@ class ReviewRepository extends BaseRepository
        parent::__construct($model);
    }
 
+   public function index()
+   {
+       $reviews = $this->model->filter(app(ReviewFilters::class))->get();
+       return $reviews;
+   }
    public function storeReview($data, $appointment)
    {
         $review = $appointment->review()->create($data);

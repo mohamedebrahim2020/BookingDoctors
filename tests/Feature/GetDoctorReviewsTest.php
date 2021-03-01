@@ -39,7 +39,7 @@ class GetDoctorReviewsTest extends TestCase
         ])->create();
         foreach ($appointments as $appointment) {
             $appointment->review()->create([
-                'rank' => rand(1,5),
+                'rank' => rand(1, 5),
                 'comment' => 'goog'
             ]);
         }
