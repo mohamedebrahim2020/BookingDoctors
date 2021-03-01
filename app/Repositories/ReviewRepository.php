@@ -10,7 +10,7 @@ class ReviewRepository extends BaseRepository
     /**
     * UserRepository constructor.
     *
-    * @param Specialization $model
+    * @param Review $model
     */
    public function __construct(Review $model)
    {

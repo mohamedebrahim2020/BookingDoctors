@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Transformers\IndexReviewResource;
-use Illuminate\Http\Request;
 use App\Http\Requests\PatientStoreReviewRequest;
 use App\Services\ReviewService;
 use App\Transformers\CreatedResource;
@@ -18,6 +17,13 @@ class ReviewController extends Controller
         $this->service = $service;
     }
 
+    public function delete($id)
+    {
+        $this->authorize('activateDoctor', Admin::class);
+        $this->service->delete($this->service->show($id));
+        return response()->json([], Response::HTTP_OK);
+    }
+             
     public function index()
     {
         $this->authorize('activateDoctor', Admin::class);

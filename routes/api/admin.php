@@ -20,6 +20,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('admins', AdminController::class);
     Route::group(['prefix' => 'admin'], function () {
         Route::get('permissions', [AdminController::class,'getPermissions']);
+        Route::delete('reviews/{review}', [ReviewController::class,'delete'])->name('reviews.delete');
         Route::get('reviews', [ReviewController::class,'index'])->name('reviews.index');
         Route::post('doctors/{doctor}/activate', [AdminController::class,'activateDoctor'])->name('activate.doctor');
     });
