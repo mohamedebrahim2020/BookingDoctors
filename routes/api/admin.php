@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('admins', AdminController::class);
     Route::group(['prefix' => 'admin'], function () {
         Route::get('permissions', [AdminController::class,'getPermissions']);
+        Route::get('reviews', [ReviewController::class,'index'])->name('reviews.index');
         Route::post('doctors/{doctor}/activate', [AdminController::class,'activateDoctor'])->name('activate.doctor');
     });
 });
