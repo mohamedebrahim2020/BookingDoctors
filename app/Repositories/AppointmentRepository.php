@@ -2,8 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Enums\AppointmentStatus;
 use App\Filters\AppointmentFilters;
 use App\Models\Appointment;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class AppointmentRepository extends BaseRepository 
@@ -51,5 +53,14 @@ class AppointmentRepository extends BaseRepository
             return $currentAppointment;
         }
 
+   }
+
+   public function getDailyAppointments()
+   {
+       $today = Carbon::now()->toDateString();
+       $appointments = $this->model->where('status', AppointmentStatus::APPROVED)
+       ->whereDate('time', $today)
+       ->get();
+       return $appointments;
    }
 }   

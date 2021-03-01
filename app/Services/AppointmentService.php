@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\AppointmentStatus;
 use App\Jobs\StoreAppointment;
 use App\Notifications\AppointmentNotification;
+use App\Notifications\SendDailyAppointmentNotification;
 use App\Repositories\AppointmentRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
@@ -152,5 +153,13 @@ class AppointmentService extends BaseService
         }
         $this->update(['status' => AppointmentStatus::COMPLETED] , $appointment->id);
         $appointment->patient->notify(new AppointmentNotification($this->show($appointment->id)));
+    }
+
+    public function notifyPatientWithDailyAppointment()
+    {
+        $appointments = $this->repository->getDailyAppointments();
+        $appointments->each(function ($appointment) {
+            $appointment->patient->notify(new SendDailyAppointmentNotification($appointment));
+        });
     }
 }    

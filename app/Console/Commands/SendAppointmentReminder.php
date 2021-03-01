@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
 use App\Notifications\SendDailyAppointmentNotification;
+use App\Services\AppointmentService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -41,11 +42,6 @@ class SendAppointmentReminder extends Command
      */
     public function handle()
     {
-        $today = Carbon::now()->toDateString();
-        Appointment::where('status', AppointmentStatus::APPROVED)
-        ->whereDate('time', $today)
-        ->get()->each(function ($appointment) {
-            $appointment->patient->notify(new SendDailyAppointmentNotification($appointment));
-        });
+        app(AppointmentService::class)->notifyPatientWithDailyAppointment();
     }
 }
