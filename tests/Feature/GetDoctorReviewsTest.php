@@ -3,14 +3,12 @@
 namespace Tests\Feature;
 
 use App\Enums\AppointmentStatus;
-use App\Enums\RankValue;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
 use Carbon\Carbon;
 use Database\Seeders\DoctorSpecializationsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 

@@ -8,7 +8,7 @@ use App\Models\Review;
 class ReviewRepository extends BaseRepository 
 {
     /**
-    * UserRepository constructor.
+    * PatientRepository constructor.
     *
     * @param Review $model
     */

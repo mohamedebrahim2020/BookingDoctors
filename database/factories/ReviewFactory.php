@@ -26,7 +26,7 @@ class ReviewFactory extends Factory
             'appointment_id' => Appointment::factory(),
             'rank' => rand(1,5),
             'comment' => $this->faker->text(20) ,
-            'respond' => $this->faker->text(20),
+            'respond' => null,
         ];
     }
 }

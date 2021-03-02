@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DoctorRespondReviewRequest;
 use App\Transformers\IndexReviewResource;
 use App\Http\Requests\PatientStoreReviewRequest;
 use App\Services\ReviewService;
@@ -17,6 +18,12 @@ class ReviewController extends Controller
         $this->service = $service;
     }
 
+    public function respond(DoctorRespondReviewRequest $request, $id)
+    {
+        $this->service->respond($request->all('respond'), $id);
+        return response()->json([], Response::HTTP_OK);
+    }
+        
     public function delete($id)
     {
         $this->authorize('activateDoctor', Admin::class);
